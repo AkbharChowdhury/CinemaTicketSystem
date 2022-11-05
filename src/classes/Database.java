@@ -1,5 +1,6 @@
 package classes;
 
+import enums.Files;
 import org.sqlite.SQLiteConfig;
 import tables.GenreTable;
 import tables.RatingTable;
@@ -15,7 +16,7 @@ public class Database {
     private static final String DB_NAME = "cinema.db";
     private static Database instance;
 
-    private Database() throws SQLException {
+    private Database() throws SQLException, FileNotFoundException {
 
         // if database file does not exist create the database file and populate tables with default values
         File databaseFile = new File(DB_NAME);
@@ -27,7 +28,7 @@ public class Database {
 
     }
 
-    public static Database getInstance() throws SQLException {
+    public static Database getInstance() throws SQLException, FileNotFoundException {
 
         return instance == null ? new Database() : null;
     }
@@ -36,8 +37,12 @@ public class Database {
         return (!rs.isBeforeFirst() && rs.getRow() == 0);
     }
 
-    private void insertDefaultValues() {
-        insertRatings();
+    private void insertDefaultValues() throws FileNotFoundException {
+
+                String ratingsFile = Helper.getCSVPath() + Files.Ratings.DESCRIPTION;
+                List<String> ratingList = FileHandler.readSingleColumn(ratingsFile);
+                insertSingleColumnTable(ratingList, new Rating().insert());
+//        insertMovies();
 
     }
 
@@ -57,55 +62,16 @@ public class Database {
 
     }
 
-//    private void createMovieTable() throws SQLException {
-//
-//        Connection con = getConnection();
-//        String sql = new Movie().createTable();
-//        Statement stmt = con.createStatement();
-//        stmt.execute(sql);
-//        con.close();
-//
-//    }
-
-//    private void createRatingTable() throws SQLException {
-//
-//        Connection con = getConnection();
-//        String sql = new Rating().createTable();
-//        Statement stmt = con.createStatement();
-//        stmt.execute(sql);
-//        con.close();
-//
-//    }
-
-
-
-//    private void createMovieTable() throws SQLException {
-//
-//        Connection con = getConnection();
-//        String sql = new Movie().createTable();
-//        Statement stmt = con.createStatement();
-//        stmt.execute(sql);
-//        con.close();
-//
-//    }
-
-
-
-    private void insertRatings() {
-        final String[] genreList = {
-                "PG-13",
-                "U",
-                "12",
-                "18"
-        };
+    // used for the lookup tables e.g. Movies, Genres, Ratings, and Tickets tables
+    private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
         try (Connection con = getConnection()) {
-            String sql = new Rating().insert();
-            System.gc();
-            for (String genre : genreList) {
+            String sql = insertSQL;
+
+            for (String item : list) {
                 PreparedStatement stmt = con.prepareStatement(sql);
                 stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, genre);
+                stmt.setString(2, item);
                 stmt.executeUpdate();
             }
 
@@ -115,26 +81,22 @@ public class Database {
 
     }
 
-    private void insertGenres() {
-        String[] genreList = {
-                "Horror",
-                "Action",
-                "Comedy",
-                "Sci-fi"
-        };
+    private void insertMovies() throws FileNotFoundException {
+
+        String movieFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
+        var movieList = FileHandler.getMovieData(movieFile);
+
 
 
         try (Connection con = getConnection()) {
-            String sql = String.format("""
-                            INSERT INTO %s
-                            VALUES (?, ?);
-                            """,
-                    GenreTable.TABLE_NAME
-            );
-            for (String genre : genreList) {
+            String sql = new Movie().insert();
+            for (var movie : movieList) {
                 PreparedStatement stmt = con.prepareStatement(sql);
                 stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, genre);
+                stmt.setString(2, movie.getTitle());
+                stmt.setInt(3, movie.getDuration());
+                stmt.setInt(4, movie.getRatingID());
+
                 stmt.executeUpdate();
             }
 
@@ -143,6 +105,7 @@ public class Database {
         }
 
     }
+
 
 
     public Connection getConnection() {
@@ -197,4 +160,6 @@ public class Database {
 //    }
 
 
+
 }
+

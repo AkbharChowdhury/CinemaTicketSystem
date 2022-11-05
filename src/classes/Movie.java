@@ -30,7 +30,7 @@ public class Movie implements Queries {
         this.title = title;
     }
 
-    public double getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -82,6 +82,11 @@ public class Movie implements Queries {
 
     @Override
     public String insert() {
-        return null;
+        return String.format("""
+                            INSERT INTO %s
+                            VALUES (?, ?, ?, ?);
+                            """,
+                RatingTable.TABLE_NAME
+        );
     }
 }
