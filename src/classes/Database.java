@@ -1,18 +1,29 @@
 package classes;
 
 import org.sqlite.SQLiteConfig;
+import tables.GenreTable;
+import tables.RatingTable;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Database {
-    private static final String DB_NAME = "cinema";
+    private static final String DB_NAME = "cinema.db";
     private static Database instance;
 
     private Database() throws SQLException {
-        createAllTables();
+
+        // if database file does not exist create the database file and populate tables with default values
+        File databaseFile = new File(DB_NAME);
+        if (!databaseFile.exists()) {
+            createAllTables();
+            insertDefaultValues();
+
+        }
 
     }
 
@@ -24,7 +35,13 @@ public class Database {
     private static boolean isResultSetEmpty(ResultSet rs) throws SQLException {
         return (!rs.isBeforeFirst() && rs.getRow() == 0);
     }
-    private void createAllTables() throws SQLException{
+
+    private void insertDefaultValues() {
+        insertRatings();
+
+    }
+
+    private void createAllTables() throws SQLException {
         createRatingTable();
     }
 
@@ -39,12 +56,65 @@ public class Database {
     }
 
 
+    private void insertRatings() {
+        final String[] genreList = {
+                "PG-13",
+                "U",
+                "12",
+                "18"
+        };
+
+
+        try (Connection con = getConnection()) {
+            String sql = new Rating().insert();
+            System.gc();
+            for (String genre : genreList) {
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setString(2, genre);
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void insertGenres() {
+        String[] genreList = {
+                "Horror",
+                "Action",
+                "Comedy",
+                "Sci-fi"
+        };
+
+
+        try (Connection con = getConnection()) {
+            String sql = String.format("""
+                            INSERT INTO %s
+                            VALUES (?, ?);
+                            """,
+                    GenreTable.TABLE_NAME
+            );
+            for (String genre : genreList) {
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setString(2, genre);
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
 
 
     public Connection getConnection() {
 
         final String DATABASE_DRIVER = "org.sqlite.JDBC";
-        final String CONN_STR = String.format("jdbc:sqlite:%s.db", DB_NAME);
+        final String CONN_STR = String.format("jdbc:sqlite:%s", DB_NAME);
         Connection connection;
 
         try {
@@ -91,11 +161,6 @@ public class Database {
 //        }
 //        return null;
 //    }
-
-
-
-
-
 
 
 }

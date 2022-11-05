@@ -52,6 +52,11 @@ public class Rating implements Queries {
 
     @Override
     public String insert() {
-        return null;
+        return String.format("""
+                            INSERT INTO %s
+                            VALUES (?, ?);
+                            """,
+                RatingTable.TABLE_NAME
+        );
     }
 }
