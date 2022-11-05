@@ -39,11 +39,10 @@ public class Database {
 
     private void insertDefaultValues() throws FileNotFoundException {
 
-                String ratingsFile = Helper.getCSVPath() + Files.Ratings.DESCRIPTION;
-                List<String> ratingList = FileHandler.readSingleColumn(ratingsFile);
-                insertSingleColumnTable(ratingList, new Rating().insert());
-//        insertMovies();
-
+        String ratingsFile = Helper.getCSVPath() + Files.Ratings.DESCRIPTION;
+        List<String> ratingList = FileHandler.readSingleColumn(ratingsFile);
+        insertSingleColumnTable(ratingList, new Rating().insert());
+        insertMovies();
     }
 
     private void createAllTables() throws SQLException {
@@ -87,7 +86,6 @@ public class Database {
         var movieList = FileHandler.getMovieData(movieFile);
 
 
-
         try (Connection con = getConnection()) {
             String sql = new Movie().insert();
             for (var movie : movieList) {
@@ -105,7 +103,6 @@ public class Database {
         }
 
     }
-
 
 
     public Connection getConnection() {
@@ -158,7 +155,6 @@ public class Database {
 //        }
 //        return null;
 //    }
-
 
 
 }

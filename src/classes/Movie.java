@@ -86,7 +86,7 @@ public class Movie implements Queries {
                             INSERT INTO %s
                             VALUES (?, ?, ?, ?);
                             """,
-                RatingTable.TABLE_NAME
+                MovieTable.TABLE_NAME
         );
     }
 }
