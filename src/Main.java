@@ -1,5 +1,10 @@
+import classes.Database;
+
+import java.sql.SQLException;
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    private static Database db;
+    public static void main(String[] args) throws SQLException {
+        db = Database.getInstance();
     }
 }
