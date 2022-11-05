@@ -1,9 +1,13 @@
 package classes;
 
-public class Movie {
+import interfaces.Queries;
+import tables.MovieTable;
+import tables.RatingTable;
+
+public class Movie implements Queries {
     private int movieID;
     private String title;
-    private double duration;
+    private int duration;
     private int ratingID;
 
     public Movie(){
@@ -30,7 +34,7 @@ public class Movie {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -42,11 +46,42 @@ public class Movie {
         this.ratingID = ratingID;
     }
 
-    public Movie(String title, double duration, int ratingID) {
+    public Movie(String title, int duration, int ratingID) {
         this.title = title;
         this.duration = duration;
         this.ratingID = ratingID;
     }
 
 
+    @Override
+    public String createTable() {
+        return String.format("""
+                        CREATE TABLE IF NOT EXISTS %s (
+                        %s INTEGER PRIMARY KEY AUTOINCREMENT,
+                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL, 
+                        %s INTEGER NOT NULL,
+                        FOREIGN KEY(%s) REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE
+                        );
+                        """,
+                MovieTable.TABLE_NAME,
+                MovieTable.COLUMN_ID,
+                MovieTable.COLUMN_TITLE,
+                MovieTable.COLUMN_DURATION,
+                MovieTable.COLUMN_RATING_ID,
+
+                // rating fk
+                MovieTable.COLUMN_RATING_ID,
+                RatingTable.TABLE_NAME,
+                RatingTable.COLUMN_ID
+
+
+
+                );
+    }
+
+    @Override
+    public String insert() {
+        return null;
+    }
 }

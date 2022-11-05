@@ -42,18 +42,53 @@ public class Database {
     }
 
     private void createAllTables() throws SQLException {
-        createRatingTable();
+        createTable(new Rating().createTable());
+        createTable(new Movie().createTable());
+
     }
 
-    private void createRatingTable() throws SQLException {
+    private void createTable(String createTableSQL) throws SQLException {
 
         Connection con = getConnection();
-        String sql = new Rating().createTable();
+        String sql = createTableSQL;
         Statement stmt = con.createStatement();
         stmt.execute(sql);
         con.close();
 
     }
+
+//    private void createMovieTable() throws SQLException {
+//
+//        Connection con = getConnection();
+//        String sql = new Movie().createTable();
+//        Statement stmt = con.createStatement();
+//        stmt.execute(sql);
+//        con.close();
+//
+//    }
+
+//    private void createRatingTable() throws SQLException {
+//
+//        Connection con = getConnection();
+//        String sql = new Rating().createTable();
+//        Statement stmt = con.createStatement();
+//        stmt.execute(sql);
+//        con.close();
+//
+//    }
+
+
+
+//    private void createMovieTable() throws SQLException {
+//
+//        Connection con = getConnection();
+//        String sql = new Movie().createTable();
+//        Statement stmt = con.createStatement();
+//        stmt.execute(sql);
+//        con.close();
+//
+//    }
+
 
 
     private void insertRatings() {
@@ -63,7 +98,6 @@ public class Database {
                 "12",
                 "18"
         };
-
 
         try (Connection con = getConnection()) {
             String sql = new Rating().insert();
