@@ -1,9 +1,7 @@
 package classes;
 
 import interfaces.Queries;
-import tables.GenreTable;
-import tables.MovieShowTimesTable;
-import tables.SalesDetailsTable;
+import tables.*;
 
 public class SalesDetails implements Queries {
     private int salesID;
@@ -61,7 +59,12 @@ public class SalesDetails implements Queries {
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
 
-                        PRIMARY KEY(%s, %s, %s)
+                        PRIMARY KEY(%s, %s, %s),
+                        
+                        FOREIGN KEY(%s) REFERENCES %s(%s),
+                        FOREIGN KEY(%s) REFERENCES %s(%s),
+                        FOREIGN KEY(%s) REFERENCES %s(%s)
+
                         
                         );
                         """,
@@ -71,20 +74,33 @@ public class SalesDetails implements Queries {
                 SalesDetailsTable.COLUMN_TICKET_ID,
                 SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD,
 
-                // primary keys
+                // primary keyss
                 SalesDetailsTable.COLUMN_SALES_ID,
                 SalesDetailsTable.COLUMN_MOVIE_ID,
                 SalesDetailsTable.COLUMN_TICKET_ID,
 
 
+                // first
+                SalesDetailsTable.COLUMN_SALES_ID,
+                SalesTable.TABLE_NAME,
+                SalesTable.COLUMN_ID,
 
 
-
-
+                // second key
+                SalesDetailsTable.COLUMN_MOVIE_ID,
+                MovieShowTimesTable.TABLE_NAME,
                 MovieShowTimesTable.COLUMN_MOVIE_ID,
-                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
 
-        );
+
+                // third key
+                SalesDetailsTable.COLUMN_TICKET_ID,
+                TicketsTable.TABLE_NAME,
+                TicketsTable.COLUMN_ID
+
+
+
+
+                );
     }
 
     @Override

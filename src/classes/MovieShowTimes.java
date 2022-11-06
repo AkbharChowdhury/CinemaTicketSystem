@@ -51,8 +51,7 @@ public class MovieShowTimes implements Queries {
                         %s INTEGER NOT NULL,
                         PRIMARY KEY(%s, %s),
                         FOREIGN KEY(%s) REFERENCES %s(%s),
-                        FOREIGN KEY(%s) REFERENCES %s(%s)
-                        
+                        FOREIGN KEY(%s) REFERENCES %s(%s)                       
                         );
                         """,
                 MovieShowTimesTable.TABLE_NAME,
