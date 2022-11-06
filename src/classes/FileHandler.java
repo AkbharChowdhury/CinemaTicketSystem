@@ -64,6 +64,7 @@ public class FileHandler {
     private static List<String> getCSVFileDetails(String filename) throws FileNotFoundException {
         return new BufferedReader(new FileReader(filename))
                 .lines()
-                .skip(1).toList();
+//                .skip(1)
+                .toList();
     }
 }

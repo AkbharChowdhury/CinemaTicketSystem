@@ -165,7 +165,6 @@ public class Database {
 
     }
 
-
     private void insertTickets() throws FileNotFoundException {
         String ticketFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
         List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
@@ -188,18 +187,26 @@ public class Database {
     }
 
 
-    public void showMovieList() {
+    public void showMovieList(boolean search, int genres) {
         try (Connection con = getConnection()) {
+            String sql;
+            ResultSet rs;
 
-            String sql = new MovieGenres().showMovieList();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            if (search){
+                PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(search));
+                stmt.setString(1,  '%'+ String.valueOf(genres) + '%');
+                rs = stmt.executeQuery();
+            } else {
+                sql = new MovieGenres().showMovieList(search);
+                Statement stmt = con.createStatement();
+                rs = stmt.executeQuery(sql);
+
+            }
 
             if (isResultSetEmpty(rs)) {
                 con.close();
                 return;
             }
-
             while (rs.next()) {
                 String title = rs.getString("title");
                 int duration = Integer.parseInt(rs.getString("duration"));
@@ -213,7 +220,6 @@ public class Database {
                 ));
 
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

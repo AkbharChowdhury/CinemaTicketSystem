@@ -15,6 +15,13 @@ public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         assert db != null;
-        db.showMovieList();
+//        db.showMovieList(false,2);
+        db.showMovieList(true,11);
+
+
+//        db.showMovieList(true,2);
+
+//        new File("cinema.db").delete();
+
     }
 }
