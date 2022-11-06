@@ -39,6 +39,7 @@ public class Database {
         insertRatings();
         insertMovies();
         insertGenres();
+        insertTickets();
 
     }
     private void insertRatings() throws FileNotFoundException {
@@ -52,6 +53,7 @@ public class Database {
     }
 
 
+
     private void createAllTables() throws SQLException {
         createTable(new Rating().createTable());
         createTable(new Movie().createTable());
@@ -60,10 +62,6 @@ public class Database {
 
         createTable(new ShowTimes().createTable());
         createTable(new MovieShowTimes().createTable());
-
-
-
-
 
 
         createTable(new Ticket().createTable());
@@ -76,9 +74,8 @@ public class Database {
     private void createTable(String createTableSQL) throws SQLException {
 
         Connection con = getConnection();
-        String sql = createTableSQL;
         Statement stmt = con.createStatement();
-        stmt.execute(sql);
+        stmt.execute(createTableSQL);
         con.close();
 
     }
@@ -87,10 +84,9 @@ public class Database {
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
         try (Connection con = getConnection()) {
-            String sql = insertSQL;
 
             for (String item : list) {
-                PreparedStatement stmt = con.prepareStatement(sql);
+                PreparedStatement stmt = con.prepareStatement(insertSQL);
                 stmt.setNull(1, java.sql.Types.NULL);
                 stmt.setString(2, item);
                 stmt.executeUpdate();
@@ -105,13 +101,12 @@ public class Database {
     private void insertMovies() throws FileNotFoundException {
 
         String movieFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
-        var movieList = FileHandler.getMovieData(movieFile);
+        List<Movie> movieList = FileHandler.getMovieData(movieFile);
 
 
         try (Connection con = getConnection()) {
-            String sql = new Movie().insert();
             for (var movie : movieList) {
-                PreparedStatement stmt = con.prepareStatement(sql);
+                PreparedStatement stmt = con.prepareStatement(new Movie().insert());
                 stmt.setNull(1, java.sql.Types.NULL);
                 stmt.setString(2, movie.getTitle());
                 stmt.setInt(3, movie.getDuration());
@@ -148,35 +143,30 @@ public class Database {
 
     }
 
-//    public List<Movie> showData(String table) {
-//        try (Connection con = getConnection()) {
-//            List<Movie> movieList = new ArrayList<>();
-//
-//            String sql = "SELECT * FROM " + table;
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//
-//            if (isResultSetEmpty(rs)) {
-//                con.close();
-//                return movieList;
-//            }
-//
-//            while (rs.next()) {
-//                String title = rs.getString("title");
-//                String director = rs.getString("director");
-//                int year = rs.getInt("year");
-//                String rating = rs.getString("rating");
-//                movieList.add(new Movie(title, director, year, rating));
-//            }
-//
-//            return movieList;
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+
+
+    private void insertTickets() throws FileNotFoundException {
+        String ticketFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
+        List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
+
+        try (Connection con = getConnection()) {
+
+            for (var ticket : ticketList) {
+                PreparedStatement stmt = con.prepareStatement(new Ticket().insert());
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setString(2, ticket.getType());
+                stmt.setDouble(3, ticket.getPrice());
+
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+
 
 
 }

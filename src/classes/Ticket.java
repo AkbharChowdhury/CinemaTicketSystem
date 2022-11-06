@@ -7,14 +7,31 @@ import tables.TicketsTable;
 public class Ticket implements Queries {
     private int ticketID;
     private String type;
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setTicketPrice(double ticketPrice) {
+        this.price = ticketPrice;
+    }
 
     public Ticket() {
 
     }
 
-    public Ticket(int ticketID, String type) {
+    public Ticket(int ticketID, String type, double price) {
         this.ticketID = ticketID;
         this.type = type;
+        this.price = price;
+
+    }
+
+    public Ticket(String type, double price) {
+        this.type = type;
+        this.price = price;
+
     }
 
     public int getTicketID() {
@@ -58,7 +75,7 @@ public class Ticket implements Queries {
                         INSERT INTO %s
                         VALUES (?, ?, ?);
                         """,
-                GenreTable.TABLE_NAME
+                TicketsTable.TABLE_NAME
         );
     }
 }

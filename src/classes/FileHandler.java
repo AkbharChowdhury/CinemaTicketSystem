@@ -23,6 +23,21 @@ public class FileHandler {
         return movieList;
     }
 
+    public static List<Ticket> getTicketData(String fileName) throws FileNotFoundException {
+
+        List<Ticket> ticketList = new ArrayList<>();
+
+        for (String line : getCSVFileDetails(fileName)) {
+            String[] values = line.split(",");
+            String type = values[0];
+            double price = Double.parseDouble(values[1]);
+
+            ticketList.add(new Ticket(type, price));
+
+        }
+        return ticketList;
+    }
+
 
 
     // reads the first line in the csv file
@@ -30,7 +45,7 @@ public class FileHandler {
         return new ArrayList<>(getCSVFileDetails(filename));
     }
 
-    private static  List<String> getCSVFileDetails(String filename) throws FileNotFoundException {
+    private static List<String> getCSVFileDetails(String filename) throws FileNotFoundException {
         return new BufferedReader(new FileReader(filename))
                 .lines()
                 .skip(1).toList();
