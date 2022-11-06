@@ -63,9 +63,7 @@ public class SalesDetails implements Queries {
                         
                         FOREIGN KEY(%s) REFERENCES %s(%s),
                         FOREIGN KEY(%s) REFERENCES %s(%s),
-                        FOREIGN KEY(%s) REFERENCES %s(%s)
-
-                        
+                        FOREIGN KEY(%s) REFERENCES %s(%s)                      
                         );
                         """,
                 SalesDetailsTable.TABLE_NAME,

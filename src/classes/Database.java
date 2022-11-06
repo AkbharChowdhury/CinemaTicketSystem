@@ -39,6 +39,7 @@ public class Database {
         insertRatings();
         insertMovies();
         insertGenres();
+        insertMovieGenres();
         insertTickets();
 
     }
@@ -119,6 +120,27 @@ public class Database {
         }
 
     }
+
+    private void insertMovieGenres() throws FileNotFoundException {
+
+        String movieGenreFile = Helper.getCSVPath() + Files.MovieGenres.DESCRIPTION;
+        List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
+
+
+        try (Connection con = getConnection()) {
+            for (var item : movieGenres) {
+                PreparedStatement stmt = con.prepareStatement(new MovieGenres().insert());
+                stmt.setInt(1, item.getMovieID());
+                stmt.setInt(2, item.getGenreID());
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
 
     public Connection getConnection() {

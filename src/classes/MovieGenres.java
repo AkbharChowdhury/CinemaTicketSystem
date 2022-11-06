@@ -80,7 +80,7 @@ public class MovieGenres implements Queries {
                         INSERT INTO %s
                         VALUES (?, ?);
                         """,
-                GenreTable.TABLE_NAME
+                MovieGenresTable.TABLE_NAME
         );
 
     }

@@ -23,6 +23,22 @@ public class FileHandler {
         return movieList;
     }
 
+
+    public static List<MovieGenres> getMovieGenreData(String fileName) throws FileNotFoundException {
+
+        List<MovieGenres> movieGenreList = new ArrayList<>();
+
+        for (String line : getCSVFileDetails(fileName)) {
+            String[] values = line.split(",");
+            int movieID = Integer.parseInt(values[0]);
+            int genreID = Integer.parseInt(values[1]);
+
+            movieGenreList.add(new MovieGenres(movieID, genreID));
+
+        }
+        return movieGenreList;
+    }
+
     public static List<Ticket> getTicketData(String fileName) throws FileNotFoundException {
 
         List<Ticket> ticketList = new ArrayList<>();
