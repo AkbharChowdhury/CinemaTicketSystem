@@ -13,10 +13,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     JButton btnShowReceipt = new JButton("Show receipt");
     JTextField txtMovieID = new JTextField(2);
     JTextField txtMovieTitle = new JTextField(20);
-
-
-
-
+    JComboBox comboBoxGenres = new JComboBox();
 
 
     JTextField txtGrossSalary = new JTextField(10);
@@ -38,9 +35,9 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
 
     public App() {
-        txtTax.setEnabled(false);
-        txtTaxable.setEnabled(false);
-        txtGrossSalary.addKeyListener(this);
+//        txtTax.setEnabled(false);
+//        txtTaxable.setEnabled(false);
+        txtMovieID.addKeyListener(this);
         setResizable(false);
 
         setLayout(new BorderLayout());
@@ -70,10 +67,13 @@ public class App extends JFrame implements ActionListener, KeyListener {
 //        top.add(new Label("Number of children"));
 //        top.add(spChild);
 
+        comboBoxGenres.addItem("Any Genre");
         JPanel middle = new JPanel();
         middle.add(new Label("Movie Title:"));
         middle.add(txtMovieTitle);
         middle.add(new Label("Genre"));
+        middle.add(comboBoxGenres);
+
 
 //        middle.add(txtTaxable);
 //        middle.add(new Label("Tax: "));
@@ -100,9 +100,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
 
 
-
     }
-
 
 
     @Override
@@ -112,16 +110,21 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // link https://www.youtube.com/watch?v=cdPKsws5f-4
-        char c = e.getKeyChar();
-        if (Character.isLetter(c)) {
-            // disable input if the value is not a number
-            txtGrossSalary.setEditable(false);
-        }
 
-        // check if number is boo
-        boolean isNumber = !Character.isLetter(c);
-        txtGrossSalary.setEditable(isNumber);
+        // listen for movie id text-field
+        if (e.getSource() == txtMovieID) {
+            // link https://www.youtube.com/watch?v=cdPKsws5f-4
+            char c = e.getKeyChar();
+            if (Character.isLetter(c)) {
+                // disable input if the value is not a number
+                txtMovieID.setEditable(false);
+            }
+
+            // check if number is boo
+            boolean isNumber = !Character.isLetter(c);
+            txtMovieID.setEditable(isNumber);
+
+        }
 
 
     }
