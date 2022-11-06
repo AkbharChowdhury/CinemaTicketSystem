@@ -1,6 +1,10 @@
 package classes;
 
-public class Customer {
+import interfaces.Queries;
+import tables.CustomerTable;
+import tables.TicketsTable;
+
+public class Customer implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
@@ -66,6 +70,38 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String createTable() {
+        return String.format("""
+                        CREATE TABLE IF NOT EXISTS %s (
+                        %s INTEGER PRIMARY KEY AUTOINCREMENT, 
+                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL UNIQUE,
+                        %s TEXT NOT NULL                  
+                        );
+                        """,
+                CustomerTable.TABLE_NAME,
+                CustomerTable.COLUMN_ID,
+                CustomerTable.COLUMN_FIRSTNAME,
+                CustomerTable.COLUMN_LASTNAME,
+                CustomerTable.COLUMN_DOB,
+                CustomerTable.COLUMN_EMAIL,
+                CustomerTable.COLUMN_PASSWORD
+                );
+    }
+
+    @Override
+    public String insert() {
+        return String.format("""
+                        INSERT INTO %s
+                        VALUES (?, ?, ?, ?, ?, ?);
+                        """,
+                CustomerTable.TABLE_NAME
+        );
     }
 
 

@@ -1,10 +1,7 @@
 package classes;
 
 import interfaces.Queries;
-import tables.GenreTable;
-import tables.MovieGenresTable;
-import tables.MovieShowTimesTable;
-import tables.MovieTable;
+import tables.*;
 
 public class MovieShowTimes implements Queries {
     private int movieId;
@@ -52,7 +49,9 @@ public class MovieShowTimes implements Queries {
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
-                        PRIMARY KEY(%s, %s)
+                        PRIMARY KEY(%s, %s),
+                        FOREIGN KEY(%s) REFERENCES %s(%s),
+                        FOREIGN KEY(%s) REFERENCES %s(%s)
                         
                         );
                         """,
@@ -61,9 +60,19 @@ public class MovieShowTimes implements Queries {
                 MovieShowTimesTable.COLUMN_SHOW_TIME_ID,
                 MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
 
-
+                // primary keys
                 MovieShowTimesTable.COLUMN_MOVIE_ID,
-                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
+                MovieShowTimesTable.COLUMN_SHOW_TIME_ID,
+
+                // first key
+                MovieShowTimesTable.COLUMN_MOVIE_ID,
+                MovieTable.TABLE_NAME,
+                MovieTable.COLUMN_ID,
+
+                // second key
+                ShowTimesTable.COLUMN_ID,
+                ShowTimesTable.TABLE_NAME,
+                ShowTimesTable.COLUMN_ID
 
         );
     }

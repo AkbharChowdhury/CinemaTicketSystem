@@ -42,16 +42,17 @@ public class Database {
         insertTickets();
 
     }
+
     private void insertRatings() throws FileNotFoundException {
-        List<String> ratingList =  Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION);
+        List<String> ratingList = Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION);
         insertSingleColumnTable(ratingList, new Rating().insert());
     }
+
     private void insertGenres() throws FileNotFoundException {
-        List<String> GenreList =  Helper.readSingleLineCSV(Files.Genres.DESCRIPTION);
+        List<String> GenreList = Helper.readSingleLineCSV(Files.Genres.DESCRIPTION);
         insertSingleColumnTable(GenreList, new Genre().insert());
 
     }
-
 
 
     private void createAllTables() throws SQLException {
@@ -59,14 +60,12 @@ public class Database {
         createTable(new Movie().createTable());
         createTable(new Genre().createTable());
         createTable(new MovieGenres().createTable());
-
         createTable(new ShowTimes().createTable());
         createTable(new MovieShowTimes().createTable());
-
-
+        createTable(new Customer().createTable());
+        createTable(new Sales().createTable());
         createTable(new Ticket().createTable());
-
-
+        createTable(new SalesDetails().createTable());
 
 
     }
@@ -144,7 +143,6 @@ public class Database {
     }
 
 
-
     private void insertTickets() throws FileNotFoundException {
         String ticketFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
         List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
@@ -165,8 +163,6 @@ public class Database {
         }
 
     }
-
-
 
 
 }

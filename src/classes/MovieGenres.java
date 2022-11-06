@@ -41,19 +41,37 @@ public class MovieGenres implements Queries {
                         CREATE TABLE IF NOT EXISTS %s (
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
-                        PRIMARY KEY(%s, %s)
+                        PRIMARY KEY(%s, %s),                   
+                        FOREIGN KEY(%s) REFERENCES %s(%s),
+                        FOREIGN KEY(%s) REFERENCES %s(%s)
+                        
                         );
                         """,
                 MovieGenresTable.TABLE_NAME,
 
                 MovieGenresTable.COLUMN_MOVIE_ID,
                 MovieGenresTable.COLUMN_GENRE_ID,
-                // compound keys
+                // primary keys
                 MovieGenresTable.COLUMN_MOVIE_ID,
-                MovieGenresTable.COLUMN_GENRE_ID
+                MovieGenresTable.COLUMN_GENRE_ID,
+
+                // compound keys
+                // first key
+                MovieGenresTable.COLUMN_MOVIE_ID,
+                MovieTable.TABLE_NAME,
+                MovieTable.COLUMN_ID,
+
+                // second key
+                MovieGenresTable.COLUMN_GENRE_ID,
+                GenreTable.TABLE_NAME,
+                GenreTable.COLUMN_ID
 
 
-        );
+
+
+
+
+                );
     }
 
     @Override
