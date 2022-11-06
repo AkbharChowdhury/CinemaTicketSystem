@@ -26,8 +26,8 @@ public class FileHandler {
 
 
     // reads the first line in the csv file
-    public static List<String> readSingleColumn(String fileName) throws FileNotFoundException {
-        return new ArrayList<>(getCSVFileDetails(fileName));
+    public static List<String> readSingleColumn(String filename) throws FileNotFoundException {
+        return new ArrayList<>(getCSVFileDetails(filename));
     }
 
     private static  List<String> getCSVFileDetails(String filename) throws FileNotFoundException {

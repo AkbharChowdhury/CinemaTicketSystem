@@ -45,11 +45,6 @@ public class Rating implements Queries {
 
         );
     }
-
-
-
-
-
     @Override
     public String insert() {
         return String.format("""

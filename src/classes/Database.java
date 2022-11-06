@@ -2,13 +2,10 @@ package classes;
 
 import enums.Files;
 import org.sqlite.SQLiteConfig;
-import tables.GenreTable;
-import tables.RatingTable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,15 +36,35 @@ public class Database {
 
     private void insertDefaultValues() throws FileNotFoundException {
 
-        String ratingsFile = Helper.getCSVPath() + Files.Ratings.DESCRIPTION;
-        List<String> ratingList = FileHandler.readSingleColumn(ratingsFile);
-        insertSingleColumnTable(ratingList, new Rating().insert());
+        insertRatings();
         insertMovies();
+        insertGenres();
+
     }
+    private void insertRatings() throws FileNotFoundException {
+        List<String> ratingList =  Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION);
+        insertSingleColumnTable(ratingList, new Rating().insert());
+    }
+    private void insertGenres() throws FileNotFoundException {
+        List<String> GenreList =  Helper.readSingleLineCSV(Files.Genres.DESCRIPTION);
+        insertSingleColumnTable(GenreList, new Genre().insert());
+
+    }
+
 
     private void createAllTables() throws SQLException {
         createTable(new Rating().createTable());
         createTable(new Movie().createTable());
+        createTable(new Genre().createTable());
+        createTable(new MovieGenres().createTable());
+
+
+
+
+        createTable(new Ticket().createTable());
+
+
+
 
     }
 
