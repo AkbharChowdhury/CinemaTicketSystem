@@ -75,8 +75,6 @@ public class Movie implements Queries {
                 RatingTable.TABLE_NAME,
                 RatingTable.COLUMN_ID
 
-
-
                 );
     }
 

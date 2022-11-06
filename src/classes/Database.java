@@ -58,6 +58,11 @@ public class Database {
         createTable(new Genre().createTable());
         createTable(new MovieGenres().createTable());
 
+        createTable(new ShowTimes().createTable());
+        createTable(new MovieShowTimes().createTable());
+
+
+
 
 
 

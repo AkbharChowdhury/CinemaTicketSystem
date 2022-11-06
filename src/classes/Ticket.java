@@ -38,11 +38,16 @@ public class Ticket implements Queries {
         return String.format("""
                         CREATE TABLE IF NOT EXISTS %s (
                         %s INTEGER PRIMARY KEY AUTOINCREMENT, 
-                        %s TEXT NOT NULL UNIQUE);
+                        %s TEXT NOT NULL UNIQUE,
+                        %s NUMERIC NOT NULL
+
+                        );
                         """,
                 TicketsTable.TABLE_NAME,
                 TicketsTable.COLUMN_ID,
-                TicketsTable.COLUMN_TYPE
+                TicketsTable.COLUMN_TYPE,
+                TicketsTable.COLUMN_PRICE
+
 
         );
     }
@@ -51,7 +56,7 @@ public class Ticket implements Queries {
     public String insert() {
         return String.format("""
                         INSERT INTO %s
-                        VALUES (?, ?);
+                        VALUES (?, ?, ?);
                         """,
                 GenreTable.TABLE_NAME
         );

@@ -1,6 +1,11 @@
 package classes;
 
-public class ShowTimes {
+import interfaces.Queries;
+import tables.MovieTable;
+import tables.RatingTable;
+import tables.ShowTimesTable;
+
+public class ShowTimes implements Queries {
     private int showTimeID;
     private String showDate;
     private String showTime;
@@ -37,5 +42,28 @@ public class ShowTimes {
         this.showTimeID = showTimeID;
         this.showDate = showDate;
         this.showTime = showTime;
+    }
+
+    @Override
+    public String createTable() {
+        return String.format("""
+                        CREATE TABLE IF NOT EXISTS %s (
+                        %s INTEGER PRIMARY KEY AUTOINCREMENT,
+                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL
+                        );
+                        """,
+                ShowTimesTable.TABLE_NAME,
+                ShowTimesTable.COLUMN_ID,
+                ShowTimesTable.COLUMN_DATE,
+                ShowTimesTable.COLUMN_TIME
+
+
+        );
+    }
+
+    @Override
+    public String insert() {
+        return null;
     }
 }
