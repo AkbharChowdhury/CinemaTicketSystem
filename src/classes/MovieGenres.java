@@ -64,15 +64,9 @@ public class MovieGenres implements Queries {
                 // second key
                 MovieGenresTable.COLUMN_GENRE_ID,
                 GenreTable.TABLE_NAME,
-                GenreTable.COLUMN_ID
-
-
-
-
-
-
-                );
+                GenreTable.COLUMN_ID);
     }
+
 
     @Override
     public String insert() {
@@ -83,5 +77,26 @@ public class MovieGenres implements Queries {
                 MovieGenresTable.TABLE_NAME
         );
 
+    }
+
+
+
+    public String showMovieList() {
+        return """
+                           
+                SELECT
+                    m.title,
+                    m.duration,
+                    r.rating,
+                    GROUP_CONCAT(g.genre,'/') genre_list,
+                    GROUP_CONCAT(g.genre_id) genre_id_list,
+                    mg.movie_id
+                FROM MovieGenres mg
+                JOIN Movies m ON mg.movie_id = m.movie_id
+                JOIN Genres g ON mg.genre_id = g.genre_id
+                JOIN Ratings r ON m.rating_id = r.rating_id
+                GROUP BY m.title
+                              
+                """;
     }
 }

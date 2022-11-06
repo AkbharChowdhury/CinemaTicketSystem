@@ -14,12 +14,7 @@ public class Main {
     private static Database db;
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         db = Database.getInstance();
-        List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
-
-
-        for(var t : ticketList){
-            System.out.println(t.getPrice());;
-        }
-
+        assert db != null;
+        db.showMovieList();
     }
 }

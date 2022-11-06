@@ -6,6 +6,8 @@ import org.sqlite.SQLiteConfig;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -142,7 +144,6 @@ public class Database {
     }
 
 
-
     public Connection getConnection() {
 
         final String DATABASE_DRIVER = "org.sqlite.JDBC";
@@ -184,6 +185,39 @@ public class Database {
             ex.printStackTrace();
         }
 
+    }
+
+
+    public void showMovieList() {
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieGenres().showMovieList();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if (isResultSetEmpty(rs)) {
+                con.close();
+                return;
+            }
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                int duration = Integer.parseInt(rs.getString("duration"));
+                String genreList = rs.getString("genre_list");
+                String formattedDuration = Helper.calcDuration(duration);
+
+                System.out.println(MessageFormat.format("{0}, {1}, {2}",
+                        title,
+                        formattedDuration,
+                        genreList
+                ));
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
