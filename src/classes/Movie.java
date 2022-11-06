@@ -5,10 +5,11 @@ import tables.MovieTable;
 import tables.RatingTable;
 
 public class Movie implements Queries {
-    private int movieID;
-    private String title;
-    private int duration;
-    private int ratingID;
+    protected int movieID;
+    protected String title;
+    protected int duration;
+    protected int ratingID;
+
 
     public Movie(){
 
@@ -50,6 +51,11 @@ public class Movie implements Queries {
         this.title = title;
         this.duration = duration;
         this.ratingID = ratingID;
+    }
+
+    public Movie(String title, int duration) {
+        this.title = title;
+        this.duration = duration;
     }
 
 

@@ -7,6 +7,7 @@ import enums.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,8 +16,19 @@ public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         assert db != null;
+        for(var movie: db.showMovieList(false,0)){
+                            System.out.println(MessageFormat.format("{0}, {1}, {2}",
+                                    movie.getTitle(),
+                                    Helper.calcDuration(movie.getDuration()),
+                                    movie.getGenres()
+                ));
+
+
+        }
+
 //        db.showMovieList(false,2);
-        db.showMovieList(true,11);
+//        db.showMovieList(true,11);
+//        db.showMovieGenreList();
 
 
 //        db.showMovieList(true,2);

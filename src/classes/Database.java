@@ -187,7 +187,8 @@ public class Database {
     }
 
 
-    public void showMovieList(boolean search, int genres) {
+    public List<MovieGenres> showMovieList(boolean search, int genres) {
+        List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             String sql;
             ResultSet rs;
@@ -205,25 +206,55 @@ public class Database {
 
             if (isResultSetEmpty(rs)) {
                 con.close();
-                return;
+                return list;
             }
             while (rs.next()) {
+
                 String title = rs.getString("title");
                 int duration = Integer.parseInt(rs.getString("duration"));
                 String genreList = rs.getString("genre_list");
-                String formattedDuration = Helper.calcDuration(duration);
+//                String formattedDuration = Helper.calcDuration(duration);
+                list.add(new MovieGenres(title, duration, genreList));
 
-                System.out.println(MessageFormat.format("{0}, {1}, {2}",
-                        title,
-                        formattedDuration,
-                        genreList
-                ));
+//
+//                System.out.println(MessageFormat.format("{0}, {1}, {2}",
+//                        title,
+//                        formattedDuration,
+//                        genreList
+//                ));
 
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return list;
+    }
+
+    // for search
+    public List<String> getMovieGenreList() {
+        List<String> genreList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieGenres().getMovieGenreList();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+
+
+            if (isResultSetEmpty(rs)) {
+                con.close();
+                return genreList;
+            }
+            while (rs.next()) {
+                genreList.add(rs.getString("genre"));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return genreList;
     }
 
 

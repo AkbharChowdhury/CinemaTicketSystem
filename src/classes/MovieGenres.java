@@ -6,7 +6,7 @@ import tables.MovieGenresTable;
 import tables.MovieTable;
 import tables.RatingTable;
 
-public class MovieGenres implements Queries {
+public class MovieGenres extends Movie implements Queries {
     private int movieID;
     private int genreID;
 
@@ -17,6 +17,21 @@ public class MovieGenres implements Queries {
     public MovieGenres(int movieID, int genreID) {
         this.movieID = movieID;
         this.genreID = genreID;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    //    private String title,duration,genres;
+    private String genres;
+
+    public MovieGenres(String title, int duration, String genres) {
+        super(title, duration);
+        this.title = title;
+        this.duration = duration;
+        this.genres = genres;
+
     }
 
     public int getMovieID() {
@@ -116,6 +131,14 @@ public class MovieGenres implements Queries {
                 					
                 					HAVING genre_id_list LIKE ?
                     """;
+    }
+
+    public String getMovieGenreList(){
+        return """
+                SELECT DISTINCT( g.genre)
+                FROM MovieGenres mg
+                JOIN Genres g ON mg.genre_id = g.genre_id                              
+                """;
     }
 
 }

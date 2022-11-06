@@ -1,47 +1,46 @@
+import classes.Database;
+import classes.Helper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App extends JFrame implements ActionListener, KeyListener {
+    static Database db;
+
 
     JButton btnListMovies = new JButton("List Movies");
     JButton btnShowTimes = new JButton("Show times");
     JButton btnPurchaseTicket = new JButton("Purchase ticket");
     JButton btnShowReceipt = new JButton("Show receipt");
+
     JTextField txtMovieID = new JTextField(2);
     JTextField txtMovieTitle = new JTextField(20);
-    JComboBox comboBoxGenres = new JComboBox();
+    JComboBox<String> comboBoxGenres = new JComboBox<>();
+    JList movieList;
 
 
-    JTextField txtGrossSalary = new JTextField(10);
 
-    JRadioButton rbMarried = new JRadioButton("Married");
-    JRadioButton rbSingle = new JRadioButton("Single");
-    ButtonGroup bgMartalStatus = new ButtonGroup();
 
     SpinnerModel spinnerModelChild = new SpinnerNumberModel(0, 0, 10, 1);
 
-    JSpinner spChild = new JSpinner(spinnerModelChild);
-
-    JTextField txtTaxable = new JTextField(10);
-    JTextField txtTax = new JTextField(10);
-
-
-    JButton btnCalcTax = new JButton("Calculate Tax");
-    JButton btnClear = new JButton("Clear");
-
-
-    public App() {
+    public App() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 //        txtTax.setEnabled(false);
 //        txtTaxable.setEnabled(false);
         txtMovieID.addKeyListener(this);
         setResizable(false);
 
         setLayout(new BorderLayout());
-        setSize(700, 150);
+        setSize(700, 250);
         setTitle("Cinema Ticket Machine");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -54,46 +53,61 @@ public class App extends JFrame implements ActionListener, KeyListener {
         top.add(btnShowReceipt);
 
 
-//        top.setLayout(new FlowLayout());
-//
-//
-//        top.add(new Label("Gross Salary"));
-//        top.add(txtGrossSalary);
-//
-//        top.add(rbMarried);
-//        top.add(rbSingle);
-//        bgMartalStatus.add(rbMarried);
-//        bgMartalStatus.add(rbSingle);
-//        top.add(new Label("Number of children"));
-//        top.add(spChild);
+       populateGenreComboBox();
 
-        comboBoxGenres.addItem("Any Genre");
+
         JPanel middle = new JPanel();
         middle.add(new Label("Movie Title:"));
         middle.add(txtMovieTitle);
         middle.add(new Label("Genre"));
         middle.add(comboBoxGenres);
 
-
-//        middle.add(txtTaxable);
-//        middle.add(new Label("Tax: "));
-//        middle.add(txtTax);
         JPanel south = new JPanel();
-        south.add(btnCalcTax);
-        south.add(btnClear);
 
+       populateMoviesList();
+        JScrollPane movieScrollPane = new JScrollPane(movieList);
+        south.add(movieScrollPane);
 
         add("North", top);
         add("Center", middle);
         add("South", south);
-        btnCalcTax.addActionListener(this);
-        btnClear.addActionListener(this);
+        
+        btnListMovies.addActionListener(this);
+        btnShowTimes.addActionListener(this);
+        btnPurchaseTicket.addActionListener(this);
+        btnShowReceipt.addActionListener(this);
+
 
 
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+    private void populateMoviesList() {
+        List<String> movies = new ArrayList<>();
+        for(var movie: db.showMovieList(false,0)){
+            movies.add(MessageFormat.format("{0}, {1}, {2}",
+                    movie.getTitle(),
+                    Helper.calcDuration(movie.getDuration()),
+                    movie.getGenres()
+            ));
+
+        }
+        movieList = new JList(movies.toArray());
+
+    }
+
+    private void populateGenreComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        // add default value
+        comboBoxGenres.addItem("Any Genre");
+        for (var genre: db.getMovieGenreList()){
+            comboBoxGenres.addItem(genre);
+        }
+
+
+    }
+
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        db = Database.getInstance();
         new App();
     }
 
@@ -134,4 +148,6 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
 
     }
+
+
 }
