@@ -187,7 +187,7 @@ public class Database {
     }
 
 
-    public List<MovieGenres> showMovieList(boolean search, int genres) {
+    public List<MovieGenres> showMovieList(boolean search, int genres, String movieTitle) {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             String sql;
@@ -196,6 +196,8 @@ public class Database {
             if (search){
                 PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(search));
                 stmt.setString(1,  '%'+ String.valueOf(genres) + '%');
+                stmt.setString(2,  '%'+ String.valueOf(movieTitle) + '%');
+
                 rs = stmt.executeQuery();
             } else {
                 sql = new MovieGenres().showMovieList(search);

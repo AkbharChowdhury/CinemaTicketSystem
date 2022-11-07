@@ -97,6 +97,8 @@ public class MovieGenres extends Movie implements Queries {
 
 
     public String showMovieList(boolean search) {
+
+        // show full movie list without filter
         if (!search) {
             return """
                               
@@ -129,7 +131,7 @@ public class MovieGenres extends Movie implements Queries {
                                     JOIN Ratings r ON m.rating_id = r.rating_id
                                     GROUP BY m.movie_id
                 					
-                					HAVING genre_id_list LIKE ?
+                					HAVING genre_id_list LIKE ? AND m.title LIKE ?
                     """;
     }
 

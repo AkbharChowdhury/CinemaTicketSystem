@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         assert db != null;
-        for(var movie: db.showMovieList(false,0)){
+        for(var movie: db.showMovieList(true,5, "mi")){
                             System.out.println(MessageFormat.format("{0}, {1}, {2}",
                                     movie.getTitle(),
                                     Helper.calcDuration(movie.getDuration()),

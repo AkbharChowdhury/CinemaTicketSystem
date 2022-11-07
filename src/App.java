@@ -16,6 +16,10 @@ import java.util.List;
 
 public class App extends JFrame implements ActionListener, KeyListener {
     static Database db;
+    DefaultListModel model;
+    JList list;
+
+
 
 
     JButton btnListMovies = new JButton("List Movies");
@@ -26,7 +30,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     JTextField txtMovieID = new JTextField(2);
     JTextField txtMovieTitle = new JTextField(20);
     JComboBox<String> comboBoxGenres = new JComboBox<>();
-    JList movieList;
+    JList<Object> movieList;
 
 
 
@@ -36,7 +40,14 @@ public class App extends JFrame implements ActionListener, KeyListener {
     public App() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 //        txtTax.setEnabled(false);
 //        txtTaxable.setEnabled(false);
+
+        model = new DefaultListModel();
+        list = new JList(model);
+
+
         txtMovieID.addKeyListener(this);
+        txtMovieTitle.addKeyListener(this);
+
         setResizable(false);
 
         setLayout(new BorderLayout());
@@ -64,35 +75,40 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
         JPanel south = new JPanel();
 
-       populateMoviesList();
-        JScrollPane movieScrollPane = new JScrollPane(movieList);
+        getMovieList(false,0, "");
+
+        JScrollPane movieScrollPane = new JScrollPane(list);
         south.add(movieScrollPane);
 
         add("North", top);
         add("Center", middle);
         add("South", south);
-        
+
         btnListMovies.addActionListener(this);
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
+        comboBoxGenres.addActionListener(this);
 
 
 
         setVisible(true);
     }
 
-    private void populateMoviesList() {
-        List<String> movies = new ArrayList<>();
-        for(var movie: db.showMovieList(false,0)){
-            movies.add(MessageFormat.format("{0}, {1}, {2}",
+    private void getMovieList(boolean isSearchable, int genreID, String movieTitle) {
+        for(var movie: db.showMovieList(isSearchable,genreID, movieTitle)){
+            model.addElement(MessageFormat.format("{0}, {1}, {2}",
                     movie.getTitle(),
                     Helper.calcDuration(movie.getDuration()),
                     movie.getGenres()
+
             ));
 
+//            model.addElement(movieList);
+
+
         }
-        movieList = new JList(movies.toArray());
+
 
     }
 
@@ -109,12 +125,29 @@ public class App extends JFrame implements ActionListener, KeyListener {
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
         new App();
+
     }
 
     public void actionPerformed(ActionEvent e) {
+        // combo
+        if (e.getSource() == comboBoxGenres){
+            boolean isSearchable = comboBoxGenres.getSelectedIndex() !=0;
+
+            filterMovieList(isSearchable);
+
+
+        }
+
 
 
     }
+
+    private void filterMovieList(boolean isSearchable) {
+        clearList(list);
+        getMovieList(isSearchable, comboBoxGenres.getSelectedIndex(), txtMovieTitle.getText());
+
+    }
+
 
 
     @Override
@@ -124,8 +157,14 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getSource() == txtMovieTitle){
+            filterMovieList(true);
+        }
 
-        // listen for movie id text-field
+
+
+
+            // listen for movie id text-field
         if (e.getSource() == txtMovieID) {
             // link https://www.youtube.com/watch?v=cdPKsws5f-4
             char c = e.getKeyChar();
@@ -148,6 +187,11 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
 
     }
+    private static void clearList(JList list){
+        DefaultListModel listModel = (DefaultListModel) list.getModel();
+        listModel.removeAllElements();
+    }
+
 
 
 }
