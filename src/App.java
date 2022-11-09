@@ -1,5 +1,6 @@
 import classes.Database;
 import classes.Helper;
+import classes.MovieGenres;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,8 @@ public class App extends JFrame implements ActionListener, KeyListener {
     static Database db;
     private final DefaultListModel model;
     private final JList list; // the main list
+    private MovieGenres movieGenre = new MovieGenres();
+    String movieTitle = "";
 
 
     private final JButton btnListMovies = new JButton("List Movies");
@@ -62,7 +65,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
         JPanel south = new JPanel();
 
-        getMovieList(false, 0, "");
+        setupMovieInit();
 
         JScrollPane movieScrollPane = new JScrollPane(list);
         south.add(movieScrollPane);
@@ -81,6 +84,13 @@ public class App extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
     }
 
+    private void setupMovieInit() {
+        movieGenre.setGenreID(0);
+        movieGenre.setTitle(movieTitle);
+        getMovieList();
+
+    }
+
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
         new App();
@@ -92,8 +102,8 @@ public class App extends JFrame implements ActionListener, KeyListener {
         listModel.removeAllElements();
     }
 
-    private void getMovieList(boolean isSearchable, int genreID, String movieTitle) {
-        for (var movie : db.showMovieList(isSearchable, genreID, movieTitle)) {
+    private void getMovieList() {
+        for (var movie : db.showMovieList(movieGenre)) {
             model.addElement(MessageFormat.format("{0}, {1}, {2}, {3}",
                     movie.getMovieID(),
                     movie.getTitle(),
@@ -115,20 +125,17 @@ public class App extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         // combo
         if (e.getSource() == comboBoxGenres) {
-            boolean isSearchable = comboBoxGenres.getSelectedIndex() != 0;
-            filterMovieList(isSearchable);
+            movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
+            filterMovieList();
+
         }
     }
 
-    private void filterMovieList(boolean isSearchable) {
-        clearList(list);
-        getMovieList(isSearchable, comboBoxGenres.getSelectedIndex(), "");
 
-    }
 
-    private void filterMovieList(boolean isSearchable, String movieTitle) {
+    private void filterMovieList() {
         clearList(list);
-        getMovieList(isSearchable, comboBoxGenres.getSelectedIndex(), movieTitle);
+        getMovieList();
 
     }
 
@@ -139,18 +146,12 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
         if (e.getSource() == txtMovieTitle) {
-            boolean isSearchable = !txtMovieTitle.getText().isEmpty();
-            if (!isSearchable) {
-                filterMovieList(false);
-            } else {
-                String title = txtMovieTitle.getText();
-                System.out.println("title is " + title);
-                filterMovieList(true, title);
-            }
-
+            movieGenre.setTitle(txtMovieTitle.getText());
+            filterMovieList();
         }
+
+
         // listen for movie id text-field
         if (e.getSource() == txtMovieID) {
             // link https://www.youtube.com/watch?v=cdPKsws5f-4
@@ -164,10 +165,36 @@ public class App extends JFrame implements ActionListener, KeyListener {
             txtMovieID.setEditable(isNumber);
 
         }
+
+//        if (e.getSource() == txtMovieTitle) {
+//            boolean isSearchable = !txtMovieTitle.getText().isEmpty();
+//            if (!isSearchable) {
+//                filterMovieList(false);
+//            } else {
+//                String title = txtMovieTitle.getText();
+//                System.out.println("title is " + title);
+//                filterMovieList(true, title);
+//            }
+//
+//        }
+//        // listen for movie id text-field
+//        if (e.getSource() == txtMovieID) {
+//            // link https://www.youtube.com/watch?v=cdPKsws5f-4
+//            char c = e.getKeyChar();
+//            if (Character.isLetter(c)) {
+//                // disable input if the value is not a number
+//                txtMovieID.setEditable(false);
+//            }
+//
+//            boolean isNumber = !Character.isLetter(c);
+//            txtMovieID.setEditable(isNumber);
+//
+//        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
 
     }
 

@@ -57,6 +57,9 @@ public class Movie implements Queries {
         this.title = title;
         this.duration = duration;
     }
+    public Movie( int movieID) {
+        this.movieID = movieID;
+    }
 
     public Movie(int movieID, String title, int duration) {
         this.movieID = movieID;

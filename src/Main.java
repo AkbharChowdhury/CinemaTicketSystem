@@ -1,7 +1,4 @@
-import classes.Database;
-import classes.FileHandler;
-import classes.Helper;
-import classes.Ticket;
+import classes.*;
 import enums.Files;
 
 import java.io.File;
@@ -16,7 +13,13 @@ public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         assert db != null;
-        for(var movie: db.showMovieList(true,5, "mi")){
+        MovieGenres m = new MovieGenres();
+        m.setTitle("cu");
+        m.setGenreID(13);
+
+
+
+        for(var movie: db.showMovieList(m)){
                             System.out.println(MessageFormat.format("{0},{1} {2}, {3}",
                                     movie.getMovieID(),
                                     movie.getTitle(),

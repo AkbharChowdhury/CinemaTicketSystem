@@ -187,24 +187,40 @@ public class Database {
     }
 
 
-    public List<MovieGenres> showMovieList(boolean search, int genres, String movieTitle) {
+    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             String sql;
             ResultSet rs;
+            // search by genre and movie title
 
-            if (search){
-                PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(search));
-                stmt.setString(1,  '%'+ String.valueOf(genres) + '%');
-                stmt.setString(2,  '%'+ String.valueOf(movieTitle) + '%');
+            int genreID = movieGenres.getGenreID();
+            String movieTitle = movieGenres.getTitle();
 
-                rs = stmt.executeQuery();
+            if (genreID == 0 && movieTitle.isEmpty()){
+                sql = new MovieGenres().showMovieList(movieGenres);
+                Statement stmtAllMovies = con.createStatement();
+                rs = stmtAllMovies.executeQuery(sql);
+
             } else {
-                sql = new MovieGenres().showMovieList(search);
-                Statement stmt = con.createStatement();
-                rs = stmt.executeQuery(sql);
+                PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
+                int x = 0;
 
+
+                if (genreID!=0){
+                    x++;
+                    stmt.setString(x,   String.valueOf(genreID) + '%');
+                }
+                if (!movieTitle.isEmpty()){
+                    x++;
+
+                    stmt.setString(x,  '%'+ String.valueOf(movieTitle) + '%');
+                }
+                rs = stmt.executeQuery();
             }
+
+
+
 
             if (isResultSetEmpty(rs)) {
                 return list;

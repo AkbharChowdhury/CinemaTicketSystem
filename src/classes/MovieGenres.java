@@ -15,7 +15,7 @@ public class MovieGenres extends Movie implements Queries {
     }
 
     public MovieGenres(int movieID, int genreID) {
-        this.movieID = movieID;
+        super(movieID);
         this.genreID = genreID;
     }
 
@@ -35,7 +35,7 @@ public class MovieGenres extends Movie implements Queries {
     }
 
     public MovieGenres(int movieID, String title, int duration, String genres) {
-        super(movieID, title, duration);
+        super(title, duration);
         this.movieID = movieID;
         this.title = title;
         this.duration = duration;
@@ -105,43 +105,72 @@ public class MovieGenres extends Movie implements Queries {
 
 
 
-    public String showMovieList(boolean search) {
+    public String showMovieList(MovieGenres movieGenres) {
+        int genreID = movieGenres.getGenreID();
+        String movieTitle = movieGenres.getTitle();
 
-        // show full movie list without filter
-        if (!search) {
-            return """
-                              
-                    SELECT
-                        m.title,
-                        m.duration,
-                        r.rating,
-                        GROUP_CONCAT(g.genre,'/') genre_list,
-                        GROUP_CONCAT(g.genre_id) genre_id_list,
-                        mg.movie_id
-                    FROM MovieGenres mg
-                    JOIN Movies m ON mg.movie_id = m.movie_id
-                    JOIN Genres g ON mg.genre_id = g.genre_id
-                    JOIN Ratings r ON m.rating_id = r.rating_id
-                    GROUP BY m.movie_id
-                                  
-                    """;
-        }
-        return """           
-                SELECT
+
+        String sql = """
+                 SELECT
                                         m.title,
                                         m.duration,
                                         r.rating,
                                         GROUP_CONCAT(g.genre,'/') genre_list,
                                         GROUP_CONCAT(g.genre_id) genre_id_list,
-                                        mg.movie_id
+                                        mg.movie_id,
+                                        mg.genre_id
+
                                     FROM MovieGenres mg
                                     JOIN Movies m ON mg.movie_id = m.movie_id
                                     JOIN Genres g ON mg.genre_id = g.genre_id
                                     JOIN Ratings r ON m.rating_id = r.rating_id
                                     GROUP BY m.movie_id
-                					
-                					HAVING genre_id_list LIKE ? AND m.title LIKE ?
-                    """;
+              
+                """;
+
+        if (genreID!=0){
+            sql+= " HAVING genre_id_list LIKE ?";
+        }
+
+        if (!movieTitle.isEmpty()){
+            sql+= " AND m.title LIKE ?";
+        }
+        return sql;
+
+        // show full movie list without filter
+//        if (!search) {
+//            return """
+//                    SELECT
+//                        m.title,
+//                        m.duration,
+//                        r.rating,
+//                        GROUP_CONCAT(g.genre,'/') genre_list,
+//                        GROUP_CONCAT(g.genre_id) genre_id_list,
+//                        mg.movie_id
+//                    FROM MovieGenres mg
+//                    JOIN Movies m ON mg.movie_id = m.movie_id
+//                    JOIN Genres g ON mg.genre_id = g.genre_id
+//                    JOIN Ratings r ON m.rating_id = r.rating_id
+//                    GROUP BY m.movie_id
+//
+//                    """;
+//        }
+//        return """
+//                SELECT
+//                                        m.title,
+//                                        m.duration,
+//                                        r.rating,
+//                                        GROUP_CONCAT(g.genre,'/') genre_list,
+//                                        GROUP_CONCAT(g.genre_id) genre_id_list,
+//                                        mg.movie_id
+//                                    FROM MovieGenres mg
+//                                    JOIN Movies m ON mg.movie_id = m.movie_id
+//                                    JOIN Genres g ON mg.genre_id = g.genre_id
+//                                    JOIN Ratings r ON m.rating_id = r.rating_id
+//                                    GROUP BY m.movie_id
+//
+//                					HAVING genre_id_list LIKE ? AND m.title LIKE ?
+//                    """;
     }
 
     public String getMovieGenreList(){
