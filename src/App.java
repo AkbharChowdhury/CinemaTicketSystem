@@ -125,6 +125,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         // combo
         if (e.getSource() == comboBoxGenres) {
+            System.out.println(comboBoxGenres.getSelectedIndex());
             movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
             filterMovieList();
 

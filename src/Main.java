@@ -14,8 +14,8 @@ public class Main {
         db = Database.getInstance();
         assert db != null;
         MovieGenres m = new MovieGenres();
-        m.setTitle("cu");
-        m.setGenreID(13);
+        m.setTitle("erat");
+        m.setGenreID(1);
 
 
 
