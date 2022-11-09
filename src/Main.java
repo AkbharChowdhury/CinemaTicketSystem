@@ -17,7 +17,8 @@ public class Main {
         db = Database.getInstance();
         assert db != null;
         for(var movie: db.showMovieList(true,5, "mi")){
-                            System.out.println(MessageFormat.format("{0}, {1}, {2}",
+                            System.out.println(MessageFormat.format("{0},{1} {2}, {3}",
+                                    movie.getMovieID(),
                                     movie.getTitle(),
                                     Helper.calcDuration(movie.getDuration()),
                                     movie.getGenres()

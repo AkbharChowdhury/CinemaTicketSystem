@@ -34,6 +34,15 @@ public class MovieGenres extends Movie implements Queries {
 
     }
 
+    public MovieGenres(int movieID, String title, int duration, String genres) {
+        super(movieID, title, duration);
+        this.movieID = movieID;
+        this.title = title;
+        this.duration = duration;
+        this.genres = genres;
+
+    }
+
     public int getMovieID() {
         return movieID;
     }

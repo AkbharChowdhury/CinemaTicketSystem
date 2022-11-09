@@ -94,7 +94,8 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     private void getMovieList(boolean isSearchable, int genreID, String movieTitle) {
         for (var movie : db.showMovieList(isSearchable, genreID, movieTitle)) {
-            model.addElement(MessageFormat.format("{0}, {1}, {2}",
+            model.addElement(MessageFormat.format("{0}, {1}, {2}, {3}",
+                    movie.getMovieID(),
                     movie.getTitle(),
                     Helper.calcDuration(movie.getDuration()),
                     movie.getGenres()
@@ -126,7 +127,6 @@ public class App extends JFrame implements ActionListener, KeyListener {
     }
 
     private void filterMovieList(boolean isSearchable, String movieTitle) {
-        System.out.println("M" + movieTitle);
         clearList(list);
         getMovieList(isSearchable, comboBoxGenres.getSelectedIndex(), movieTitle);
 
@@ -168,7 +168,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        
+
     }
 
 }

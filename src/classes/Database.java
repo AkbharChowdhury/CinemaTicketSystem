@@ -210,13 +210,15 @@ public class Database {
                 con.close();
                 return list;
             }
-            while (rs.next()) {
 
+            // add movies to list
+            while (rs.next()) {
+                int movieID = rs.getInt("movie_id");
                 String title = rs.getString("title");
                 int duration = Integer.parseInt(rs.getString("duration"));
                 String genreList = rs.getString("genre_list");
 //                String formattedDuration = Helper.calcDuration(duration);
-                list.add(new MovieGenres(title, duration, genreList));
+                list.add(new MovieGenres(movieID, title, duration, genreList));
 
 //
 //                System.out.println(MessageFormat.format("{0}, {1}, {2}",

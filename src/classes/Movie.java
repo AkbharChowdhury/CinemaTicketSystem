@@ -58,6 +58,12 @@ public class Movie implements Queries {
         this.duration = duration;
     }
 
+    public Movie(int movieID, String title, int duration) {
+        this.movieID = movieID;
+        this.title = title;
+        this.duration = duration;
+    }
+
 
     @Override
     public String createTable() {
