@@ -207,7 +207,6 @@ public class Database {
             }
 
             if (isResultSetEmpty(rs)) {
-                con.close();
                 return list;
             }
 
@@ -217,15 +216,9 @@ public class Database {
                 String title = rs.getString("title");
                 int duration = Integer.parseInt(rs.getString("duration"));
                 String genreList = rs.getString("genre_list");
-//                String formattedDuration = Helper.calcDuration(duration);
+
                 list.add(new MovieGenres(movieID, title, duration, genreList));
 
-//
-//                System.out.println(MessageFormat.format("{0}, {1}, {2}",
-//                        title,
-//                        formattedDuration,
-//                        genreList
-//                ));
 
             }
 
