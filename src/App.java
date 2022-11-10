@@ -16,12 +16,11 @@ import java.sql.SQLException;
 
 
 public class App extends JFrame implements ActionListener, KeyListener {
-    static Database db;
-//    private final DefaultListModel model;
+    private static Database db;
     private DefaultTableModel model;
 
-    private MovieGenres movieGenre = new MovieGenres();
-    private JTable table = new JTable();
+    private final MovieGenres movieGenre = new MovieGenres();
+    private final JTable table = new JTable();
     private JScrollPane scrollPane = new JScrollPane();
     private DefaultTableCellRenderer cellRenderer;
     private String movieTitle = "";
@@ -49,9 +48,8 @@ public class App extends JFrame implements ActionListener, KeyListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        setupMovieInit();
+        setUpMovieListInit();
 
-        // add ll buttons
         top.add(btnListMovies);
         top.add(btnShowTimes);
         top.add(txtMovieID);
@@ -77,8 +75,6 @@ public class App extends JFrame implements ActionListener, KeyListener {
         middle.add(comboBoxGenres);
 
         JPanel south = new JPanel();
-
-
         JScrollPane movieScrollPane = new JScrollPane(scrollPane);
         south.add(movieScrollPane);
 
@@ -119,7 +115,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     }
 
-    private void setupMovieInit() {
+    private void setUpMovieListInit() {
         movieGenre.setGenreID(0);
         movieGenre.setTitle(movieTitle);
         getMovieList();
@@ -151,6 +147,21 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     public void actionPerformed(ActionEvent e) {
 
+        if (e.getSource() == btnPurchaseTicket){
+
+        }
+
+        if (e.getSource() == btnListMovies){
+
+        }
+
+        if (e.getSource() == btnShowReceipt){
+
+        }
+        if (e.getSource() == btnShowTimes){
+
+        }
+
         if (e.getSource() == comboBoxGenres) {
             System.out.println(comboBoxGenres.getSelectedIndex());
             movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
@@ -179,9 +190,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
         }
 
 
-        // listen for movie id text-field
         if (e.getSource() == txtMovieID) {
-            // link https://www.youtube.com/watch?v=cdPKsws5f-4
             char c = e.getKeyChar();
             if (Character.isLetter(c)) {
                 // disable input if the value is not a number
