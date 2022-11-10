@@ -27,9 +27,9 @@ public final class Helper {
 //        }
 //        return comboBox;
 //    }
-
-
-
-
+    public static void showErrorMessage(String message, String title){
+        JOptionPane.showMessageDialog(null, message,
+                title, JOptionPane.ERROR_MESSAGE);
+    }
 
 }

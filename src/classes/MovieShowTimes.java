@@ -87,5 +87,17 @@ public class MovieShowTimes implements Queries {
 
     }
 
+    public String getMovieShowTimes(){
+        return """
+                SELECT mst.movie_id,
+                                  m.title,
+                                 st.*,
+                                  mst.num_tickets_left
+                                 FROM MovieShowTimes mst
+                                 JOIN Movies m ON m.movie_id = mst.movie_id
+                                 JOIN ShowTimes st ON st.show_time_id = mst.show_time_id
+                """;
+    }
+
 
 }

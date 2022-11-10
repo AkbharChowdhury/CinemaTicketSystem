@@ -1,6 +1,9 @@
+package forms;
+
 import classes.Database;
 import classes.Helper;
 import classes.MovieGenres;
+import enums.FormDetails;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -15,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 
-public class App extends JFrame implements ActionListener, KeyListener {
+public class MovieList extends JFrame implements ActionListener, KeyListener {
     private static Database db;
     private DefaultTableModel model;
 
@@ -34,7 +37,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
 
-    public App() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         scrollPane.setViewportView(table);
         setupTableProperties();
@@ -44,7 +47,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle("Cinema Ticket Machine");
+        setTitle(FormDetails.movieList());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -124,7 +127,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-        new App();
+        new MovieList();
 
     }
 
@@ -153,12 +156,33 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
         if (e.getSource() == btnListMovies){
 
+
         }
 
         if (e.getSource() == btnShowReceipt){
 
         }
         if (e.getSource() == btnShowTimes){
+            if (txtMovieID.getText().isEmpty()){
+                Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
+                return;
+            }
+
+            try {
+                new Login().setVisible(true);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            } catch (InstantiationException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            //create a welcome label and set it to the new page
+//        LoginInfo.setCustomerID(1);
+//        JLabel wel_label = new JLabel("Welcome: " + LoginInfo.getCustomerID());
+//        page.getContentPane().add(wel_label);
+        dispose();
 
         }
 

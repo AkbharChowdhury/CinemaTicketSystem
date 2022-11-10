@@ -1,26 +1,21 @@
-import classes.Database;
-import classes.Helper;
-import classes.LoginInfo;
-import classes.MovieGenres;
-import enums.Forms;
+package forms;
+
+import enums.FormDetails;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 
 
 public class Login extends JFrame implements ActionListener  {
 
 
 
-    private final JButton btnLogin = new JButton("Login");
+    private final JButton btnLogin = new JButton("forms.Login");
     JTextField txtUsername = new JTextField(20);
     JPasswordField txtPassword = new JPasswordField(20);
 
@@ -39,7 +34,7 @@ public class Login extends JFrame implements ActionListener  {
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(300, 250);
-        setTitle(Forms.Login.DESCRIPTION);
+        setTitle(FormDetails.login());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         add(panel);

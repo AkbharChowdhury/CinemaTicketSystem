@@ -42,7 +42,7 @@ class CreateLoginForm{}
 //        textField2 = new JPasswordField(15);    //set length for the password
 //
 //        //create submit button
-//        b1 = new JButton("Login"); //set label to button
+//        b1 = new JButton("forms.Login"); //set label to button
 //
 //        //create panel to put form elements
 //        newPanel = new JPanel(new GridLayout(3, 1));
