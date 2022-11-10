@@ -6,12 +6,28 @@ import tables.MovieGenresTable;
 import tables.MovieTable;
 import tables.RatingTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MovieGenres extends Movie implements Queries {
-    private int movieID;
     private int genreID;
+    private String rating;
 
     public MovieGenres() {
 
+    }
+    public static List<String> MovieGenreTableColumns(){
+        List<String> columns = new ArrayList<>();
+        columns.add("ID");
+        columns.add("Movie");
+        columns.add("Duration");
+        columns.add("Rating");
+        columns.add("Genre");
+        return columns;
+    }
+
+    public String getRating() {
+        return rating;
     }
 
     public MovieGenres(int movieID, int genreID) {
@@ -34,12 +50,14 @@ public class MovieGenres extends Movie implements Queries {
 
     }
 
-    public MovieGenres(int movieID, String title, int duration, String genres) {
+    public MovieGenres(int movieID, String title, int duration, String genres, String rating) {
         super(title, duration);
         this.movieID = movieID;
         this.title = title;
         this.duration = duration;
         this.genres = genres;
+        this.rating = rating;
+
 
     }
 

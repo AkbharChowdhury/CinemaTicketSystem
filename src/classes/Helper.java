@@ -20,6 +20,7 @@ public final class Helper {
         return String.format( "%d:%02d", hours, minutes);
     }
 
+
 //      JComboBox populateComboBox(Database db, JComboBox comboBox){
 //        for(var item: db.showMovieGenreList()){
 //            comboBox.addItem(item);

@@ -3,8 +3,6 @@ import classes.Helper;
 import classes.MovieGenres;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,62 +11,56 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 
 
-public class App extends JFrame implements ActionListener, KeyListener {
+public class MovieForm extends JFrame implements ActionListener, KeyListener {
+
+
     static Database db;
-//    private final DefaultListModel model;
-    private DefaultTableModel model;
-
-    private MovieGenres movieGenre = new MovieGenres();
-    private JTable table = new JTable();
-    private JScrollPane scrollPane = new JScrollPane();
-    private DefaultTableCellRenderer cellRenderer;
-    private String movieTitle = "";
-
+    private final DefaultListModel model;
+    private final JList list; // the main list
     private final JButton btnListMovies = new JButton("List Movies");
     private final JButton btnShowTimes = new JButton("Show times");
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
-
     private final JTextField txtMovieID = new JTextField(2);
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
+    String[][] data = {{"101", "Amit", "670000"},
+            {"102", "Jai", "780000"},
+            {"101", "Sachin", "700000"}};
+    String[] column = {"ID", "NAME", "SALARY"};
+    String movieTitle = "";
+    private final MovieGenres movieGenre = new MovieGenres();
 
-    public App() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public MovieForm() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        scrollPane.setViewportView(table);
-        setupTableProperties();
+
+
+
+        model = new DefaultListModel();
+        list = new JList(model);
 
         txtMovieID.addKeyListener(this);
         txtMovieTitle.addKeyListener(this);
+
         setResizable(false);
+
         setLayout(new BorderLayout());
-        setSize(700, 550);
+        setSize(700, 250);
         setTitle("Cinema Ticket Machine");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        setupMovieInit();
-
-        // add ll buttons
         top.add(btnListMovies);
         top.add(btnShowTimes);
         top.add(txtMovieID);
+
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
-
         populateGenreComboBox();
-
-        getMovieList();
-        table.getColumnModel().getColumn(0).setPreferredWidth(5);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-
-        table.getColumnModel().getColumn(3).setPreferredWidth(50);
-        cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie Title:"));
@@ -78,9 +70,18 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
         JPanel south = new JPanel();
 
+        setupMovieInit();
 
-        JScrollPane movieScrollPane = new JScrollPane(scrollPane);
-        south.add(movieScrollPane);
+        JScrollPane movieScrollPane = new JScrollPane(list);
+
+        String data[][]={ {"101","Amit","670000"},
+                {"102","Jai","780000"},
+                {"101","Sachin","700000"}};
+        String column[]={"ID","NAME","SALARY"};
+        JTable jt=new JTable(data,column);
+        jt.setBounds(30,40,400,500);
+        JScrollPane sp=new JScrollPane(jt);
+        south.add(jt);
 
         add("North", top);
         add("Center", middle);
@@ -92,31 +93,19 @@ public class App extends JFrame implements ActionListener, KeyListener {
         btnShowReceipt.addActionListener(this);
         comboBoxGenres.addActionListener(this);
 
+
         setVisible(true);
     }
 
-    private void setupTableProperties() {
-        model = (DefaultTableModel)table.getModel();
-        for (String column : MovieGenres.MovieGenreTableColumns()){
-            model.addColumn(column);
-
-        }
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        db = Database.getInstance();
+        new MovieForm();
 
     }
 
-    private void getMovieList() {
-        var movieList = db.showMovieList(movieGenre);
-        int i = 0;
-        for(var movie: movieList) {
-            model.addRow(new Object[0]);
-            model.setValueAt(movie.getMovieID(), i, 0);
-            model.setValueAt(movie.getTitle(), i, 1);
-            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 2);
-            model.setValueAt(movie.getRating(), i, 3);
-            model.setValueAt( movie.getGenres(), i, 4);
-            i++;
-        }
-
+    private static void clearList(JList list) {
+        DefaultListModel listModel = (DefaultListModel) list.getModel();
+        listModel.removeAllElements();
     }
 
     private void setupMovieInit() {
@@ -126,22 +115,19 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        db = Database.getInstance();
-        new App();
-
+    private void getMovieList() {
+        for (var movie : db.showMovieList(movieGenre)) {
+            model.addElement(MessageFormat.format("{0}, {1}, {2}, {3}",
+                    movie.getMovieID(),
+                    movie.getTitle(),
+                    Helper.calcDuration(movie.getDuration()),
+                    movie.getGenres()
+            ));
+        }
     }
-
-
-
-    private static void clearTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-    }
-
-
 
     private void populateGenreComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        // add default value
         comboBoxGenres.addItem("Any Genre");
         for (var genre : db.getMovieGenreList()) {
             comboBoxGenres.addItem(genre);
@@ -150,7 +136,7 @@ public class App extends JFrame implements ActionListener, KeyListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-
+        // combo
         if (e.getSource() == comboBoxGenres) {
             System.out.println(comboBoxGenres.getSelectedIndex());
             movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
@@ -161,8 +147,9 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
 
     private void filterMovieList() {
-        clearTable(table);
+        clearList(list);
         getMovieList();
+
     }
 
     @Override
@@ -175,7 +162,6 @@ public class App extends JFrame implements ActionListener, KeyListener {
         if (e.getSource() == txtMovieTitle) {
             movieGenre.setTitle(txtMovieTitle.getText());
             filterMovieList();
-
         }
 
 
@@ -193,11 +179,14 @@ public class App extends JFrame implements ActionListener, KeyListener {
 
         }
 
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
+
     }
+
 
 }

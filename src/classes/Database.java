@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Database {
     private static final String DB_NAME = "cinema.db";
-    private static Database instance;
+    private static volatile Database instance;
 
     private Database() throws SQLException, FileNotFoundException {
 
@@ -28,8 +28,16 @@ public class Database {
     }
 
     public static Database getInstance() throws SQLException, FileNotFoundException {
+        if (instance == null){
+            synchronized (Database.class){
+                if (instance == null){
+                    instance = new Database();
+                }
+            }
+        }
+        return instance;
 
-        return instance == null ? new Database() : null;
+//        return instance == null ? new Database() : null;
     }
 
     private static boolean isResultSetEmpty(ResultSet rs) throws SQLException {
@@ -232,8 +240,9 @@ public class Database {
                 String title = rs.getString("title");
                 int duration = Integer.parseInt(rs.getString("duration"));
                 String genreList = rs.getString("genre_list");
+                String rating = rs.getString("rating");
 
-                list.add(new MovieGenres(movieID, title, duration, genreList));
+                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
 
 
             }
