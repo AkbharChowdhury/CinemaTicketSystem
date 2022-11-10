@@ -22,6 +22,35 @@ public class FileHandler {
         }
         return movieList;
     }
+    public static List<ShowTimes> getShowTimeData(String fileName) throws FileNotFoundException {
+
+        List<ShowTimes> showTimeList = new ArrayList<>();
+
+        for (String line : getCSVFileDetails(fileName)) {
+            String[] values = line.split(",");
+            String showDate = values[0];
+            String showTime = values[1];
+            showTimeList.add(new ShowTimes(showDate, showTime));
+
+        }
+        return showTimeList;
+    }
+
+    public static List<MovieShowTimes> getMovieShowTimesData(String fileName) throws FileNotFoundException {
+
+        List<MovieShowTimes> movieShowTimeList = new ArrayList<>();
+
+        for (String line : getCSVFileDetails(fileName)) {
+            String[] values = line.split(",");
+            String movieID = values[0];
+            String showTimeID = values[1];
+            String numTicketsLeft = values[2];
+
+            movieShowTimeList.add(new MovieShowTimes(Integer.parseInt(movieID), Integer.parseInt(showTimeID), Integer.parseInt(numTicketsLeft)));
+
+        }
+        return movieShowTimeList;
+    }
 
 
     public static List<MovieGenres> getMovieGenreData(String fileName) throws FileNotFoundException {

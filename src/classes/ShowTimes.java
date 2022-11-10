@@ -10,9 +10,23 @@ public class ShowTimes implements Queries {
     private String showDate;
     private String showTime;
 
-    public ShowTimes(){
+    public ShowTimes() {
 
     }
+
+    public ShowTimes(int showTimeID, String showDate, String showTime) {
+        this.showTimeID = showTimeID;
+        this.showDate = showDate;
+        this.showTime = showTime;
+    }
+
+    public ShowTimes(String showDate, String showTime) {
+        this.showDate = showDate;
+        this.showTime = showTime;
+
+    }
+
+
 
     public int getShowTimeID() {
         return showTimeID;
@@ -38,12 +52,6 @@ public class ShowTimes implements Queries {
         this.showTime = showTime;
     }
 
-    public ShowTimes(int showTimeID, String showDate, String showTime) {
-        this.showTimeID = showTimeID;
-        this.showDate = showDate;
-        this.showTime = showTime;
-    }
-
     @Override
     public String createTable() {
         return String.format("""
@@ -64,6 +72,11 @@ public class ShowTimes implements Queries {
 
     @Override
     public String insert() {
-        return null;
+        return String.format("""
+                        INSERT INTO %s
+                        VALUES (?, ?, ?);
+                        """,
+                ShowTimesTable.TABLE_NAME
+        );
     }
 }

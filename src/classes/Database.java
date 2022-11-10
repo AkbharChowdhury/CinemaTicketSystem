@@ -6,7 +6,6 @@ import org.sqlite.SQLiteConfig;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +50,9 @@ public class Database {
         insertGenres();
         insertMovieGenres();
         insertTickets();
+        insertShowTimes();
+        insertMovieShowTimes();
+
 
     }
 
@@ -131,6 +133,49 @@ public class Database {
 
     }
 
+    private void insertShowTimes() throws FileNotFoundException {
+
+        List<ShowTimes> showTimeList = FileHandler.getShowTimeData(Helper.getCSVPath() + Files.ShowTimes.DESCRIPTION);
+
+
+        try (Connection con = getConnection()) {
+            for (var showtime : showTimeList) {
+                PreparedStatement stmt = con.prepareStatement(new ShowTimes().insert());
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setString(2, showtime.getShowDate());
+                stmt.setString(3, showtime.getShowTime());
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+
+    private void insertMovieShowTimes() throws FileNotFoundException {
+
+        List<MovieShowTimes> movieShowTimesList = FileHandler.getMovieShowTimesData(Helper.getCSVPath() + Files.MovieShowTimes.DESCRIPTION);
+
+
+        try (Connection con = getConnection()) {
+            for (var showMovieTime : movieShowTimesList) {
+                PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().insert());
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setInt(2, showMovieTime.getMovieId());
+                stmt.setInt(3, showMovieTime.getShowTimeID());
+                stmt.setInt(4, showMovieTime.getNumTicketLeft());
+
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
     private void insertMovieGenres() throws FileNotFoundException {
 
         String movieGenreFile = Helper.getCSVPath() + Files.MovieGenres.DESCRIPTION;
@@ -174,7 +219,6 @@ public class Database {
     }
 
     private void insertTickets() throws FileNotFoundException {
-        String ticketFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
         List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
 
         try (Connection con = getConnection()) {

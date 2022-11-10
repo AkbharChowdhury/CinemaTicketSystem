@@ -6,7 +6,11 @@ public enum Files {
 
     Ratings("ratings.csv"),
     Genres("genres.csv"),
-    Tickets("tickets.csv");
+    Tickets("tickets.csv"),
+    ShowTimes("showTimes.csv"),
+    MovieShowTimes("movieShowTimes.csv");
+
+
 
 
     public final String DESCRIPTION;

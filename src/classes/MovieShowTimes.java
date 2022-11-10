@@ -80,7 +80,7 @@ public class MovieShowTimes implements Queries {
     public String insert() {
         return String.format("""
                         INSERT INTO %s
-                        VALUES (?, ?);
+                        VALUES (?, ?, ?);
                         """,
                 GenreTable.TABLE_NAME
         );
