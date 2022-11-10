@@ -8,7 +8,9 @@ public enum Files {
     Genres("genres.csv"),
     Tickets("tickets.csv"),
     ShowTimes("showTimes.csv"),
-    MovieShowTimes("movieShowTimes.csv");
+    MovieShowTimes("movieShowTimes.csv"),
+    Customers("customer.csv");
+
 
 
 

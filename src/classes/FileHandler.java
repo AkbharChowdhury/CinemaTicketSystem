@@ -1,5 +1,7 @@
 package classes;
 
+import enums.Files;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,6 +24,29 @@ public class FileHandler {
         }
         return movieList;
     }
+
+    public static List<Customer> getCustomerData() throws FileNotFoundException {
+
+        List<Customer> customerList = new ArrayList<>();
+
+        for (String line : getCSVFileDetails(Helper.getCSVPath() + Files.Customers.DESCRIPTION)) {
+            String[] values = line.split(",");
+            String firstname = values[0];
+            String lastname = values[1];
+            String dob = values[2];
+            String email = values[3];
+            String password = Encryption.encode(values[4]);
+
+
+
+
+
+            customerList.add(new Customer(firstname, lastname,dob, email,password ));
+
+        }
+        return customerList;
+    }
+
     public static List<ShowTimes> getShowTimeData(String fileName) throws FileNotFoundException {
 
         List<ShowTimes> showTimeList = new ArrayList<>();
@@ -38,19 +63,40 @@ public class FileHandler {
 
     public static List<MovieShowTimes> getMovieShowTimesData(String fileName) throws FileNotFoundException {
 
-        List<MovieShowTimes> movieShowTimeList = new ArrayList<>();
+        List<MovieShowTimes> movieShowTimesList = new ArrayList<>();
 
         for (String line : getCSVFileDetails(fileName)) {
             String[] values = line.split(",");
-            String movieID = values[0];
-            String showTimeID = values[1];
-            String numTicketsLeft = values[2];
-
-            movieShowTimeList.add(new MovieShowTimes(Integer.parseInt(movieID), Integer.parseInt(showTimeID), Integer.parseInt(numTicketsLeft)));
+            // note that the zero index is ignored
+            int movieID = Integer.parseInt(values[1]);
+            int showTimeID = Integer.parseInt(values[2]);
+            int numTicketsLeft = Integer.parseInt(values[3]);
+            movieShowTimesList.add(new MovieShowTimes(movieID, showTimeID, numTicketsLeft));
 
         }
-        return movieShowTimeList;
+        return movieShowTimesList;
     }
+
+//    public static List<MovieShowTimes> getMovieShowTimesDatas() throws FileNotFoundException{
+//        List<MovieShowTimes> movieShowTimesList = new ArrayList<>();
+//
+//        String line;
+//        try (BufferedReader br = new BufferedReader(new FileReader(Helper.getCSVPath() + Files.MovieShowTimes.DESCRIPTION))) {
+//            while (( line = br.readLine()) != null) {
+//                String[] data = line.split(",");
+//                int movieID = Integer.parseInt(data[1]);
+//                int showTimeID = Integer.parseInt(data[2]);
+//                int numTicketsLeft = Integer.parseInt(data[3]);
+//                movieShowTimesList.add(new MovieShowTimes(movieID, showTimeID, numTicketsLeft));
+//
+//            }
+//        } catch (Exception e) {
+//           e.printStackTrace();
+//        }
+//        return movieShowTimesList;
+//    }
+
+
 
 
     public static List<MovieGenres> getMovieGenreData(String fileName) throws FileNotFoundException {

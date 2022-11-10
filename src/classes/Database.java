@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class Database {
@@ -52,6 +53,7 @@ public class Database {
         insertTickets();
         insertShowTimes();
         insertMovieShowTimes();
+        insertCustomer();
 
 
     }
@@ -153,19 +155,40 @@ public class Database {
 
     }
 
+    private void insertCustomer() throws FileNotFoundException {
+
+        List<Customer> customerList =  FileHandler.getCustomerData();
+
+
+        try (Connection con = getConnection()) {
+            for (var customer : customerList) {
+                PreparedStatement stmt = con.prepareStatement(new Customer().insert());
+                stmt.setNull(1, java.sql.Types.NULL);
+                stmt.setString(2, customer.getFirstname());
+                stmt.setString(3, customer.getLastname());
+                stmt.setString(4, customer.getDob());
+                stmt.setString(5, customer.getEmail());
+                stmt.setString(6, customer.getPassword());
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
     private void insertMovieShowTimes() throws FileNotFoundException {
 
         List<MovieShowTimes> movieShowTimesList = FileHandler.getMovieShowTimesData(Helper.getCSVPath() + Files.MovieShowTimes.DESCRIPTION);
 
-
         try (Connection con = getConnection()) {
             for (var showMovieTime : movieShowTimesList) {
                 PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setInt(2, showMovieTime.getMovieId());
-                stmt.setInt(3, showMovieTime.getShowTimeID());
-                stmt.setInt(4, showMovieTime.getNumTicketLeft());
+                stmt.setInt(1, showMovieTime.getMovieId());
+                stmt.setInt(2, showMovieTime.getShowTimeID());
+                stmt.setInt(3, showMovieTime.getNumTicketLeft());
 
                 stmt.executeUpdate();
             }

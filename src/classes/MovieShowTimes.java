@@ -82,7 +82,7 @@ public class MovieShowTimes implements Queries {
                         INSERT INTO %s
                         VALUES (?, ?, ?);
                         """,
-                GenreTable.TABLE_NAME
+                MovieShowTimesTable.TABLE_NAME
         );
 
     }
