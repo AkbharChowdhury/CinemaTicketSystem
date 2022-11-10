@@ -204,7 +204,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         if (e.getSource() == btnListMovies) {
             try {
                 new MovieList();
-                dispose();
+//                dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

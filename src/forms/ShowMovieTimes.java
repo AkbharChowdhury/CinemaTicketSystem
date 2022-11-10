@@ -30,14 +30,15 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
     private final JTextField txtMShowDate = new JTextField(20);
     private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
-    JLabel movieTitle = new JLabel("Movie title");
+    JLabel movieTitle = new JLabel();
 
 
     public ShowMovieTimes() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
         // set movie title label style
-        movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
-
         db = Database.getInstance();
+        movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
+
         scrollPane.setViewportView(table);
         setupTableProperties();
 
@@ -71,9 +72,7 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
         JPanel middle = new JPanel();
         middle.add(new Label("Filter Date:"));
         middle.add(txtMShowDate);
-        JLabel movieTitle = new JLabel("Movie title");
-        movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        movieTitle.setText("ksdjksdj");
+       movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
         middle.add(movieTitle);
 
 
@@ -175,6 +174,16 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
 
             boolean isNumber = !Character.isLetter(c);
             txtMovieID.setEditable(isNumber);
+
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                int movieID = MovieInfo.getMovieID();
+                movieShowTimes.setMovieId(movieID);
+                String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
+                getShowTimesList();
+                movieTitle.setText(title);
+                System.out.println(title);
+
+            }
 
         }
 
