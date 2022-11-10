@@ -1,5 +1,6 @@
 package forms;
 
+import classes.Database;
 import enums.FormDetails;
 
 import javax.swing.*;
@@ -12,9 +13,7 @@ import java.sql.SQLException;
 
 
 public class Login extends JFrame implements ActionListener  {
-
-
-
+    private Database db;
     private final JButton btnLogin = new JButton("forms.Login");
     JTextField txtUsername = new JTextField(20);
     JPasswordField txtPassword = new JPasswordField(20);
@@ -27,10 +26,9 @@ public class Login extends JFrame implements ActionListener  {
 
 
 
-    public Login() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Login() throws InvocationTargetException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
 
-
-
+        db = Database.getInstance();
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(300, 250);
@@ -71,6 +69,7 @@ public class Login extends JFrame implements ActionListener  {
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
        new Login();
+
 
     }
 

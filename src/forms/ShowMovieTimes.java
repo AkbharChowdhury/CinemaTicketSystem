@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction {
+public class ShowMovieTimes extends JFrame implements ActionListener, KeyListener, FormAction {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
     private final JTable table = new JTable();
@@ -30,12 +30,11 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final JButton btnShowReceipt = new JButton("Show receipt");
     private final JTextField txtMovieID = new JTextField(2);
     private final JTextField txtMovieTitle = new JTextField(20);
-    private final JComboBox<String> comboBoxGenres = new JComboBox<>();
     private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
 
-    public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
+    public ShowMovieTimes() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
         db = Database.getInstance();
 
         scrollPane.setViewportView(table);
@@ -46,7 +45,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.movieList());
+        setTitle(FormDetails.showTimes());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -59,8 +58,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         top.add(btnShowReceipt);
 
 
-        populateGenreComboBox();
-
         getMovieList();
         table.getColumnModel().getColumn(0).setPreferredWidth(5);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -71,13 +68,13 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
         JPanel middle = new JPanel();
-        middle.add(new Label("Movie Title:"));
+        middle.add(new Label("Filter Date:"));
         middle.add(txtMovieTitle);
-        middle.add(new Label("Genre"));
-        middle.add(comboBoxGenres);
 
         JPanel south = new JPanel();
         JScrollPane movieScrollPane = new JScrollPane(scrollPane);
+        south.add(new Label("Spider man"));
+
         south.add(movieScrollPane);
 
         add("North", top);
@@ -88,13 +85,12 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
-        comboBoxGenres.addActionListener(this);
 
         setVisible(true);
     }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        new MovieList();
+        new ShowMovieTimes();
 
     }
 
@@ -134,26 +130,13 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     }
 
-    private void populateGenreComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        comboBoxGenres.addItem("Any Genre");
-        for (var genre : db.getMovieGenreList()) {
-            comboBoxGenres.addItem(genre);
-        }
-
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         handleButtonClick(e);
 
-        if (e.getSource() == comboBoxGenres) {
-            System.out.println(comboBoxGenres.getSelectedIndex());
-            movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
-            filterMovieList();
 
-        }
     }
 
 
