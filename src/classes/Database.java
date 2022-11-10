@@ -2,13 +2,13 @@ package classes;
 
 import enums.Files;
 import org.sqlite.SQLiteConfig;
+import tables.MovieTable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class Database {
@@ -28,9 +28,9 @@ public class Database {
     }
 
     public static Database getInstance() throws SQLException, FileNotFoundException {
-        if (instance == null){
-            synchronized (Database.class){
-                if (instance == null){
+        if (instance == null) {
+            synchronized (Database.class) {
+                if (instance == null) {
                     instance = new Database();
                 }
             }
@@ -157,7 +157,7 @@ public class Database {
 
     private void insertCustomer() throws FileNotFoundException {
 
-        List<Customer> customerList =  FileHandler.getCustomerData();
+        List<Customer> customerList = FileHandler.getCustomerData();
 
 
         try (Connection con = getConnection()) {
@@ -272,7 +272,7 @@ public class Database {
             int genreID = movieGenres.getGenreID();
             String movieTitle = movieGenres.getTitle();
 
-            if (genreID == 0 && movieTitle.isEmpty()){
+            if (genreID == 0 && movieTitle.isEmpty()) {
                 sql = new MovieGenres().showMovieList(movieGenres);
                 Statement stmtAllMovies = con.createStatement();
                 rs = stmtAllMovies.executeQuery(sql);
@@ -282,19 +282,17 @@ public class Database {
                 int x = 0;
 
 
-                if (genreID!=0){
+                if (genreID != 0) {
                     x++;
-                    stmt.setString(x,   String.valueOf(genreID) + '%');
+                    stmt.setString(x, String.valueOf(genreID) + '%');
                 }
-                if (!movieTitle.isEmpty()){
+                if (!movieTitle.isEmpty()) {
                     x++;
 
-                    stmt.setString(x,  '%'+ String.valueOf(movieTitle) + '%');
+                    stmt.setString(x, '%' + movieTitle + '%');
                 }
                 rs = stmt.executeQuery();
             }
-
-
 
 
             if (isResultSetEmpty(rs)) {
@@ -320,6 +318,45 @@ public class Database {
         return list;
     }
 
+
+    public List<MovieShowTimes> showMovieTimes(MovieShowTimes movieShowTimes) {
+        String showDate = movieShowTimes.getShowDate();
+        List<MovieShowTimes> list = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+
+            PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getMovieShowTimes(movieShowTimes));
+            int param = 0;
+            param++;
+            stmt.setInt(param, movieShowTimes.getMovieId());
+
+            if (!showDate.isEmpty()) {
+                param++;
+                stmt.setString(param, "%" + showDate + "%");
+            }
+
+            rs = stmt.executeQuery();
+
+
+            if (isResultSetEmpty(rs)) {
+                return list;
+            }
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String date = rs.getString("show_date");
+                String showTime = rs.getString("show_time");
+                int ticketsLeft = rs.getInt("num_tickets_left");
+                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // for search
     public List<String> getMovieGenreList() {
         List<String> genreList = new ArrayList<>();
@@ -328,7 +365,6 @@ public class Database {
             String sql = new MovieGenres().getMovieGenreList();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
 
 
             if (isResultSetEmpty(rs)) {
@@ -344,6 +380,31 @@ public class Database {
             e.printStackTrace();
         }
         return genreList;
+    }
+
+    public String getMovieName(int movieID) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME, MovieTable.COLUMN_ID);
+
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, movieID);
+
+            rs = stmt.executeQuery();
+
+            if (isResultSetEmpty(rs)) {
+                return "Error: there are no movies that exists with the specified id!";
+            }
+
+            return rs.getString("title");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "error";
+
     }
 
 

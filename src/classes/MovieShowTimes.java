@@ -1,12 +1,17 @@
 package classes;
 
 import interfaces.Queries;
+import interfaces.TableProperties;
 import tables.*;
 
-public class MovieShowTimes implements Queries {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MovieShowTimes extends ShowTimes implements Queries, TableProperties {
     private int movieId;
     private int showTimeID;
     private int numTicketLeft;
+    private String movieTitle;
 
     public int getMovieId() {
         return movieId;
@@ -39,6 +44,13 @@ public class MovieShowTimes implements Queries {
         this.movieId = movieId;
         this.showTimeID = showTimeID;
         this.numTicketLeft = numTicketLeft;
+    }
+    public MovieShowTimes(String showDate, String ShowTime, String movieTitle, int numTicketLeft){
+        super(showDate, ShowTime);
+        this.movieTitle = movieTitle;
+        this.numTicketLeft = numTicketLeft;
+
+
     }
 
 
@@ -76,6 +88,8 @@ public class MovieShowTimes implements Queries {
         );
     }
 
+
+
     @Override
     public String insert() {
         return String.format("""
@@ -87,17 +101,52 @@ public class MovieShowTimes implements Queries {
 
     }
 
-    public String getMovieShowTimes(){
-        return """
-                SELECT mst.movie_id,
+//    public String getMovieShowTimes(){
+//        return """
+//                SELECT mst.movie_id,
+//                 m.title,
+//                st.*,
+//                 mst.num_tickets_left
+//                FROM MovieShowTimes mst
+//                JOIN Movies m ON m.movie_id = mst.movie_id
+//                JOIN ShowTimes st ON st.show_time_id = mst.show_time_id
+//                WHERE mst.movie_id =?
+//                """;
+//    }
+
+    public  String getMovieShowTimes(MovieShowTimes movieShowTimes) {
+
+        String sql = """
+                 SELECT mst.movie_id,
                                   m.title,
                                  st.*,
                                   mst.num_tickets_left
                                  FROM MovieShowTimes mst
                                  JOIN Movies m ON m.movie_id = mst.movie_id
                                  JOIN ShowTimes st ON st.show_time_id = mst.show_time_id
-                """;
+                                 WHERE m.movie_id = ?
+                                                  """;
+
+        if (!movieShowTimes.getShowDate().isEmpty()) {
+            sql += " AND st.show_date LIKE ?";
+        }
+
+        return sql;
+
     }
 
 
+    @Override
+    public List<String> tableColumns() {
+        List<String> columns = new ArrayList<>();
+        columns.add("Date");
+        columns.add("Time");
+        columns.add("No of Tickets left");
+        return columns;
+    }
+
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
 }

@@ -3,8 +3,10 @@ package forms;
 import classes.Database;
 import classes.Helper;
 import classes.MovieGenres;
+import classes.MovieInfo;
 import enums.FormDetails;
 import interfaces.FormAction;
+import interfaces.TableProperties;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -17,9 +19,10 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.List;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction {
+public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
     private final JTable table = new JTable();
@@ -61,7 +64,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         populateGenreComboBox();
 
-        getMovieList();
+        populateTable();
         table.getColumnModel().getColumn(0).setPreferredWidth(5);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
 
@@ -105,32 +108,19 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
-        for (String column : MovieGenres.MovieGenreTableColumns()) {
+        for (String column : new MovieGenres().tableColumns()) {
             model.addColumn(column);
 
         }
 
     }
 
-    private void getMovieList() {
-        var movieList = db.showMovieList(movieGenre);
-        int i = 0;
-        for (var movie : movieList) {
-            model.addRow(new Object[0]);
-            model.setValueAt(movie.getMovieID(), i, 0);
-            model.setValueAt(movie.getTitle(), i, 1);
-            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 2);
-            model.setValueAt(movie.getRating(), i, 3);
-            model.setValueAt(movie.getGenres(), i, 4);
-            i++;
-        }
 
-    }
 
     private void setUpMovieListInit() {
         movieGenre.setGenreID(0);
         movieGenre.setTitle(movieTitle);
-        getMovieList();
+        populateTable();
 
     }
 
@@ -151,16 +141,14 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         if (e.getSource() == comboBoxGenres) {
             System.out.println(comboBoxGenres.getSelectedIndex());
             movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
-            filterMovieList();
+            populateTable();
+
 
         }
     }
 
 
-    private void filterMovieList() {
-        clearTable(table);
-        getMovieList();
-    }
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -171,7 +159,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     public void keyPressed(KeyEvent e) {
         if (e.getSource() == txtMovieTitle) {
             movieGenre.setTitle(txtMovieTitle.getText());
-            filterMovieList();
+            populateTable();
 
         }
 
@@ -241,6 +229,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                 return;
             }
             try {
+                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new ShowMovieTimes();
                 dispose();
             } catch (Exception ex) {
@@ -249,4 +238,29 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         }
     }
+
+    @Override
+    public List<String> tableColumns() {
+        return null;
+    }
+
+
+    public void populateTable() {
+        clearTable(table);
+
+        var movieList = db.showMovieList(movieGenre);
+        int i = 0;
+        for (var movie : movieList) {
+            model.addRow(new Object[0]);
+            model.setValueAt(movie.getMovieID(), i, 0);
+            model.setValueAt(movie.getTitle(), i, 1);
+            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 2);
+            model.setValueAt(movie.getRating(), i, 3);
+            model.setValueAt(movie.getGenres(), i, 4);
+            i++;
+        }
+
+    }
 }
+
+

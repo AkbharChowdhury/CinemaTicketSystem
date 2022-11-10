@@ -1,6 +1,7 @@
 package classes;
 
 import interfaces.Queries;
+import interfaces.TableProperties;
 import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
@@ -9,22 +10,14 @@ import tables.RatingTable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieGenres extends Movie implements Queries {
+public class MovieGenres extends Movie implements Queries, TableProperties {
     private int genreID;
     private String rating;
 
     public MovieGenres() {
 
     }
-    public static List<String> MovieGenreTableColumns(){
-        List<String> columns = new ArrayList<>();
-        columns.add("ID");
-        columns.add("Movie");
-        columns.add("Duration");
-        columns.add("Rating");
-        columns.add("Genre");
-        return columns;
-    }
+
 
     public String getRating() {
         return rating;
@@ -198,5 +191,17 @@ public class MovieGenres extends Movie implements Queries {
                 JOIN Genres g ON mg.genre_id = g.genre_id order by mg.genre_id                              
                 """;
     }
+
+    @Override
+    public List<String> tableColumns() {
+        List<String> columns = new ArrayList<>();
+        columns.add("ID");
+        columns.add("Movie");
+        columns.add("Duration");
+        columns.add("Rating");
+        columns.add("Genre");
+        return columns;
+    }
+
 
 }

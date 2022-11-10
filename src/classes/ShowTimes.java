@@ -52,6 +52,24 @@ public class ShowTimes implements Queries {
         this.showTime = showTime;
     }
 
+//    @Override
+//    public String createTable() {
+//        return String.format("""
+//                        CREATE TABLE IF NOT EXISTS %s (
+//                        %s INTEGER PRIMARY KEY AUTOINCREMENT,
+//                        %s TEXT NOT NULL,
+//                        %s TEXT NOT NULL
+//                        );
+//                        """,
+//                ShowTimesTable.TABLE_NAME,
+//                ShowTimesTable.COLUMN_ID,
+//                ShowTimesTable.COLUMN_DATE,
+//                ShowTimesTable.COLUMN_TIME
+//
+//
+//        );
+//    }
+
     @Override
     public String createTable() {
         return String.format("""
