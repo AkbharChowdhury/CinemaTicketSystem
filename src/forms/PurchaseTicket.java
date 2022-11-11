@@ -131,10 +131,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void actionPerformed(ActionEvent e) {
 
         handleButtonClick(e);
+        // update movie label (title and date and time
         if (e.getSource() == cbMovies){
             updateMovieTitle();
-            System.out.println("s");
-
 
         }
 
