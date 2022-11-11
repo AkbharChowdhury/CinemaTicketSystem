@@ -38,14 +38,13 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     private final JButton btnShowTimes = new JButton("Show times");
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JButton btnAddTicket = new JButton("Add Ticket");
-    private final JButton btnRemoveTicket = new JButton("Remove Ticket");
     private final JButton btnConfirm = new JButton("Confirm Order");
+    private final Ticket TICKET_DETAILS;
+
 
     private final List<Ticket> TICKETS_LIST;
 
-    JLabel lblTicket = new JLabel("Ticket ");
-    private final JComboBox<String> cbTicket = new JComboBox<>();
+    JLabel lblTicket = new JLabel();
 
 
     private final JTextField txtMovieID = new JTextField(2);
@@ -72,6 +71,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public PurchaseTicket() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         // set movie title label style
         db = Database.getInstance();
+        TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
         TICKETS_LIST = db.getTicket();
 
         movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
@@ -132,13 +132,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         JPanel south = new JPanel();
 
 
-
+        showTicketPricesLabel();
         south.add(lblTicket);
-        populateTicketComboBox();
-        south.add(cbTicket);
         south.add(spNumTickets);
-        south.add(btnAddTicket);
-        south.add(btnRemoveTicket);
         south.add(btnConfirm);
         south.add(lblTotal);
 
@@ -158,6 +154,16 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         spNumTickets.addChangeListener(this);
 
         setVisible(true);
+    }
+
+    private void showTicketPricesLabel() {
+        String output = MessageFormat.format("Ticket: {0} ({1})",
+                TICKET_DETAILS.getType(),
+                Helper.formatMoney(TICKET_DETAILS.getPrice())
+                );
+        lblTicket.setText(output);
+
+
     }
 
     private void init() {
@@ -342,14 +348,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
 
-    private void populateTicketComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        // add default value
-        for (var ticket : TICKETS_LIST) {
-            String ticketStr = MessageFormat.format("{0} {1}",ticket.getType(), Helper.formatMoney(ticket.getPrice()));
-            cbTicket.addItem(ticketStr);
-        }
 
-    }
 
     private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         // add default value

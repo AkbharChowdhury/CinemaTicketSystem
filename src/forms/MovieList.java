@@ -183,24 +183,24 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void handleButtonClick(ActionEvent e) {
         if (e.getSource() == btnPurchaseTicket) {
-//            if (LoginInfo.getCustomerID() == 0){
-//                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-//                if (dialogButton == JOptionPane.YES_OPTION){
-//                    try {
-//                        new Login();
-//                        dispose();
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//
-//                }
-//                return;
-//            }
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
+                }
+                return;
+            }
 
-
-
-
+            if (txtMovieID.getText().isEmpty()){
+                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "purchase ticket error");
+                return;
+            }
             if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
                 return;
             }
@@ -226,19 +226,19 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnShowReceipt) {
-//            if (LoginInfo.getCustomerID() == 0){
-//                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-//                if (dialogButton == JOptionPane.YES_OPTION){
-//                    try {
-//                        new Login();
-//                        dispose();
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//
-//                }
-//                return;
-//            }
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+                return;
+            }
 
 
             try {

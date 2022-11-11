@@ -8,7 +8,10 @@ import java.util.regex.Pattern;
 public class Test {
     // email regex https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
     public static void main(String[] args) throws SQLException, FileNotFoundException {
-        System.out.println(Database.getInstance().movieIDExists(20));;
+        var d = Database.getInstance().getCustomerTicketType(5);
+        System.out.println(d.getType());
+        System.out.println(d.getPrice());
+
 
     }
     static boolean isValidEmail(String email){

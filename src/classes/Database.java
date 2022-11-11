@@ -433,6 +433,7 @@ public class Database {
     }
 
 
+
     public List<Ticket> getTicket() {
         List<Ticket> ticketList = new ArrayList<>();
         try (Connection con = getConnection()) {
@@ -585,6 +586,36 @@ public class Database {
         }
         return 0;
 
+    }
+
+
+    public Ticket getCustomerTicketType(int customerID) {
+        Ticket ticket = null;
+
+        try (Connection con = getConnection()) {
+
+            String sql = new Customer().getCustomerTicketType();
+            ResultSet rs;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, customerID);
+
+            rs = stmt.executeQuery();
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            stmt.setInt(0, customerID);
+//
+//
+//            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
+                double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
+                ticket = new Ticket(ticketType, price);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ticket;
     }
 
 
