@@ -7,12 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 
-public class Login extends JFrame implements ActionListener {
+public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
     private final JButton btnLogin = new JButton("Login");
     private final JButton btnRegister = new JButton("Register");
@@ -56,7 +58,8 @@ public class Login extends JFrame implements ActionListener {
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
 
-
+        txtEmail.setText("john@gmail.com");
+        txtPassword.setText("password");
         setVisible(true);
     }
 
@@ -102,6 +105,24 @@ public class Login extends JFrame implements ActionListener {
             return;
         }
         Helper.showErrorMessage("invalid username/password combination", "Login error");
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            handleLogin();
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
 

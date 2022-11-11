@@ -73,5 +73,8 @@ public final class Helper {
         return true;
 
     }
+    public static double calcPrice(int numTickets, double price){
+        return numTickets * price;
+    }
 
 }
