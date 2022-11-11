@@ -57,25 +57,21 @@ public class SalesDetails implements Queries {
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
                         %s INTEGER NOT NULL,
-                        %s INTEGER NOT NULL,
-
-                        PRIMARY KEY(%s, %s, %s),
+                        
+                        PRIMARY KEY(%s, %s),
                         
                         FOREIGN KEY(%s) REFERENCES %s(%s),
-                        FOREIGN KEY(%s) REFERENCES %s(%s),
-                        FOREIGN KEY(%s) REFERENCES %s(%s)                      
+                        FOREIGN KEY(%s) REFERENCES %s(%s)
                         );
                         """,
                 SalesDetailsTable.TABLE_NAME,
                 SalesDetailsTable.COLUMN_SALES_ID,
                 SalesDetailsTable.COLUMN_MOVIE_ID,
-                SalesDetailsTable.COLUMN_TICKET_ID,
                 SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD,
 
-                // primary keyss
+                // primary keys
                 SalesDetailsTable.COLUMN_SALES_ID,
                 SalesDetailsTable.COLUMN_MOVIE_ID,
-                SalesDetailsTable.COLUMN_TICKET_ID,
 
 
                 // first
@@ -87,15 +83,7 @@ public class SalesDetails implements Queries {
                 // second key
                 SalesDetailsTable.COLUMN_MOVIE_ID,
                 MovieShowTimesTable.TABLE_NAME,
-                MovieShowTimesTable.COLUMN_MOVIE_ID,
-
-
-                // third key
-                SalesDetailsTable.COLUMN_TICKET_ID,
-                TicketsTable.TABLE_NAME,
-                TicketsTable.COLUMN_ID
-
-
+                MovieShowTimesTable.COLUMN_MOVIE_ID
 
 
                 );

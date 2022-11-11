@@ -73,6 +73,7 @@ public class Database {
 
 
     private void createAllTables() throws SQLException {
+        createTable(new Ticket().createTable());
         createTable(new Rating().createTable());
         createTable(new Movie().createTable());
         createTable(new Genre().createTable());
@@ -81,7 +82,6 @@ public class Database {
         createTable(new MovieShowTimes().createTable());
         createTable(new Customer().createTable());
         createTable(new Sales().createTable());
-        createTable(new Ticket().createTable());
         createTable(new SalesDetails().createTable());
 
 
@@ -168,15 +168,38 @@ public class Database {
                 stmt.setNull(1, java.sql.Types.NULL);
                 stmt.setString(2, customer.getFirstname());
                 stmt.setString(3, customer.getLastname());
-                stmt.setString(4, customer.getDob());
-                stmt.setString(5, customer.getEmail());
-                stmt.setString(6, customer.getPassword());
+                stmt.setString(4, customer.getEmail());
+                stmt.setString(5, customer.getPassword());
+                stmt.setInt(6, customer.getTicketID());
+
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+    }
+
+
+    public boolean addCustomer(Customer customer)  {
+
+
+
+        try (Connection con = getConnection()) {
+            PreparedStatement stmt = con.prepareStatement(new Customer().insert());
+            stmt.setNull(1, java.sql.Types.NULL);
+            stmt.setString(2, customer.getFirstname());
+            stmt.setString(3, customer.getLastname());
+            stmt.setString(4, customer.getEmail());
+            stmt.setString(5, customer.getPassword());
+            stmt.setInt(6, customer.getTicketID());
+            return stmt.executeUpdate() == 1;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
 
     }
 
@@ -471,6 +494,32 @@ public class Database {
             stmt.setString(1, email);
             stmt.setString(2, password);
 
+
+            rs2 = stmt.executeQuery();
+
+            return !isResultSetEmpty(rs2);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+    public boolean emailExists(String email) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
+                CustomerTable.COLUMN_EMAIL,
+                CustomerTable.TABLE_NAME,
+                CustomerTable.COLUMN_EMAIL
+        );
+
+        try (Connection con = getConnection()) {
+            ResultSet rs2;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
 
             rs2 = stmt.executeQuery();
 

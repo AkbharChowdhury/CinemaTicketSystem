@@ -2,9 +2,11 @@ package classes;
 
 import interfaces.Queries;
 import tables.CustomerTable;
+import tables.MovieTable;
+import tables.RatingTable;
 import tables.TicketsTable;
 
-public class Customer implements Queries {
+public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
@@ -16,13 +18,15 @@ public class Customer implements Queries {
 
     }
 
-    public Customer(String firstname, String lastname, String dob, String email, String password) {
+    public Customer(String firstname, String lastname, String email, String password, int ticketID) {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.dob = dob;
         this.email = email;
         this.password = password;
+        this.ticketID = ticketID;
     }
+
+
 
     public int getCustomerID() {
         return customerID;
@@ -79,19 +83,23 @@ public class Customer implements Queries {
                         %s INTEGER PRIMARY KEY AUTOINCREMENT, 
                         %s TEXT NOT NULL,
                         %s TEXT NOT NULL,
-                        %s TEXT NOT NULL,
                         %s TEXT NOT NULL UNIQUE,
-                        %s TEXT NOT NULL                  
+                        %s TEXT NOT NULL,
+                        %s INTEGER NOT NULL,
+                        FOREIGN KEY(%s) REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE              
                         );
                         """,
                 CustomerTable.TABLE_NAME,
                 CustomerTable.COLUMN_ID,
                 CustomerTable.COLUMN_FIRSTNAME,
                 CustomerTable.COLUMN_LASTNAME,
-                CustomerTable.COLUMN_DOB,
                 CustomerTable.COLUMN_EMAIL,
-                CustomerTable.COLUMN_PASSWORD
-                );
+                CustomerTable.COLUMN_PASSWORD,
+                CustomerTable.COLUMN_TICKET_ID,
+                TicketsTable.COLUMN_ID,
+                TicketsTable.TABLE_NAME,
+                TicketsTable.COLUMN_ID
+        );
     }
 
     @Override

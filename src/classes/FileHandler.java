@@ -33,15 +33,11 @@ public class FileHandler {
             String[] values = line.split(",");
             String firstname = values[0];
             String lastname = values[1];
-            String dob = values[2];
-            String email = values[3];
-            String password = Encryption.encode(values[4]);
+            String email = values[2];
+            String password =  Encryption.encode(values[3]);
+            int ticketID = Integer.parseInt(values[4]);
 
-
-
-
-
-            customerList.add(new Customer(firstname, lastname,dob, email,password ));
+            customerList.add(new Customer(firstname, lastname, email,password, ticketID));
 
         }
         return customerList;

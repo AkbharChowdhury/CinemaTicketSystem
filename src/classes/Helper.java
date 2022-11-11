@@ -39,6 +39,10 @@ public final class Helper {
                 title, JOptionPane.ERROR_MESSAGE);
     }
 
+    public static void message(String message){
+        JOptionPane.showMessageDialog(null, message);
+    }
+
     public static String formatTime(String time) throws ParseException {
         DateFormat f1 = new SimpleDateFormat("hh:mm"); //12:30
         Date unFormattedTime = f1.parse(time);

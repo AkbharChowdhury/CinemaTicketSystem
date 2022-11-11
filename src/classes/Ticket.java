@@ -5,7 +5,7 @@ import tables.GenreTable;
 import tables.TicketsTable;
 
 public class Ticket implements Queries {
-    private int ticketID;
+    protected int ticketID;
     private String type;
     private double price;
 
@@ -33,6 +33,14 @@ public class Ticket implements Queries {
         this.price = price;
 
     }
+
+    public Ticket(int ticketID) {
+        this.ticketID = ticketID;
+
+    }
+
+
+
 
     public int getTicketID() {
         return ticketID;

@@ -15,6 +15,10 @@ public enum FormDetails {
         return APP_NAME + "List Movies";
 
     }
+    public static String register() {
+        return APP_NAME + "Customer registration";
+
+    }
 
     public static String login() {
         return APP_NAME + "Customer Login";

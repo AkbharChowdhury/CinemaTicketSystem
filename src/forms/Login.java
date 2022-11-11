@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 
 public class Login extends JFrame implements ActionListener  {
-    private Database db;
+    private final Database db;
     private final JButton btnLogin = new JButton("Login");
     JTextField txtEmail = new JTextField(20);
     JPasswordField txtPassword = new JPasswordField(20);
