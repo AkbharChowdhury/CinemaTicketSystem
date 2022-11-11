@@ -32,6 +32,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
     private final JTextField txtMovieID = new JTextField(2);
+    JLabel lblMovieDetails = new JLabel();
 
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
@@ -83,6 +84,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         middle.add(new Label("Movie: "));
         populateMovieComboBox();
         middle.add(cbMovies);
+        lblMovieDetails.setText(getSelectedMovieTitle());
+        middle.add(lblMovieDetails);
+
 //        middle.add(txtMShowDate);
 //        movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
 //        middle.add(movieTitle);
@@ -101,6 +105,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
+        cbMovies.addActionListener(this);
+
 
         setVisible(true);
     }
@@ -125,8 +131,22 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void actionPerformed(ActionEvent e) {
 
         handleButtonClick(e);
+        if (e.getSource() == cbMovies){
+            updateMovieTitle();
+            System.out.println("s");
 
 
+        }
+
+
+
+    }
+    private void updateMovieTitle(){
+        lblMovieDetails.setText(getSelectedMovieTitle());
+
+    }
+    private String getSelectedMovieTitle(){
+        return String.valueOf(cbMovies.getSelectedItem());
     }
 
 
@@ -263,8 +283,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         // add default value
-        for (var genre : db.getMovieGenreList()) {
-            cbMovies.addItem(genre);
+        for (var title : db.getMovieTitle()) {
+            cbMovies.addItem(title);
         }
 
     }
