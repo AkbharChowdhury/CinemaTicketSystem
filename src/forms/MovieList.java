@@ -78,8 +78,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         middle.add(comboBoxGenres);
 
         JPanel south = new JPanel();
-        JScrollPane movieScrollPane = new JScrollPane(scrollPane);
-        south.add(movieScrollPane);
+        JScrollPane scrollPane = new JScrollPane(table);
+        south.add(scrollPane);
 
         add("North", top);
         add("Center", middle);
@@ -221,19 +221,19 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (LoginInfo.getCustomerID() == 0){
-                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-                if (dialogButton == JOptionPane.YES_OPTION){
-                    try {
-                        new Login();
-                        dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-                return;
-            }
+//            if (LoginInfo.getCustomerID() == 0){
+//                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+//                if (dialogButton == JOptionPane.YES_OPTION){
+//                    try {
+//                        new Login();
+//                        dispose();
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
+//
+//                }
+//                return;
+//            }
 
             try {
                 new ShowReceipt();
