@@ -68,6 +68,9 @@ public class Ticket implements Queries {
 
         );
     }
+    public String getTickets(){
+        return "SELECT * FROM " + TicketsTable.TABLE_NAME;
+    }
 
     @Override
     public String insert() {

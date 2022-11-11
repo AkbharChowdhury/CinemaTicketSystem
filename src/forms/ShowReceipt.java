@@ -84,6 +84,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         JScrollPane scrollPane1 = new JScrollPane(list);
         middle.add(scrollPane1);
 
+
         JPanel south = new JPanel();
         south.add(btnPrintReceipt);
         south.add(btnCancel);

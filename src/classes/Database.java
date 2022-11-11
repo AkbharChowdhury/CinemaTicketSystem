@@ -4,6 +4,7 @@ import enums.Files;
 import org.sqlite.SQLiteConfig;
 import tables.CustomerTable;
 import tables.MovieTable;
+import tables.TicketsTable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -406,6 +407,33 @@ public class Database {
             e.printStackTrace();
         }
         return movieTitleList;
+    }
+
+
+    public List<Ticket> getTicket() {
+        List<Ticket> ticketList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(new Ticket().getTickets());
+
+
+            if (isResultSetEmpty(rs)) {
+                con.close();
+                return ticketList;
+            }
+            while (rs.next()) {
+                int ticketID = rs.getInt(TicketsTable.COLUMN_ID);
+                String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
+                double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
+                ticketList.add(new Ticket(ticketID, ticketType, price));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ticketList;
     }
 
     public String getMovieName(int movieID) {

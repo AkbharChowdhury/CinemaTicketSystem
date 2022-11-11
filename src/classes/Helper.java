@@ -5,10 +5,12 @@ import enums.Files;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public final class Helper {
 
@@ -42,6 +44,10 @@ public final class Helper {
 
         DateFormat formattedTime = new SimpleDateFormat("h:mm a"); // e.g. 12:30 AM
         return formattedTime.format(unFormattedTime); // "23:00"
+    }
+    public static String formatMoney(double amount) {
+        NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.UK);
+        return currency.format(amount);
     }
 
 }

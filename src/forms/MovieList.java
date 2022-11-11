@@ -204,6 +204,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                 return;
             }
             try {
+                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new PurchaseTicket();
                 dispose();
             } catch (Exception ex) {

@@ -18,8 +18,11 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.List;
 
 
 public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
@@ -31,30 +34,49 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     private final JButton btnShowTimes = new JButton("Show times");
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
+    private final JButton btnAddTicket = new JButton("Add Ticket");
+    private final JButton btnRemoveTicket = new JButton("Remove Ticket");
+    private final JButton btnConfirm = new JButton("Confirm Order");
+
+    private final List<Ticket> TICKETS_LIST;
+
+    JLabel lblTicket = new JLabel("Ticket ");
+    private final JComboBox<String> cbTicket = new JComboBox<>();
+
+
     private final JTextField txtMovieID = new JTextField(2);
+
+    JTable tblShowTimes  = new JTable();
+    JTable tblBill  = new JTable();
+
     JLabel lblMovieDetails = new JLabel();
+    JLabel lblTotal = new JLabel("Total to pay: ");
+
 
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
     private final DefaultTableCellRenderer cellRenderer;
-    MaskFormatter mf1 = new MaskFormatter("####-##-##");
-    JFormattedTextField txtMShowDate = new JFormattedTextField(mf1);
+
     JLabel movieTitle = new JLabel();
+
+
+    JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(0, 0, 8, 1));
     private DefaultTableModel model;
 
 
     public PurchaseTicket() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         // set movie title label style
         db = Database.getInstance();
-        mf1.setPlaceholderCharacter('_');
+        TICKETS_LIST = db.getTicket();
+
         movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
         movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
+
 
         scrollPane.setViewportView(table);
         showColumn();
 
         txtMovieID.addKeyListener(this);
-        txtMShowDate.addKeyListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
@@ -72,6 +94,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
 
         populateTable();
+
 //        table.getColumnModel().getColumn(0).setPreferredWidth(5);
 //        table.getColumnModel().getColumn(1).setPreferredWidth(150);
 //
@@ -83,19 +106,40 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         populateMovieComboBox();
+        init();
+
         middle.add(cbMovies);
         lblMovieDetails.setText(getSelectedMovieTitle());
         middle.add(lblMovieDetails);
 
-//        middle.add(txtMShowDate);
+        JScrollPane showTimesShowPane = new JScrollPane(tblShowTimes);
+        JScrollPane billScrollPane = new JScrollPane(tblBill);
+
+
+
+        middle.add(showTimesShowPane);
+        middle.add(billScrollPane);
+
 //        movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
 //        middle.add(movieTitle);
 
 
         JPanel south = new JPanel();
-//        JScrollPane movieScrollPane = new JScrollPane(scrollPane);
 
-//        south.add(movieScrollPane);
+
+
+        south.add(lblTicket);
+        populateTicketComboBox();
+        south.add(cbTicket);
+        south.add(spNumTickets);
+        south.add(btnAddTicket);
+        south.add(btnRemoveTicket);
+        south.add(btnConfirm);
+        south.add(lblTotal);
+
+
+
+
 
         add("North", top);
         add("Center", middle);
@@ -109,6 +153,21 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
 
         setVisible(true);
+    }
+
+    private void init() {
+//        int selectedMovieID = cbMovies.getSelectedIndex() + 1;
+//        cbMovies.setSelectedIndex();
+        // combo box start from 0 index so if the first movie is selected set the default option
+        if (MovieInfo.getMovieID() == 1){
+            cbMovies.setSelectedIndex(0);
+            return;
+        }
+        int selectedMovieID = MovieInfo.getMovieID() -1;
+
+        cbMovies.setSelectedIndex(selectedMovieID);
+
+//       JOptionPane.showMessageDialog(null,  MovieInfo.getMovieID());
     }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
@@ -156,11 +215,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtMShowDate) {
-            movieShowTimes.setShowDate(txtMShowDate.getText());
-            populateTable();
 
-        }
 
 
         if (e.getSource() == txtMovieID) {
@@ -178,7 +233,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
                 movieTitle.setText(title);
                 movieShowTimes.setMovieId(movieID);
-                movieShowTimes.setShowDate(txtMShowDate.getText());
 
 
                 populateTable();
@@ -280,11 +334,22 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
 
-    private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private void populateTicketComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         // add default value
-        for (var title : db.getMovieTitle()) {
-            cbMovies.addItem(title);
+        for (var ticket : TICKETS_LIST) {
+            String ticketStr = MessageFormat.format("{0} {1}",ticket.getType(), Helper.formatMoney(ticket.getPrice()));
+            cbTicket.addItem(ticketStr);
         }
 
     }
+
+    private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        // add default value
+        for (var movie : db.getMovieTitle()) {
+            cbMovies.addItem(movie);
+        }
+
+    }
+
+
 }
