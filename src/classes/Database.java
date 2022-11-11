@@ -383,6 +383,31 @@ public class Database {
         return genreList;
     }
 
+
+    public List<String> getMovieTitle() {
+        List<String> movieTitleList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+
+            String sql = new Movie().getMovieList();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+
+            if (isResultSetEmpty(rs)) {
+                con.close();
+                return movieTitleList;
+            }
+            while (rs.next()) {
+                movieTitleList.add(rs.getString("title"));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return movieTitleList;
+    }
+
     public String getMovieName(int movieID) {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME, MovieTable.COLUMN_ID);

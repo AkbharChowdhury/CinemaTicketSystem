@@ -43,6 +43,9 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, IOException, ParseException {
         db = Database.getInstance();
+        for (var d: db.getMovieTitle()){
+            System.out.println(d);
+        }
 //        System.out.println(db.getMovieName(20));
 //        String pattern = "hh:mm a";
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -66,7 +69,7 @@ public class Main {
 //                ;
 //        System.out.println(result);
 //        timeCoversion12to24("12:21");
-        System.out.println(formatTime("14:30"));
+//        System.out.println(formatTime("14:30"));
 
         System.exit(0);
         MovieShowTimes ms = new MovieShowTimes();
