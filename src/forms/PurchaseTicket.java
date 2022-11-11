@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
@@ -63,6 +65,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
 
     JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(0, 0, 8, 1));
+
     private DefaultTableModel model;
 
 
@@ -219,6 +222,11 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void keyPressed(KeyEvent e) {
         if (e.getSource() == spNumTickets){
             System.out.println("PK");
+//            NumberFormatter formatter = (NumberFormatter) txt.getFormatter();
+//            DecimalFormat decimalFormat = new DecimalFormat("00");
+//            formatter.setFormat(decimalFormat);
+//            formatter.setAllowsInvalid(false);
+
         }
 
 
