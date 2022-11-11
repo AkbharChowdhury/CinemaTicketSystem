@@ -5,6 +5,8 @@ import enums.FormDetails;
 import interfaces.FormAction;
 import interfaces.TableGUI;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.MaskFormatter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -25,7 +27,7 @@ import java.util.*;
 import java.util.List;
 
 
-public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
+public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener {
     private final Database db;
     private final MovieShowTimes movieShowTimes = new MovieShowTimes();
     private final JTable table = new JTable();
@@ -150,7 +152,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
         cbMovies.addActionListener(this);
-
+        spNumTickets.addChangeListener(this);
 
         setVisible(true);
     }
@@ -215,18 +217,16 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getSource() == spNumTickets){
+            System.out.println("PK");
+        }
 
 
 
         if (e.getSource() == txtMovieID) {
-            char c = e.getKeyChar();
-            if (Character.isLetter(c)) {
-                // disable input if the value is not a number
-                txtMovieID.setEditable(false);
-            }
+            Helper.validateNumber(e, txtMovieID);
 
-            boolean isNumber = !Character.isLetter(c);
-            txtMovieID.setEditable(isNumber);
+
 
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 int movieID = Integer.parseInt(txtMovieID.getText());
@@ -352,4 +352,13 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
 
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == spNumTickets){
+            System.out.println(spNumTickets.getValue());
+
+
+        }
+
+    }
 }

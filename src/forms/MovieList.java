@@ -160,14 +160,15 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
 
         if (e.getSource() == txtMovieID) {
-            char c = e.getKeyChar();
-            if (Character.isLetter(c)) {
-                // disable input if the value is not a number
-                txtMovieID.setEditable(false);
-            }
-
-            boolean isNumber = !Character.isLetter(c);
-            txtMovieID.setEditable(isNumber);
+            Helper.validateNumber(e, txtMovieID);
+//            char c = e.getKeyChar();
+//            if (Character.isLetter(c)) {
+//                // disable input if the value is not a number
+//                txtMovieID.setEditable(false);
+//            }
+//
+//            boolean isNumber = !Character.isLetter(c);
+//            txtMovieID.setEditable(isNumber);
 
         }
 

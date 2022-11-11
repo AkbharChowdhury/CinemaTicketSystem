@@ -3,6 +3,7 @@ package classes;
 import enums.Files;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -48,6 +49,16 @@ public final class Helper {
     public static String formatMoney(double amount) {
         NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.UK);
         return currency.format(amount);
+    }
+    public static void validateNumber(KeyEvent e, JTextField textField){
+        char c = e.getKeyChar();
+        if (Character.isLetter(c)) {
+            // disable input if the value is not a number
+            textField.setEditable(false);
+        }
+
+        boolean isNumber = !Character.isLetter(c);
+        textField.setEditable(isNumber);
     }
 
 }
