@@ -1,11 +1,9 @@
 package forms;
 
-import classes.Database;
-import classes.Helper;
-import classes.MovieGenres;
-import classes.MovieInfo;
+import classes.*;
 import enums.FormDetails;
 import interfaces.FormAction;
+import interfaces.TableGUI;
 import interfaces.TableProperties;
 
 import javax.swing.*;
@@ -22,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties {
+public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties, TableGUI {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
     private final JTable table = new JTable();
@@ -101,10 +99,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     }
 
-    private static void clearTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-    }
+
 
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
@@ -187,6 +182,19 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void handleButtonClick(ActionEvent e) {
         if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+                return;
+            }
 
             if (txtMovieID.getText().isEmpty()) {
                 Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
@@ -204,7 +212,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         if (e.getSource() == btnListMovies) {
             try {
                 new MovieList();
-//                dispose();
+                dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -213,6 +221,20 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnShowReceipt) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+                return;
+            }
+
             try {
                 new ShowReceipt();
                 dispose();
@@ -245,9 +267,23 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     }
 
 
+
+    @Override
+    public void clearTable(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+    }
+
+    @Override
+    public void showColumn() {
+        new MovieGenres().tableColumns().forEach(i -> model.addColumn(i));
+
+
+    }
+
+    @Override
     public void populateTable() {
         clearTable(table);
-
         var movieList = db.showMovieList(movieGenre);
         int i = 0;
         for (var movie : movieList) {
@@ -259,6 +295,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             model.setValueAt(movie.getGenres(), i, 4);
             i++;
         }
+
 
     }
 }

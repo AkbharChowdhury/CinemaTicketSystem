@@ -2,6 +2,7 @@ package classes;
 
 import enums.Files;
 import org.sqlite.SQLiteConfig;
+import tables.CustomerTable;
 import tables.MovieTable;
 
 import java.io.File;
@@ -404,6 +405,53 @@ public class Database {
             e.printStackTrace();
         }
         return "error";
+
+    }
+
+    public boolean isAuthorised(String email, String password) {
+
+        String sql = "SELECT * FROM Customers WHERE email = ? AND password = ?";
+
+        try (Connection con = getConnection()) {
+            ResultSet rs2;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+
+            rs2 = stmt.executeQuery();
+
+            return !isResultSetEmpty(rs2);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public int getCustomerID(String email) {
+        String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
+
+
+        try (Connection con = getConnection()) {
+
+            ResultSet rs3;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
+
+            rs3 = stmt.executeQuery();
+
+
+
+            return rs3.getInt(CustomerTable.COLUMN_ID);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
 
     }
 

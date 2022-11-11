@@ -1,6 +1,9 @@
 package forms;
 
 import classes.Database;
+import classes.Encryption;
+import classes.Helper;
+import classes.LoginInfo;
 import enums.FormDetails;
 
 import javax.swing.*;
@@ -14,8 +17,8 @@ import java.sql.SQLException;
 
 public class Login extends JFrame implements ActionListener  {
     private Database db;
-    private final JButton btnLogin = new JButton("forms.Login");
-    JTextField txtUsername = new JTextField(20);
+    private final JButton btnLogin = new JButton("Login");
+    JTextField txtEmail = new JTextField(20);
     JPasswordField txtPassword = new JPasswordField(20);
 
     private final JLabel lblUsername = new JLabel("Username");
@@ -40,7 +43,7 @@ public class Login extends JFrame implements ActionListener  {
         panel.setLayout(null);
 
         lblUsername.setBounds(10,20,80,25);
-        txtUsername.setBounds(100,20,165,25);
+        txtEmail.setBounds(100,20,165,25);
 
         lblPassword.setBounds(10,50,80,25);
         txtPassword.setBounds(100,50,165,25);
@@ -49,7 +52,7 @@ public class Login extends JFrame implements ActionListener  {
 
 
         panel.add(lblUsername);
-        panel.add(txtUsername);
+        panel.add(txtEmail);
         panel.add(lblPassword);
         panel.add(txtPassword);
         panel.add(btnLogin);
@@ -76,6 +79,21 @@ public class Login extends JFrame implements ActionListener  {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String email = txtEmail.getText();
+        var password = txtPassword.getText();
+
+        if (db.isAuthorised(email, Encryption.encode(password))){
+            LoginInfo.setCustomerID(db.getCustomerID(email));
+            try {
+                new MovieList();
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return;
+        }
+        Helper.showErrorMessage("invalid username/password combination","Login error");
+
 //        var page = new App.NewPage();
 //        page.setVisible(true);
 //
