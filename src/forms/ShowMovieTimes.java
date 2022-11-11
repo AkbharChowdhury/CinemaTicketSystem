@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 
 
 public class ShowMovieTimes extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
@@ -106,7 +107,7 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
     }
 
 
-    private void setUpTimesListInit() {
+    private void setUpTimesListInit() throws ParseException {
         txtMovieID.setText(String.valueOf(MovieInfo.getMovieID()));
         movieShowTimes.setMovieId(MovieInfo.getMovieID());
         movieShowTimes.setShowDate("");
@@ -235,17 +236,23 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void populateTable() {
-        clearTable(table);
-        var showTimesList = db.showMovieTimes(movieShowTimes);
-        int i = 0;
-        for (var showTime : showTimesList) {
-            model.addRow(new Object[0]);
-            model.setValueAt(showTime.getShowDate(), i, 0);
-            model.setValueAt(showTime.getShowTime(), i, 1);
-            model.setValueAt(showTime.getNumTicketLeft(), i, 2);
+        try {
+            clearTable(table);
+            var showTimesList = db.showMovieTimes(movieShowTimes);
+            int i = 0;
+            for (var showTime : showTimesList) {
+                model.addRow(new Object[0]);
+                model.setValueAt(showTime.getShowDate(), i, 0);
+                model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 1);
+                model.setValueAt(showTime.getNumTicketLeft(), i, 2);
+                i++;
+            }
 
-            i++;
+        } catch (ParseException e){
+            e.printStackTrace();
+
         }
+
 
     }
 }

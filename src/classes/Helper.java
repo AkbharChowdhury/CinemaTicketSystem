@@ -4,6 +4,10 @@ import enums.Files;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public final class Helper {
@@ -30,6 +34,14 @@ public final class Helper {
     public static void showErrorMessage(String message, String title){
         JOptionPane.showMessageDialog(null, message,
                 title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static String formatTime(String time) throws ParseException {
+        DateFormat f1 = new SimpleDateFormat("hh:mm"); //12:30
+        Date unFormattedTime = f1.parse(time);
+
+        DateFormat formattedTime = new SimpleDateFormat("h:mm a"); // e.g. 12:30 AM
+        return formattedTime.format(unFormattedTime); // "23:00"
     }
 
 }
