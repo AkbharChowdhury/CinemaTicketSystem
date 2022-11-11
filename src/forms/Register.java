@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
+
 public class Register
         extends JFrame implements ActionListener {
     private final JTextField txtFirstname = new JTextField("");
@@ -22,18 +23,8 @@ public class Register
     private final JButton btnRegister = new JButton("Register");
     private final List<Ticket> TICKETS_LIST;
 
-    private Database db;
+    private final Database db;
 
-
-
-
-
-
-
-    public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        new Register();
-
-    }
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
@@ -45,7 +36,7 @@ public class Register
         setLocationRelativeTo(null);
 
         JPanel middle = new JPanel();
-        middle.setLayout(new GridLayout(6,1,5,5));
+        middle.setLayout(new GridLayout(6, 1, 5, 5));
         middle.add(new JLabel("Firstname"));
         middle.add(txtFirstname);
         middle.add(new JLabel("Lastname"));
@@ -69,39 +60,47 @@ public class Register
         setVisible(true);
     }
 
+    public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        new Register();
+
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnRegister){
-            String firstname = txtFirstname.getText();
-            String lastname = txtLastName.getText();
-            String email = txtEmail.getText();
-            String password = txtPassword.getText();
-            Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
-            if (Validation.validateRegisterForm(customer)){
-                if (db.emailExists(customer.getEmail())){
-                    Helper.showErrorMessage("This email already exists", "Email error");
-                    return;
-                }
-                if (db.addCustomer(customer)){
-                    Helper.message("Your account has been created, you can now login");
-                }
 
-                try {
-                    new Login();
-                    dispose();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-            }
+        if (e.getSource() == btnRegister) {
+            handleRegister();
         }
 
 
+    }
+    private void handleRegister(){
+        String firstname = txtFirstname.getText();
+        String lastname = txtLastName.getText();
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+        Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
+        if (Validation.validateRegisterForm(customer)) {
+            if (db.emailExists(customer.getEmail())) {
+                Helper.showErrorMessage("This email already exists", "Email error");
+                return;
+            }
+            // encrypt the password
+            customer.setPassword(Encryption.encode(password));
+            // add customer
+            if (db.addCustomer(customer)) {
+                Helper.message("Your account has been created, you can now login");
+            }
 
+            try {
+                new Login();
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-
-
-
+        }
     }
 
     private void populateTicketComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -111,4 +110,6 @@ public class Register
         }
 
     }
+
+
 }

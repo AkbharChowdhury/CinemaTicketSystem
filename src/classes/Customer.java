@@ -10,7 +10,6 @@ public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
-    private String dob;
     private String email;
     private String password;
 
@@ -52,13 +51,8 @@ public class Customer extends Ticket implements Queries {
         this.lastname = lastname;
     }
 
-    public String getDob() {
-        return dob;
-    }
 
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
+
 
     public String getEmail() {
         return email;

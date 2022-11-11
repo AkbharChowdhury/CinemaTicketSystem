@@ -200,8 +200,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
 
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
+
+            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
                 return;
             }
             try {
@@ -240,6 +240,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 //                return;
 //            }
 
+
             try {
                 new ShowReceipt();
                 dispose();
@@ -253,6 +254,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
             if (txtMovieID.getText().isEmpty()) {
                 Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
+                return;
+            }
+            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
                 return;
             }
             try {

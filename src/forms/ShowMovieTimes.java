@@ -142,6 +142,9 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
 
         if (e.getSource() == txtMovieID) {
            Helper.validateNumber(e, txtMovieID);
+            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
+                return;
+            }
 
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 int movieID = Integer.parseInt(txtMovieID.getText());

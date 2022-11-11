@@ -65,4 +65,13 @@ public final class Helper {
         textField.setEditable(isNumber);
     }
 
+    public static boolean validateMovieID(Database db, int movieID){
+        if (!db.movieIDExists(movieID)){
+            showErrorMessage("This movie ID does not exists. Please enter an existing movie ID","Movie ID error");
+            return false;
+        }
+        return true;
+
+    }
+
 }

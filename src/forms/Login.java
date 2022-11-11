@@ -1,9 +1,6 @@
 package forms;
 
-import classes.Database;
-import classes.Encryption;
-import classes.Helper;
-import classes.LoginInfo;
+import classes.*;
 import enums.FormDetails;
 
 import javax.swing.*;
@@ -15,21 +12,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 
-public class Login extends JFrame implements ActionListener  {
+public class Login extends JFrame implements ActionListener {
     private final Database db;
     private final JButton btnLogin = new JButton("Login");
-    JTextField txtEmail = new JTextField(20);
-    JPasswordField txtPassword = new JPasswordField(20);
+    private final JButton btnRegister = new JButton("Register");
 
     private final JLabel lblUsername = new JLabel("Username");
     private final JLabel lblPassword = new JLabel("Password");
-
     private final JPanel panel = new JPanel();
+    private final JTextField txtEmail = new JTextField(20);
+    private final JPasswordField txtPassword = new JPasswordField(20);
 
 
-
-
-    public Login() throws InvocationTargetException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
+    public Login() throws SQLException, FileNotFoundException {
 
         db = Database.getInstance();
         setResizable(false);
@@ -42,13 +37,13 @@ public class Login extends JFrame implements ActionListener  {
 
         panel.setLayout(null);
 
-        lblUsername.setBounds(10,20,80,25);
-        txtEmail.setBounds(100,20,165,25);
+        lblUsername.setBounds(10, 20, 80, 25);
+        txtEmail.setBounds(100, 20, 165, 25);
 
-        lblPassword.setBounds(10,50,80,25);
-        txtPassword.setBounds(100,50,165,25);
-
-        btnLogin.setBounds(10,80,80,25 );
+        lblPassword.setBounds(10, 50, 80, 25);
+        txtPassword.setBounds(100, 50, 165, 25);
+        btnLogin.setBounds(10, 80, 80, 25);
+        btnRegister.setBounds(90, 80, 80, 25);
 
 
         panel.add(lblUsername);
@@ -56,33 +51,47 @@ public class Login extends JFrame implements ActionListener  {
         panel.add(lblPassword);
         panel.add(txtPassword);
         panel.add(btnLogin);
+        panel.add(btnRegister);
+
         btnLogin.addActionListener(this);
-
-
-
-
-
-
+        btnRegister.addActionListener(this);
 
 
         setVisible(true);
     }
 
 
-
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-       new Login();
-
-
+        new Login();
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String email = txtEmail.getText();
-        var password = txtPassword.getText();
+        if (e.getSource() == btnLogin) {
+            handleLogin();
+            return;
+        }
+        try {
+            new Register();
+            dispose();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        if (db.isAuthorised(email, Encryption.encode(password))){
+    }
+
+    private void handleLogin() {
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+        if (!Validation.validateLoginForm(email, password)) {
+            return;
+        }
+        if (!db.emailExists(txtEmail.getText())) {
+            Helper.showErrorMessage("This email does not exist!", "Login Error");
+            return;
+        }
+        if (db.isAuthorised(email, Encryption.encode(password))) {
             LoginInfo.setCustomerID(db.getCustomerID(email));
             try {
                 new MovieList();
@@ -92,17 +101,7 @@ public class Login extends JFrame implements ActionListener  {
             }
             return;
         }
-        Helper.showErrorMessage("invalid username/password combination","Login error");
-
-//        var page = new App.NewPage();
-//        page.setVisible(true);
-//
-//        //create a welcome label and set it to the new page
-//        LoginInfo.setCustomerID(1);
-//        JLabel wel_label = new JLabel("Welcome: " + LoginInfo.getCustomerID());
-//        page.getContentPane().add(wel_label);
-//        dispose();
-
+        Helper.showErrorMessage("invalid username/password combination", "Login error");
     }
 }
 
