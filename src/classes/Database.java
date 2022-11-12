@@ -432,6 +432,31 @@ public class Database {
     }
 
 
+    public List<MovieTemp> getMovieAllShowTimes() {
+        List<MovieTemp> movies = new ArrayList<>();
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieShowTimes().getAllMovieShowTimes();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+//            Movie movie = new Movie();
+
+            while (rs.next()) {
+//                System.out.println(rs.getString("movie_id"));
+//                System.out.println(rs.getString("title"));
+
+//                movie.setTitle(rs.getString(MovieTable.COLUMN_TITLE));
+                movies.add(new MovieTemp(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
+
+
 
     public List<Ticket> getTicket() {
         List<Ticket> ticketList = new ArrayList<>();

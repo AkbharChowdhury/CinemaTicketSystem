@@ -200,7 +200,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             movieShowTimes.setMovieId(selectedIndex);
             movieShowTimes.setShowDate("");
             populateTable();
-//            txtMovieID.setText(String.valueOf(MovieInfo.getMovieID()));
 
         }
 
@@ -347,8 +346,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         // add default value
-        for (var movie : db.getMovieTitle()) {
-            cbMovies.addItem(movie);
+
+
+        for (var d : db.getMovieAllShowTimes()){
+            cbMovies.addItem(d.getTitle());
         }
 
     }

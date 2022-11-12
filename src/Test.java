@@ -9,8 +9,10 @@ import java.util.regex.Pattern;
 public class Test {
     // email regex https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
     public static void main(String[] args) throws SQLException, FileNotFoundException {
-        System.out.println(Helper.formatDate("1999-12-12"));
-
+//        System.out.println(Helper.formatDate("1999-12-12"));
+        for (var d : Database.getInstance().getMovieAllShowTimes()){
+            System.out.println(d.getTitle() + " " + d.getMovieID());
+        }
 
 
     }

@@ -137,6 +137,21 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
     }
 
 
+    public  String getAllMovieShowTimes() {
+
+        return  """
+                    SELECT 
+                     DISTINCT(mst.movie_id),
+                     m.title
+                  FROM MovieShowTimes mst
+               JOIN Movies m ON m.movie_id = mst.movie_id
+                """;
+
+
+
+    }
+
+
     @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
