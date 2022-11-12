@@ -97,7 +97,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         if (db.isAuthorised(email, Encryption.encode(password))) {
             LoginInfo.setCustomerID(db.getCustomerID(email));
             try {
-                new MovieList();
+                new MovieListOld();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();

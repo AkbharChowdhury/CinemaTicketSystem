@@ -9,7 +9,6 @@ import javax.swing.text.MaskFormatter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.time.format.DateTimeParseException;
 
 
 public class PT extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
@@ -55,7 +53,7 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.showTimes());
+        setTitle(FormDetails.purchaseTicket() + "YES");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -187,7 +185,7 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieList();
+                new MovieListOld();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();

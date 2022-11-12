@@ -1,7 +1,7 @@
 package classes;
 
 public final class MovieInfo {
-    private static int movieID;
+    private static int movieID = 0;
 
     public static int getMovieID() {
         return movieID;

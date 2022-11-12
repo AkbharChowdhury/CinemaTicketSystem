@@ -290,7 +290,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     private void updateTotalLabel() {
         double ticketPrice = TICKET_DETAILS.getPrice();
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        System.out.println(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
         lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
     }
 
@@ -301,7 +300,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieList();
+                new MovieListOld();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -378,7 +377,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 if (MovieInfo.getMovieID() == 1) {
                     movieIndex = 0;
                 } else {
-                    movieIndex = i - 1;
                 }
             }
             cbMovies.addItem(movie.get(i).getTitle());

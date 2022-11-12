@@ -195,7 +195,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
     @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
-        columns.add("ID");
+//        columns.add("ID");
         columns.add("Movie");
         columns.add("Duration");
         columns.add("Rating");

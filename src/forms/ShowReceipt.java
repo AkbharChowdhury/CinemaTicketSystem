@@ -5,12 +5,8 @@ import classes.*;
 import enums.FormDetails;
 import interfaces.FormAction;
 import interfaces.ListGUI;
-import interfaces.TableGUI;
-import interfaces.TableProperties;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.List;
 
 
 public class ShowReceipt extends JFrame implements ActionListener, KeyListener, FormAction, ListGUI {
@@ -193,7 +188,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieList();
+                new MovieListOld();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();

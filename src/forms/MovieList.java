@@ -1,6 +1,7 @@
 package forms;
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
 import interfaces.FormAction;
 import interfaces.TableGUI;
@@ -9,7 +10,6 @@ import interfaces.TableProperties;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,11 +27,10 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final MovieGenres movieGenre = new MovieGenres();
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
-    private final JButton btnListMovies = new JButton("List Movies");
-    private final JButton btnShowTimes = new JButton("Show times");
-    private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
-    private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JTextField txtMovieID = new JTextField(2);
+    private final JButton btnListMovies = new JButton(Buttons.listMovies());
+    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
+    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
+    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
     private DefaultTableModel model;
@@ -43,11 +42,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
-        txtMovieID.setText("20");
         scrollPane.setViewportView(table);
         setupTableProperties();
 
-        txtMovieID.addKeyListener(this);
         txtMovieTitle.addKeyListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
@@ -60,7 +57,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         top.add(btnListMovies);
         top.add(btnShowTimes);
-        top.add(txtMovieID);
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
@@ -68,13 +64,14 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         populateGenreComboBox();
 
         populateTable();
-        table.getColumnModel().getColumn(0).setPreferredWidth(5);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(30);
 
-        table.getColumnModel().getColumn(3).setPreferredWidth(50);
+        table.getColumnModel().getColumn(3).setPreferredWidth(120);
         cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie Title:"));
@@ -84,6 +81,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         JPanel south = new JPanel();
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(600, 400));
+
         south.add(scrollPane);
 
         add("North", top);
@@ -164,18 +163,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
 
-        if (e.getSource() == txtMovieID) {
-            Helper.validateNumber(e, txtMovieID);
-//            char c = e.getKeyChar();
-//            if (Character.isLetter(c)) {
-//                // disable input if the value is not a number
-//                txtMovieID.setEditable(false);
-//            }
-//
-//            boolean isNumber = !Character.isLetter(c);
-//            txtMovieID.setEditable(isNumber);
 
-        }
 
     }
 
@@ -188,6 +176,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void handleButtonClick(ActionEvent e) {
         if (e.getSource() == btnPurchaseTicket) {
+
             if (LoginInfo.getCustomerID() == 0){
                 int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
                 if (dialogButton == JOptionPane.YES_OPTION){
@@ -201,15 +190,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                 return;
             }
 
-            if (txtMovieID.getText().isEmpty()){
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "purchase ticket error");
-                return;
-            }
-            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
-                return;
-            }
+
+//            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
+//                return;
+//            }
+
+
+
+
             try {
-                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
+//                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new PurchaseTicket();
 
                 dispose();
@@ -221,7 +211,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieList();
+                new MovieListOld();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -257,25 +247,11 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         if (e.getSource() == btnShowTimes) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
-                return;
-            }
-            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
-                return;
-            }
 
-            int movieID = Integer.parseInt(txtMovieID.getText());
-            MovieShowTimes movieShowTimes = new MovieShowTimes();
-            movieShowTimes.setMovieId(movieID);
-            movieShowTimes.setShowDate("");
 
-            if (Helper.validateMovieShowTime(db, movieShowTimes, movieID)){
-                return;
-            }
 
             try {
-                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
+//                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new ShowMovieTimes();
                 dispose();
             } catch (Exception ex) {
@@ -284,6 +260,18 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         }
     }
+
+//    private boolean validateShowTimes() {
+//        int movieID = Integer.parseInt(txtMovieID.getText());
+//        MovieShowTimes movieShowTimes = new MovieShowTimes();
+//        movieShowTimes.setMovieId(movieID);
+//        movieShowTimes.setShowDate("");
+//
+//        if (Helper.validateMovieShowTime(db, movieShowTimes, movieID)){
+//            return false;
+//        }
+//        return true;
+//    }
 
     @Override
     public List<String> tableColumns() {
@@ -312,11 +300,11 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         int i = 0;
         for (var movie : movieList) {
             model.addRow(new Object[0]);
-            model.setValueAt(movie.getMovieID(), i, 0);
-            model.setValueAt(movie.getTitle(), i, 1);
-            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 2);
-            model.setValueAt(movie.getRating(), i, 3);
-            model.setValueAt(movie.getGenres(), i, 4);
+//            model.setValueAt(movie.getMovieID(), i, 0);
+            model.setValueAt(movie.getTitle(), i, 0);
+            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 1);
+            model.setValueAt(movie.getRating(), i, 2);
+            model.setValueAt(movie.getGenres(), i, 3);
             i++;
         }
 
