@@ -511,6 +511,31 @@ public class Database {
 
     }
 
+    public int getMovieID(String title) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE);
+
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, title);
+
+            rs = stmt.executeQuery();
+
+            if (isResultSetEmpty(rs)) {
+                return 0;
+            }
+
+            return rs.getInt(MovieTable.COLUMN_ID);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
     public boolean isAuthorised(String email, String password) {
 
         String sql = "SELECT * FROM Customers WHERE email = ? AND password = ?";

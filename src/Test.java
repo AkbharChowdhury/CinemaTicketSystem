@@ -13,10 +13,9 @@ public class Test {
     // email regex https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
     public static void main(String[] args) throws SQLException, FileNotFoundException, CompileException, InvocationTargetException {
 //        System.out.println(Helper.formatDate("1999-12-12"));
-//        String x = "System.out.println(\"X\");"; //<-- dont forget the ; in the string here
-//        ScriptEvaluator se = new ScriptEvaluator();
-//        se.cook(x);
-//        se.evaluate(new Object[0]);
+        var db = Database.getInstance();
+        System.out.println(db.getMovieID("You're Next"));
+//
 
 
     }

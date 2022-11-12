@@ -18,10 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
-
+import java.time.LocalDate;
+import java.util.List;
 
 public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener, MouseListener {
     final String TOTAL_MSG = "Total to pay: ";
+    int selectedShowTimeID;
 
     private final Database db;
     private final JComboBox<String> cbMovies = new JComboBox<>();
@@ -46,6 +48,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     JLabel lblTotal = new JLabel();
     private final JButton btnConfirm = new JButton("Confirm Order");
     private final Ticket TICKET_DETAILS;
+    private int movieIndex;
 
 
 
@@ -93,7 +96,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         populateMovieComboBox();
+        cbMovies.setSelectedIndex(movieIndex);
         middle.add(cbMovies);
+//        getCBMovieID(MovieInfo.getMovieID());
+        cbMovies.setSelectedIndex(getCBMovieID());
         lblMovieDetails.setText(db.getMovieName(MovieInfo.getMovieID()));
         middle.add(lblMovieDetails);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -120,8 +126,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
         btnListMovies.addActionListener(this);
         btnShowTimes.addActionListener(this);
-        btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
+        btnPurchaseTicket.addActionListener(this);
+        btnConfirm.addActionListener(this);
+
         spNumTickets.addChangeListener(this);
 
         table.addMouseListener(new MouseListener() {
@@ -133,9 +141,12 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
                 String selectedCellValue = (String) table.getValueAt(table.getSelectedRow() , table.getSelectedColumn());
                 int tableID = table.getSelectedRow();
-                int selectedShowTimeID =  Integer.parseInt(model.getValueAt(table.getSelectedRow(), 3).toString());
+//                selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 3).toString());
+
+                var showTimeIDStr  = model.getValueAt(table.getSelectedRow(), 3).toString();
+                selectedShowTimeID = Integer.parseInt(showTimeIDStr);
+
                 String date = model.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println(Helper.formatDate(date));
                 int movieID = Integer.parseInt(txtMovieID.getText());
                 updateMovieLabel(db.getMovieName(movieID) ,Helper.formatDate(date));
 
@@ -187,19 +198,17 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == cbMovies){
-            int selectedIndex = cbMovies.getSelectedIndex();
-
-            if (selectedIndex == 0){
-                selectedIndex = 1;
-
-            } else {
-                selectedIndex++;
-
-            }
-            movieShowTimes.setMovieId(selectedIndex);
+            movieShowTimes.setMovieId(getCBMovieID());
             movieShowTimes.setShowDate("");
             populateTable();
+
+        }
+        if (e.getSource() == btnConfirm){
+            handlePurchase();
+
+
 
         }
 
@@ -207,6 +216,41 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
 
     }
+
+    private void handlePurchase() {
+        if(selectedShowTimeID == 0){
+            Helper.showErrorMessage("Please enter the movie showtime", "Error");
+            return;
+        }
+
+        int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
+        int customerID = LoginInfo.getCustomerID();
+        String salesDate = LocalDate.now().toString();
+        var movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
+
+        String s = MessageFormat.format("""
+                    Purchase details:
+                    Sales Date : {0}
+                   Num Tickets : {1}
+                 customerID : {2}
+                 Movie ID : {3}                                
+                    """, salesDate, numTickets, customerID, movieID);
+        System.out.println(s);
+    }
+
+    private int getCBMovieID(){
+        var movieIDTitle = db.getMovieID(cbMovies.getSelectedItem().toString());
+        int selectedIndex = cbMovies.getSelectedIndex();
+        if (selectedIndex == 0){
+            selectedIndex = 1;
+
+        } else {
+            selectedIndex -=1;
+
+        }
+        return selectedIndex;
+    }
+
 
 
     @Override
@@ -216,11 +260,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void keyPressed(KeyEvent e) {
-//        if (e.getSource() == txtMShowDate) {
-//            movieShowTimes.setShowDate(txtMShowDate.getText());
-//            populateTable();
-//
-//        }
 
 
         if (e.getSource() == txtMovieID) {
@@ -235,8 +274,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 lblMovieDetails.setText(title);
                 movieShowTimes.setMovieId(movieID);
                 movieShowTimes.setShowDate("");
-
-
                 populateTable();
 
 
@@ -260,20 +297,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void handleButtonClick(ActionEvent e) {
-        if (e.getSource() == btnPurchaseTicket) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
-                return;
-            }
-            try {
-                new PurchaseTicket();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        }
 
         if (e.getSource() == btnListMovies) {
             try {
@@ -303,6 +327,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             lblMovieDetails.setText(title);
 
         }
+
+
+
+
     }
 
     @Override
@@ -316,8 +344,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
         new MovieShowTimes().tableColumnsWithID().forEach(i -> model.addColumn(i));
-
-//        new MovieShowTimes().tableColumns().forEach(i -> model.addColumn(i));
 
     }
 
@@ -344,13 +370,22 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     }
 
-    private void populateMovieComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        // add default value
+    private void populateMovieComboBox() {
+        movieIndex = 0;
+        List<Movie> movie = db.getMovieAllShowTimes();
+        for (int i = 0; i < movie.size(); i++) {
+            if (MovieInfo.getMovieID() == movie.get(i).getMovieID()) {
+                if (MovieInfo.getMovieID() == 1) {
+                    movieIndex = 0;
+                } else {
+                    movieIndex = i - 1;
+                }
+            }
+            cbMovies.addItem(movie.get(i).getTitle());
 
 
-        for (var d : db.getMovieAllShowTimes()){
-            cbMovies.addItem(d.getTitle());
         }
+
 
     }
 
@@ -372,15 +407,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == table){
-//            int column = 2;
-//            int row = table.getSelectedRow();
-//            String value = table.getModel().getValueAt(row, column).toString();
-//            System.out.println(value);
-//            int row = table.getSelectedRow();
-//            int column = table.getColumnCount();
-//            for(int i = 0; i < column; i++) {
-//                System.out.println(table.getColumnModel());
-//            }
             int selectedRow = table.getSelectedRow();
             selectedRow = table.convertRowIndexToModel(selectedRow);
             System.out.println(selectedRow);
