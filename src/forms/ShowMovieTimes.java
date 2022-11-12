@@ -146,12 +146,17 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
                 return;
             }
 
+
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 int movieID = Integer.parseInt(txtMovieID.getText());
                 String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
                 movieTitle.setText(title);
                 movieShowTimes.setMovieId(movieID);
                 movieShowTimes.setShowDate(txtMShowDate.getText());
+                if (db.showMovieTimes(movieShowTimes).size() == 0 ){
+                    Helper.showErrorMessage("There are no show times for " + db.getMovieName(movieID),"Show time error");
+                    return;
+                }
 
 
                 populateTable();
@@ -171,14 +176,32 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void handleButtonClick(ActionEvent e) {
-        if (e.getSource() == btnPurchaseTicket) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
+        if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                return;
+            }
+
+            if (txtMovieID.getText().isEmpty()){
+                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "purchase ticket error");
+                return;
+            }
+            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
                 return;
             }
             try {
+                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new PurchaseTicket();
+
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -208,7 +231,18 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
                 Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
                 return;
             }
-            movieShowTimes.setMovieId(Integer.parseInt(txtMovieID.getText()));
+
+            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
+                return;
+            }
+
+            int movieID = Integer.parseInt(txtMovieID.getText());
+            movieShowTimes.setMovieId(movieID);
+
+            if (Helper.validateMovieShowTime(db, movieShowTimes, movieID)){
+                return;
+            }
+
             populateTable();
             String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
             movieTitle.setText(title);

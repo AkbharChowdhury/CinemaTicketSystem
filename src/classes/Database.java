@@ -432,8 +432,10 @@ public class Database {
     }
 
 
-    public List<MovieTemp> getMovieAllShowTimes() {
-        List<MovieTemp> movies = new ArrayList<>();
+    public List<Movie> getMovieAllShowTimes() {
+//        List<MovieTemp> movies = new ArrayList<>();
+        List<Movie> movies = new ArrayList<>();
+
         try (Connection con = getConnection()) {
 
             String sql = new MovieShowTimes().getAllMovieShowTimes();
@@ -446,7 +448,7 @@ public class Database {
 //                System.out.println(rs.getString("title"));
 
 //                movie.setTitle(rs.getString(MovieTable.COLUMN_TITLE));
-                movies.add(new MovieTemp(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
+                movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
 
             }
 

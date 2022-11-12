@@ -31,15 +31,15 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final JButton btnShowTimes = new JButton("Show times");
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
-//    private final JTextField txtMovieID = new JTextField(2);
+    private final JTextField txtMovieID = new JTextField(2);
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
     private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
-
-    MaskFormatter mf1 = new MaskFormatter("##");
-    JFormattedTextField txtMovieID = new JFormattedTextField(mf1);
+//
+//    MaskFormatter mf1 = new MaskFormatter("##");
+//    JFormattedTextField txtMovieID = new JFormattedTextField(mf1);
 
     public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
@@ -197,7 +197,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
                 }
                 return;
             }
@@ -211,7 +210,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             }
             try {
                 MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
-//                new PurchaseTicket();
                 new PurchaseTicket();
 
                 dispose();
@@ -266,6 +264,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
                 return;
             }
+
+            int movieID = Integer.parseInt(txtMovieID.getText());
+            MovieShowTimes movieShowTimes = new MovieShowTimes();
+            movieShowTimes.setMovieId(movieID);
+            movieShowTimes.setShowDate("");
+
+            if (Helper.validateMovieShowTime(db, movieShowTimes, movieID)){
+                return;
+            }
+
             try {
                 MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new ShowMovieTimes();

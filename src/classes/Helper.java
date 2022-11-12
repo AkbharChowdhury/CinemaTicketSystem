@@ -90,4 +90,13 @@ public final class Helper {
         return fullDay;
     }
 
+    public static boolean validateMovieShowTime(Database db, MovieShowTimes movieShowTimes, int movieID){
+        if (db.showMovieTimes(movieShowTimes).size() == 0 ){
+            Helper.showErrorMessage("There are no show times for " + db.getMovieName(movieID),"Show time error");
+            return true;
+        }
+        return false;
+    }
+
+
 }
