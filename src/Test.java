@@ -1,4 +1,5 @@
 import classes.Database;
+import classes.Helper;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -8,9 +9,8 @@ import java.util.regex.Pattern;
 public class Test {
     // email regex https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
     public static void main(String[] args) throws SQLException, FileNotFoundException {
-        var d = Database.getInstance().getCustomerTicketType(5);
-        System.out.println(d.getType());
-        System.out.println(d.getPrice());
+        System.out.println(Helper.formatDate("1999-12-12"));
+
 
 
     }

@@ -43,7 +43,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
-
+        txtMovieID.setText("20");
         scrollPane.setViewportView(table);
         setupTableProperties();
 

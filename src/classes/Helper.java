@@ -9,6 +9,9 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -75,6 +78,16 @@ public final class Helper {
     }
     public static double calcPrice(int numTickets, double price){
         return numTickets * price;
+    }
+
+    public static String formatDate(String date) {
+        String[] dateSplit = date.split("-");
+        int year = Integer.parseInt(dateSplit[0]);
+        int month = Integer.parseInt(dateSplit[1]);
+        int day = Integer.parseInt(dateSplit[2]);
+        LocalDate selectedDate = LocalDate.of(year, month, day);
+        String fullDay = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(selectedDate);
+        return fullDay;
     }
 
 }
