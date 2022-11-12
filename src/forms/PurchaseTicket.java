@@ -385,10 +385,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -397,7 +394,7 @@ import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 
 
-public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener {
+public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener, MouseListener {
     final String TOTAL_MSG = "Total to pay: ";
 
     private final Database db;
@@ -432,6 +429,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public PurchaseTicket() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         // set movie title label style
         db = Database.getInstance();
+
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
         mf1.setPlaceholderCharacter('_');
         movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
@@ -502,6 +500,31 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
         spNumTickets.addChangeListener(this);
+
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String selectedCellValue = (String) table.getValueAt(table.getSelectedRow() , table.getSelectedColumn());
+                int tableID = table.getSelectedRow();
+                System.out.println(tableID);
+                if (tableID == 0){
+
+                }
+//                System.out.println(selectedCellValue);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
 
 
         setVisible(true);
@@ -647,7 +670,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     @Override
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
-        new MovieShowTimes().tableColumns().forEach(i -> model.addColumn(i));
+        new MovieShowTimes().tableColumnsWithID().forEach(i -> model.addColumn(i));
+
+//        new MovieShowTimes().tableColumns().forEach(i -> model.addColumn(i));
 
     }
 
@@ -662,6 +687,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 model.setValueAt(showTime.getShowDate(), i, 0);
                 model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 1);
                 model.setValueAt(showTime.getNumTicketLeft(), i, 2);
+                model.setValueAt(showTime.getShowTimeID(), i, 3);
                 i++;
             }
 
@@ -685,13 +711,49 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == spNumTickets) {
             updateTotalLabel();
-            int column = 0;
-            int row = table.getSelectedRow();
-            String value = table.getModel().getValueAt(row, column).toString();
-            System.out.println(value);
 
 
         }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getSource() == table){
+//            int column = 2;
+//            int row = table.getSelectedRow();
+//            String value = table.getModel().getValueAt(row, column).toString();
+//            System.out.println(value);
+//            int row = table.getSelectedRow();
+//            int column = table.getColumnCount();
+//            for(int i = 0; i < column; i++) {
+//                System.out.println(table.getColumnModel());
+//            }
+            int selectedRow = table.getSelectedRow();
+            selectedRow = table.convertRowIndexToModel(selectedRow);
+            String v = (String)table.getModel().getValueAt(selectedRow, 4);
+            System.out.println(v);
+        }
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }

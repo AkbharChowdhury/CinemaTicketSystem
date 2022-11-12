@@ -2,9 +2,7 @@ package classes;
 
 import enums.Files;
 import org.sqlite.SQLiteConfig;
-import tables.CustomerTable;
-import tables.MovieTable;
-import tables.TicketsTable;
+import tables.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -368,11 +366,12 @@ public class Database {
             }
 
             while (rs.next()) {
-                String title = rs.getString("title");
-                String date = rs.getString("show_date");
-                String showTime = rs.getString("show_time");
-                int ticketsLeft = rs.getInt("num_tickets_left");
-                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft));
+                String title = rs.getString(MovieTable.COLUMN_TITLE);
+                String date = rs.getString(ShowTimesTable.COLUMN_DATE);
+                String showTime = rs.getString(ShowTimesTable.COLUMN_TIME);
+                int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+                int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
+                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID));
 
             }
 

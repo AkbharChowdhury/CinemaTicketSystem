@@ -45,10 +45,11 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         this.showTimeID = showTimeID;
         this.numTicketLeft = numTicketLeft;
     }
-    public MovieShowTimes(String showDate, String ShowTime, String movieTitle, int numTicketLeft){
+    public MovieShowTimes(String showDate, String ShowTime, String movieTitle, int numTicketLeft, int showTimeID){
         super(showDate, ShowTime);
         this.movieTitle = movieTitle;
         this.numTicketLeft = numTicketLeft;
+        this.showTimeID = showTimeID;
 
 
     }
@@ -142,6 +143,15 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         columns.add("Date");
         columns.add("Time");
         columns.add("No of Tickets left");
+        return columns;
+    }
+    public List<String> tableColumnsWithID() {
+        List<String> columns = new ArrayList<>();
+        columns.add("Date");
+        columns.add("Time");
+        columns.add("No of Tickets left");
+        columns.add("ID");
+
         return columns;
     }
 

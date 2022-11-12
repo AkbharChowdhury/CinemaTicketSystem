@@ -61,7 +61,7 @@ public final class Helper {
             textField.setEditable(false);
         }
 
-        boolean isNumber = !Character.isLetter(c);
+        boolean isNumber = !Character.isLetter(c) && e.getKeyChar() !=0;
         textField.setEditable(isNumber);
     }
 

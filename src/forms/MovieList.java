@@ -9,6 +9,7 @@ import interfaces.TableProperties;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -29,14 +31,17 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final JButton btnShowTimes = new JButton("Show times");
     private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
     private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JTextField txtMovieID = new JTextField(2);
+//    private final JTextField txtMovieID = new JTextField(2);
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
     private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
 
-    public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
+    MaskFormatter mf1 = new MaskFormatter("##");
+    JFormattedTextField txtMovieID = new JFormattedTextField(mf1);
+
+    public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
 
         scrollPane.setViewportView(table);
@@ -94,7 +99,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new MovieList();
 
     }
