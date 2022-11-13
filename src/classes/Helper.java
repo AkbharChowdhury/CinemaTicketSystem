@@ -1,10 +1,9 @@
 package classes;
 
 import enums.Files;
+import enums.Pages;
 import enums.RedirectPage;
-import forms.Login;
-import forms.MovieList;
-import forms.PurchaseTicket;
+import forms.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -103,17 +102,38 @@ public final class Helper {
         }
         return false;
     }
-    public  static void gotoForm(JFrame frame) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Class<?> className;
+    public  static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
-        try {
-            new PurchaseTicket();
-
-            frame.dispose();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        switch (page){
+            case LOGIN -> {
+                new Login();
+                currentPage.dispose();
+            }
+            case REGISTER -> {
+                new Register();
+                currentPage.dispose();
+            }
+            case LIST_MOVIES -> {
+                new MovieList();
+                currentPage.dispose();
+            }
+            case PURCHASE_TICKET -> {
+                new PurchaseTicket();
+                currentPage.dispose();
+            }
+            case SHOW_RECEIPT -> {
+                new ShowReceipt();
+                currentPage.dispose();
+            }
         }
+
+//        try {
+//            new PurchaseTicket();
+//
+//            currentPage.dispose();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page){

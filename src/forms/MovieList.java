@@ -3,6 +3,7 @@ package forms;
 import classes.*;
 import enums.Buttons;
 import enums.FormDetails;
+import enums.Pages;
 import enums.RedirectPage;
 import interfaces.FormAction;
 import interfaces.TableGUI;
@@ -142,7 +143,11 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        handleButtonClick(e);
+        try {
+            handleButtonClick(e);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
 
         if (e.getSource() == cbGenres) {
             System.out.println(db.getGenreID(cbGenres.getSelectedItem().toString()));
@@ -184,99 +189,30 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) {
+    public void handleButtonClick(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (e.getSource() == btnPurchaseTicket) {
-//            if(!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
-//                return;
-//            }
-
-
-//            if (LoginInfo.getCustomerID() == 0){
-//                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-//                if (dialogButton == JOptionPane.YES_OPTION){
-//
-//
-//                    try {
-//                        new Login();
-//                        dispose();
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//                return;
-//            }
-
-
-
-
-
             if(Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)){
-                JFrame f = new JFrame();
-
-                Helper.gotoForm(f);
-//                try {
-//                    new PurchaseTicket();
-//
-//                    dispose();
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
+                Helper.gotoForm(this, Pages.LOGIN);
 
             }
-
-
 
         }
 
 
         if (e.getSource() == btnShowReceipt) {
-            if (LoginInfo.getCustomerID() == 0){
-                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-                if (dialogButton == JOptionPane.YES_OPTION){
-                    try {
-                        new Login();
-                        dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+            if(Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
+                Helper.gotoForm(this, Pages.LOGIN);
 
-                }
-                return;
-            }
-
-
-            try {
-                new ShowReceipt();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
 
         }
 
         if (e.getSource() == btnShowTimes) {
-
-            try {
-                new ShowTimes();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+           Helper.gotoForm(this, Pages.SHOW_TIMES);
 
         }
     }
-
-//    private boolean validateShowTimes() {
-//        int movieID = Integer.parseInt(txtMovieID.getText());
-//        MovieShowTimes movieShowTimes = new MovieShowTimes();
-//        movieShowTimes.setMovieId(movieID);
-//        movieShowTimes.setShowDate("");
-//
-//        if (Helper.validateMovieShowTime(db, movieShowTimes, movieID)){
-//            return false;
-//        }
-//        return true;
-//    }
+    
 
     @Override
     public List<String> tableColumns() {
