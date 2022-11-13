@@ -4,6 +4,7 @@ import enums.Files;
 import enums.Pages;
 import enums.RedirectPage;
 import forms.*;
+import forms.ShowTimes;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -125,15 +126,12 @@ public final class Helper {
                 new ShowReceipt();
                 currentPage.dispose();
             }
+            case SHOW_TIMES -> {
+                new ShowTimes();
+                currentPage.dispose();
+            }
         }
 
-//        try {
-//            new PurchaseTicket();
-//
-//            currentPage.dispose();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
     }
 
     public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page){

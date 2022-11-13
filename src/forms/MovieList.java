@@ -39,9 +39,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
-    private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
+    private DefaultTableModel model;
 //
 //    MaskFormatter mf1 = new MaskFormatter("##");
 //    JFormattedTextField txtMovieID = new JFormattedTextField(mf1);
@@ -86,7 +86,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         middle.add(cbGenres);
 
 
-
         JPanel south = new JPanel();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(600, 400));
@@ -112,7 +111,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     }
 
 
-
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
         for (String column : new MovieGenres().tableColumns()) {
@@ -121,7 +119,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
     }
-
 
 
     private void setUpMovieListInit() {
@@ -145,7 +142,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         try {
             handleButtonClick(e);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -159,8 +156,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     }
 
 
-
-
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -171,13 +166,10 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         if (e.getSource() == txtMovieTitle) {
 
 
-
             movieGenre.setTitle(txtMovieTitle.getText().trim());
             populateTable();
 
         }
-
-
 
 
     }
@@ -191,34 +183,28 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void handleButtonClick(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (e.getSource() == btnPurchaseTicket) {
-            if(Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)){
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)) {
                 Helper.gotoForm(this, Pages.LOGIN);
-
             }
-
         }
 
-
         if (e.getSource() == btnShowReceipt) {
-            if(Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
                 Helper.gotoForm(this, Pages.LOGIN);
-
             }
 
         }
 
         if (e.getSource() == btnShowTimes) {
-           Helper.gotoForm(this, Pages.SHOW_TIMES);
-
+            Helper.gotoForm(this, Pages.SHOW_TIMES);
         }
     }
-    
+
 
     @Override
     public List<String> tableColumns() {
         return null;
     }
-
 
 
     @Override
