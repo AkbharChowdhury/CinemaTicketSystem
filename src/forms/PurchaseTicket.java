@@ -1,13 +1,13 @@
 package forms;
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
 import interfaces.FormAction;
 import interfaces.TableGUI;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.MaskFormatter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -19,55 +19,48 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.List;
 
-public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener, MouseListener {
-    final String TOTAL_MSG = "Total to pay: ";
-    int selectedShowTimeID;
 
+public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener, MouseListener
+{
     private final Database db;
-    private final JComboBox<String> cbMovies = new JComboBox<>();
-    JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
-
     private final MovieShowTimes movieShowTimes = new MovieShowTimes();
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
-    private final JButton btnListMovies = new JButton("List Movies");
-    private final JButton btnShowTimes = new JButton("Show times");
-    private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
-    private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JTextField txtMovieID = new JTextField(2);
-    //    private final JTextField txtMShowDate = new JTextField(20);
-    private final DefaultTableCellRenderer cellRenderer;
-    MaskFormatter mf1 = new MaskFormatter("####-##-##");
-    JFormattedTextField txtMShowDate = new JFormattedTextField(mf1);
-    JLabel lblMovieDetails = new JLabel();
-    private DefaultTableModel model;
+    private int movieIDIndex;
+    int selectedShowTimeID;
 
-    JLabel lblTicket = new JLabel();
-    JLabel lblTotal = new JLabel();
-    private final JButton btnConfirm = new JButton("Confirm Order");
+
+    private final JButton btnListMovies = new JButton(Buttons.listMovies());
+    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
+    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
+    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+
+    private final JLabel lblMovieDetails = new JLabel();
+
     private final Ticket TICKET_DETAILS;
-    private int movieIndex;
 
+    final String TOTAL_MSG = "Total to pay: ";
 
+    private final DefaultTableCellRenderer cellRenderer;
+
+    private DefaultTableModel model;
+    private final JComboBox<String> cbMovies = new JComboBox<>();
+    private final JLabel lblTicket = new JLabel();
+    private final JLabel lblTotal = new JLabel();
+    private final JButton btnConfirm = new JButton("Confirm Order");
+
+    private JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));;
 
     public PurchaseTicket() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
-        // set movie title label style
         db = Database.getInstance();
-
+        movieShowTimes.setShowDate("");
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
-        mf1.setPlaceholderCharacter('_');
-        lblMovieDetails.setFont(new Font("Arial", Font.BOLD, 20));
-        lblMovieDetails.setText(db.getMovieName(MovieInfo.getMovieID()));
-        txtMovieID.setEditable(false);
+
 
         scrollPane.setViewportView(table);
         showColumn();
 
-        txtMovieID.addKeyListener(this);
-        txtMShowDate.addKeyListener(this);
-        cbMovies.addActionListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
@@ -75,41 +68,31 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        setUpTimesListInit();
 
         top.add(btnListMovies);
         top.add(btnShowTimes);
-        top.add(txtMovieID);
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
-
-        populateTable();
-//        table.getColumnModel().getColumn(0).setPreferredWidth(5);
-//        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-//
-//        table.getColumnModel().getColumn(3).setPreferredWidth(50);
         cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
         JPanel middle = new JPanel();
-        middle.add(new Label("Movie: "));
+        middle.add(new Label("Select Movies: "));
+        cbMovies.addItem("Select Movie");
         populateMovieComboBox();
-        cbMovies.setSelectedIndex(movieIndex);
         middle.add(cbMovies);
-//        getCBMovieID(MovieInfo.getMovieID());
-        cbMovies.setSelectedIndex(getCBMovieID());
-        lblMovieDetails.setText(db.getMovieName(MovieInfo.getMovieID()));
+        lblMovieDetails.setText("sss");
         middle.add(lblMovieDetails);
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane movieScrollPane = new JScrollPane(scrollPane);
+        middle.add(movieScrollPane);
 
-        middle.add(scrollPane);
+
+//        middle.add(txtShowDate);
 
 
         JPanel south = new JPanel();
-
-//        south.add(movieScrollPane);
 
         showTicketPricesLabel();
         south.add(lblTicket);
@@ -119,19 +102,17 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         updateTotalLabel();
 
         south.add(btnConfirm);
-
         add("North", top);
         add("Center", middle);
         add("South", south);
 
         btnListMovies.addActionListener(this);
         btnShowTimes.addActionListener(this);
-        btnShowReceipt.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
+        btnShowReceipt.addActionListener(this);
+        cbMovies.addActionListener(this);
         btnConfirm.addActionListener(this);
-
         spNumTickets.addChangeListener(this);
-
         table.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -139,22 +120,25 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             @Override
             public void mousePressed(MouseEvent e) {
 
-                String selectedCellValue = (String) table.getValueAt(table.getSelectedRow() , table.getSelectedColumn());
-                int tableID = table.getSelectedRow();
-//                selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 3).toString());
+              try {
+                  int row = table.rowAtPoint(e.getPoint());
+                  int col = table.columnAtPoint(e.getPoint());
 
-                var showTimeIDStr  = model.getValueAt(table.getSelectedRow(), 3).toString();
-                selectedShowTimeID = Integer.parseInt(showTimeIDStr);
+                  var showTimeIDStr1  = model.getValueAt(table.getSelectedRow(), 0).toString();
+                  String selectedCellValue = (String) table.getValueAt(table.getSelectedRow() , table.getSelectedColumn());
+                  int tableID = table.getSelectedRow();
 
-                String date = model.getValueAt(table.getSelectedRow(), 0).toString();
-                int movieID = Integer.parseInt(txtMovieID.getText());
-                updateMovieLabel(db.getMovieName(movieID) ,Helper.formatDate(date));
+                  var showTimeIDStr  = model.getValueAt(table.getSelectedRow(), 3).toString();
+                  selectedShowTimeID = Integer.parseInt(showTimeIDStr);
+
+                  String date = model.getValueAt(table.getSelectedRow(), 0).toString();
+                  updateMovieLabel(db.getMovieName(getMovieID()), Helper.formatDate(date));
+              } catch (Exception ex){
+
+              }
 
 
-                if (tableID == 0){
 
-                }
-//                System.out.println(selectedCellValue);
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -179,6 +163,14 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
 
     }
+    private void updateTotalLabel() {
+        double ticketPrice = TICKET_DETAILS.getPrice();
+        int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
+        lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
+    }
+
+
+
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new PurchaseTicket();
@@ -186,71 +178,30 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
 
-    private void setUpTimesListInit() throws ParseException {
-        txtMovieID.setText(String.valueOf(MovieInfo.getMovieID()));
-        movieShowTimes.setMovieId(MovieInfo.getMovieID());
-        movieShowTimes.setShowDate("");
-
-        populateTable();
-
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        String movieTitle = cbMovies.getSelectedItem().toString();
+        int movieID = cbMovies.getSelectedIndex();
+
         if (e.getSource() == cbMovies){
-            movieShowTimes.setMovieId(getCBMovieID());
-            movieShowTimes.setShowDate("");
+            if(movieID == 0){
+                Helper.showErrorMessage("Please select a movie","Movie Error");
+                cbMovies.setSelectedIndex(movieIDIndex);
+                return;
+
+            }
+            movieShowTimes.setMovieId(db.getMovieID(movieTitle));
+            String title = db.getMovieName(movieID);
+            lblMovieDetails.setText(title);
             populateTable();
-
-        }
-        if (e.getSource() == btnConfirm){
-            handlePurchase();
-
-
-
         }
 
         handleButtonClick(e);
 
 
     }
-
-    private void handlePurchase() {
-        if(selectedShowTimeID == 0){
-            Helper.showErrorMessage("Please enter the movie showtime", "Error");
-            return;
-        }
-
-        int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        int customerID = LoginInfo.getCustomerID();
-        String salesDate = LocalDate.now().toString();
-        var movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-
-        String s = MessageFormat.format("""
-                    Purchase details:
-                    Sales Date : {0}
-                   Num Tickets : {1}
-                 customerID : {2}
-                 Movie ID : {3}                                
-                    """, salesDate, numTickets, customerID, movieID);
-        System.out.println(s);
-    }
-
-    private int getCBMovieID(){
-        var movieIDTitle = db.getMovieID(cbMovies.getSelectedItem().toString());
-        int selectedIndex = cbMovies.getSelectedIndex();
-        if (selectedIndex == 0){
-            selectedIndex = 1;
-
-        } else {
-            selectedIndex -=1;
-
-        }
-        return selectedIndex;
-    }
-
 
 
     @Override
@@ -262,24 +213,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void keyPressed(KeyEvent e) {
 
 
-        if (e.getSource() == txtMovieID) {
-            Helper.validateNumber(e, txtMovieID);
-            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
-                return;
-            }
-
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                int movieID = Integer.parseInt(txtMovieID.getText());
-                String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
-                lblMovieDetails.setText(title);
-                movieShowTimes.setMovieId(movieID);
-                movieShowTimes.setShowDate("");
-                populateTable();
-
-
-            }
-
-        }
 
     }
 
@@ -287,20 +220,39 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public void keyReleased(KeyEvent e) {
 
     }
-    private void updateTotalLabel() {
-        double ticketPrice = TICKET_DETAILS.getPrice();
-        int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
-    }
 
 
     @Override
     public void handleButtonClick(ActionEvent e) {
 
+        if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                return;
+            }
+
+
+            try {
+                new PT();
+
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieListOld();
+                new MovieList();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -310,27 +262,80 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         }
 
         if (e.getSource() == btnShowReceipt) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
+                }
+                return;
+            }
+
+
+            try {
+                new ShowReceipt();
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         }
 
         if (e.getSource() == btnShowTimes) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
-                return;
-            }
-            movieShowTimes.setMovieId(Integer.parseInt(txtMovieID.getText()));
             populateTable();
-            String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
-            lblMovieDetails.setText(title);
+
 
         }
 
 
+        if (e.getSource() == btnConfirm){
+            handlePurchase();
 
+
+
+        }
 
     }
+    private void handlePurchase() {
+//        if(selectedShowTimeID == 0){
+//            Helper.showErrorMessage("Please enter the movie showtime", "Error");
+//            return;
+//        }
+
+        int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
+        int customerID = LoginInfo.getCustomerID();
+        String salesDate = LocalDate.now().toString();
+        int movieID = getMovieID();
+
+        Sales sales = new Sales(salesDate,customerID);
+        if (db.addSales(sales)){
+            int salesID = db.lastInsertedID();
+            SalesDetails salesDetails = new SalesDetails(salesID, 2,numTickets);
+            if (db.addSalesDetails(salesDetails)){
+                System.out.println("Added");
+
+            }
+        }
+
+        String s = MessageFormat.format("""
+                    Purchase details:
+                    Sales Date : {0}
+                   Num Tickets : {1}
+                 customerID : {2}
+                 Movie ID : {3}                                
+                    """, salesDate, numTickets, customerID, movieID);
+        System.out.println(s);
+    }
+    private int getMovieID(){
+        return db.getMovieID(cbMovies.getSelectedItem().toString());
+    }
+
 
     @Override
     public void clearTable(JTable table) {
@@ -354,10 +359,11 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             int i = 0;
             for (var showTime : showTimesList) {
                 model.addRow(new Object[0]);
-                model.setValueAt(showTime.getShowDate(), i, 0);
-                model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 1);
-                model.setValueAt(showTime.getNumTicketLeft(), i, 2);
-                model.setValueAt(showTime.getShowTimeID(), i, 3);
+                model.setValueAt(showTime.getShowTimeID(), i, 0);
+
+                model.setValueAt(showTime.getShowDate(), i, 1);
+                model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 2);
+                model.setValueAt(showTime.getNumTicketLeft(), i, 3);
                 i++;
             }
 
@@ -370,30 +376,11 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
     private void populateMovieComboBox() {
-        movieIndex = 0;
-        List<Movie> movie = db.getMovieAllShowTimes();
-        for (int i = 0; i < movie.size(); i++) {
-            if (MovieInfo.getMovieID() == movie.get(i).getMovieID()) {
-                if (MovieInfo.getMovieID() == 1) {
-                    movieIndex = 0;
-                } else {
-                }
-            }
-            cbMovies.addItem(movie.get(i).getTitle());
 
-
+        for (var movie : db.getAllMovieShowTimes()){
+            cbMovies.addItem(movie.getTitle());
         }
 
-
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == spNumTickets) {
-            updateTotalLabel();
-
-
-        }
 
     }
 
@@ -404,11 +391,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == table){
-            int selectedRow = table.getSelectedRow();
-            selectedRow = table.convertRowIndexToModel(selectedRow);
-            System.out.println(selectedRow);
-        }
 
     }
 
@@ -427,8 +409,15 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     }
 
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == spNumTickets) {
+            updateTotalLabel();
+
+        }
+
+    }
     private void updateMovieLabel(String title, String date){
         lblMovieDetails.setText(String.format("%s: %s", title, date));
     }
 }
-

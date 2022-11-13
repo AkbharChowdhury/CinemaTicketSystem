@@ -27,12 +27,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final MovieGenres movieGenre = new MovieGenres();
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
+
+
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+
+
     private final JTextField txtMovieTitle = new JTextField(20);
-    private final JComboBox<String> comboBoxGenres = new JComboBox<>();
+    private final JComboBox<String> cbGenres = new JComboBox<>();
     private DefaultTableModel model;
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
@@ -67,7 +71,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         table.getColumnModel().getColumn(0).setPreferredWidth(200);
         table.getColumnModel().getColumn(1).setPreferredWidth(30);
 
-        table.getColumnModel().getColumn(3).setPreferredWidth(120);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
         cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
@@ -77,7 +81,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         middle.add(new Label("Movie Title:"));
         middle.add(txtMovieTitle);
         middle.add(new Label("Genre"));
-        middle.add(comboBoxGenres);
+        middle.add(cbGenres);
+
+
 
         JPanel south = new JPanel();
         JScrollPane scrollPane = new JScrollPane(table);
@@ -93,7 +99,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
-        comboBoxGenres.addActionListener(this);
+        cbGenres.addActionListener(this);
 
         setVisible(true);
     }
@@ -124,9 +130,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     }
 
     private void populateGenreComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        comboBoxGenres.addItem("Any Genre");
+        cbGenres.addItem("Any Genre");
         for (var genre : db.getMovieGenreList()) {
-            comboBoxGenres.addItem(genre);
+            cbGenres.addItem(genre);
         }
 
     }
@@ -137,9 +143,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         handleButtonClick(e);
 
-        if (e.getSource() == comboBoxGenres) {
-            System.out.println(comboBoxGenres.getSelectedIndex());
-            movieGenre.setGenreID(comboBoxGenres.getSelectedIndex());
+        if (e.getSource() == cbGenres) {
+            System.out.println(db.getGenreID(cbGenres.getSelectedItem().toString()));
+            movieGenre.setGenreID(db.getGenreID(cbGenres.getSelectedItem().toString()));
             populateTable();
 
 
@@ -157,7 +163,10 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getSource() == txtMovieTitle) {
-            movieGenre.setTitle(txtMovieTitle.getText());
+
+
+
+            movieGenre.setTitle(txtMovieTitle.getText().trim());
             populateTable();
 
         }
@@ -191,15 +200,12 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             }
 
 
-//            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
-//                return;
-//            }
+
 
 
 
 
             try {
-//                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
                 new PurchaseTicket();
 
                 dispose();
@@ -209,16 +215,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         }
 
-        if (e.getSource() == btnListMovies) {
-            try {
-                new MovieListOld();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-
-        }
 
         if (e.getSource() == btnShowReceipt) {
             if (LoginInfo.getCustomerID() == 0){
@@ -247,12 +243,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         if (e.getSource() == btnShowTimes) {
 
-
-
-
             try {
-//                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
-                new ShowMovieTimes();
+                new ShowTimes();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -289,8 +281,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void showColumn() {
         new MovieGenres().tableColumns().forEach(i -> model.addColumn(i));
-
-
     }
 
     @Override
@@ -300,7 +290,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         int i = 0;
         for (var movie : movieList) {
             model.addRow(new Object[0]);
-//            model.setValueAt(movie.getMovieID(), i, 0);
             model.setValueAt(movie.getTitle(), i, 0);
             model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 1);
             model.setValueAt(movie.getRating(), i, 2);

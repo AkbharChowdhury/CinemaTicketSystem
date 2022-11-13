@@ -2,6 +2,7 @@ package forms;
 
 import classes.*;
 import enums.FormDetails;
+import enums.RedirectPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,8 +98,24 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         if (db.isAuthorised(email, Encryption.encode(password))) {
             LoginInfo.setCustomerID(db.getCustomerID(email));
             try {
-                new MovieListOld();
+
+                if (Form.getRedirectPage() == null){
+                    new MovieList();
+                    dispose();
+                    return;
+
+                }
+                switch (Form.getRedirectPage()){
+                    case PURCHASE -> new PurchaseTicket();
+                    case SHOW_RECEIPT -> new ShowReceipt();
+                    default -> new MovieList();
+
+
+                }
                 dispose();
+
+
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

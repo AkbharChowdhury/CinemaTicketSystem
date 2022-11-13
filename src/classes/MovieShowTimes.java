@@ -160,12 +160,13 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         columns.add("No of Tickets left");
         return columns;
     }
+
     public List<String> tableColumnsWithID() {
         List<String> columns = new ArrayList<>();
+        columns.add("ID");
         columns.add("Date");
         columns.add("Time");
         columns.add("No of Tickets left");
-        columns.add("ID");
 
         return columns;
     }

@@ -140,7 +140,11 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
                 """;
 
         if (genreID!=0){
-            sql+= " HAVING genre_id_list LIKE ?";
+            sql+= """
+                    HAVING genre_id_list LIKE ? 
+                    OR genre_id_list LIKE ?
+                    
+                    """;
         }
 
         if (!movieTitle.isEmpty()){

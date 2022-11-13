@@ -21,6 +21,10 @@ public class Sales implements Queries {
         this.salesDate = salesDate;
         this.customerID = customerID;
     }
+    public Sales(String salesDate, int customerID) {
+        this.salesDate = salesDate;
+        this.customerID = customerID;
+    }
 
     public int getSalesID() {
         return salesID;

@@ -1,5 +1,6 @@
 import classes.Database;
 import classes.Helper;
+import classes.Sales;
 import org.codehaus.janino.CompileException;
 import org.codehaus.janino.ScriptEvaluator;
 
@@ -14,8 +15,39 @@ public class Test {
     public static void main(String[] args) throws SQLException, FileNotFoundException, CompileException, InvocationTargetException {
 //        System.out.println(Helper.formatDate("1999-12-12"));
         var db = Database.getInstance();
-        System.out.println(db.getMovieID("You're Next"));
+
+       var rs = db.getInvoice(1);
+        System.out.println(rs.size());
+       for (var i : db.getInvoice(1)){
+           System.out.println(i.getPrice());
+       }
+
+//       rs.getString("firstname");
+
+
 //
+
+        /*
+        *
+        *
+        * SELECT
+sd.*,
+s.sales_date,
+s.customer_id,
+c.firstname,
+c.lastname,
+m.title,
+t.type,
+t.price
+FROM SalesDetails sd
+JOIN Sales s ON s.sales_id = sd.sales_id
+JOIN Customers c ON c.customer_id = s.sales_id
+JOIN Tickets t ON t.ticket_id = c.ticket_id
+JOIN MovieShowTimes mst ON mst.movie_id = sd.movie_id
+JOIN Movies m ON m.movie_id = mst.movie_id
+WHERE c.customer_id = 1
+
+*/
 
 
     }

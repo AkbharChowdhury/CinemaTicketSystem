@@ -1,7 +1,9 @@
 package forms;
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
+import enums.RedirectPage;
 import interfaces.FormAction;
 import interfaces.TableGUI;
 
@@ -18,68 +20,64 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
+import classes.*;
 
 
-public class PT extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
+public class ShowTimes extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
     private final Database db;
     private final MovieShowTimes movieShowTimes = new MovieShowTimes();
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
-    private final JButton btnListMovies = new JButton("List Movies");
-    private final JButton btnShowTimes = new JButton("Show times");
-    private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
-    private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JTextField txtMovieID = new JTextField(2);
-    //    private final JTextField txtMShowDate = new JTextField(20);
+    private int movieIDIndex;
+
+
+    private final JButton btnListMovies = new JButton(Buttons.listMovies());
+    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
+    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
+    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+
     private final DefaultTableCellRenderer cellRenderer;
-    MaskFormatter mf1 = new MaskFormatter("####-##-##");
-    JFormattedTextField txtMShowDate = new JFormattedTextField(mf1);
-    JLabel movieTitle = new JLabel();
+    private final MaskFormatter mf1 = new MaskFormatter("####-##-##");
+    private final JFormattedTextField txtShowDate = new JFormattedTextField(mf1);
     private DefaultTableModel model;
+    private final JComboBox<String> cbMovies = new JComboBox<>();
 
 
-    public PT() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
-        // set movie title label style
+
+    public ShowTimes() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
+        movieShowTimes.setShowDate("");
         mf1.setPlaceholderCharacter('_');
-        movieTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
 
         scrollPane.setViewportView(table);
         showColumn();
 
-        txtMovieID.addKeyListener(this);
-        txtMShowDate.addKeyListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.purchaseTicket() + "YES");
+        setTitle(FormDetails.showTimes());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        setUpTimesListInit();
 
         top.add(btnListMovies);
         top.add(btnShowTimes);
-        top.add(txtMovieID);
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
-
-        populateTable();
-//        table.getColumnModel().getColumn(0).setPreferredWidth(5);
-//        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-//
-//        table.getColumnModel().getColumn(3).setPreferredWidth(50);
         cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
         JPanel middle = new JPanel();
+        middle.add(new Label("Select Movie: "));
+        cbMovies.addItem("Select Movie");
+        populateMovieComboBox();
+        middle.add(cbMovies);
+
         middle.add(new Label("Filter Date:"));
-        middle.add(txtMShowDate);
-        movieTitle.setText(db.getMovieName(MovieInfo.getMovieID()));
-        middle.add(movieTitle);
+        middle.add(txtShowDate);
 
 
         JPanel south = new JPanel();
@@ -95,27 +93,35 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
+        txtShowDate.addKeyListener(this);
+        cbMovies.addActionListener(this);
 
         setVisible(true);
     }
 
+
+
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
-        new ShowMovieTimes();
+        new ShowTimes();
 
     }
 
-
-    private void setUpTimesListInit() throws ParseException {
-        movieShowTimes.setMovieId(2);
-        movieShowTimes.setShowDate("");
-
-        populateTable();
-
-    }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == cbMovies){
+            if(cbMovies.getSelectedIndex()== 0 ){
+                Helper.showErrorMessage("Please select a movie","Movie Error");
+                cbMovies.setSelectedIndex(movieIDIndex);
+                return;
+
+            }
+            movieIDIndex = cbMovies.getSelectedIndex();
+            movieShowTimes.setMovieId(db.getMovieID(cbMovies.getSelectedItem().toString()));
+            populateTable();
+        }
 
         handleButtonClick(e);
 
@@ -130,33 +136,14 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtMShowDate) {
-            movieShowTimes.setShowDate(txtMShowDate.getText());
-            populateTable();
-
-        }
-
-
-        if (e.getSource() == txtMovieID) {
-            Helper.validateNumber(e, txtMovieID);
-            if(!Helper.validateMovieID(db,Integer.parseInt(txtMovieID.getText()))){
-                return;
-            }
-
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                int movieID = Integer.parseInt(txtMovieID.getText());
-                String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
-                movieTitle.setText(title);
-                movieShowTimes.setMovieId(movieID);
-                movieShowTimes.setShowDate(txtMShowDate.getText());
-
-
+        if (e.getSource() == txtShowDate) {
+            if (!txtShowDate.getText().isEmpty()){
+                movieShowTimes.setShowDate(txtShowDate.getText());
                 populateTable();
-
-
             }
-
         }
+
+
 
     }
 
@@ -168,14 +155,26 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
     @Override
     public void handleButtonClick(ActionEvent e) {
-        if (e.getSource() == btnPurchaseTicket) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
+        if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                Form.setRedirectPage(RedirectPage.PURCHASE);
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 return;
             }
+
+
             try {
-                new PurchaseTicket1();
+                new PurchaseTicket();
+
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -185,7 +184,7 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
         if (e.getSource() == btnListMovies) {
             try {
-                new MovieListOld();
+                new MovieList();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -195,20 +194,43 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
         }
 
         if (e.getSource() == btnShowReceipt) {
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
+                }
+                return;
+            }
+
+
+            try {
+                new ShowReceipt();
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         }
 
         if (e.getSource() == btnShowTimes) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
-                return;
-            }
-            movieShowTimes.setMovieId(Integer.parseInt(txtMovieID.getText()));
+
+
+
+
+
+
+
+
             populateTable();
-            String title = db.getMovieName(Integer.parseInt(txtMovieID.getText()));
-            movieTitle.setText(title);
+//            String title = db.getMovieName("");
+//            movieTitle.setText(title);
 
         }
     }
@@ -248,4 +270,13 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
 
     }
+
+    private void populateMovieComboBox() {
+
+        for (var movie : db.getAllMovieShowTimes()){
+            cbMovies.addItem(movie.getTitle());
+        }
+
+
+        }
 }

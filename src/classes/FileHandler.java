@@ -138,4 +138,8 @@ public class FileHandler {
 //                .skip(1)
                 .toList();
     }
+    public static boolean printInvoice(String filename, Invoice invoice){
+
+        return true;
+    }
 }

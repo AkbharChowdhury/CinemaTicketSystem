@@ -2,11 +2,17 @@ package forms;
 
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
 import interfaces.FormAction;
 import interfaces.ListGUI;
+import tables.MovieTable;
+import tables.SalesDetailsTable;
+import tables.SalesTable;
+import tables.TicketsTable;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,41 +21,47 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.text.ParseException;
-
+import java.util.List;
 
 public class ShowReceipt extends JFrame implements ActionListener, KeyListener, FormAction, ListGUI {
     private final Database db;
-    private final MovieGenres movieGenre = new MovieGenres();
-    private final DefaultListModel model2;
-    private final JList list;
+
+    private final DefaultListModel model;
+    private final JList list ;
+    int index;
+    private final List<Invoice> INVOICES;
 
 
 
-    private final JButton btnListMovies = new JButton("List Movies");
-    private final JButton btnShowTimes = new JButton("Show times");
-    private final JButton btnPurchaseTicket = new JButton("Purchase ticket");
-    private final JButton btnShowReceipt = new JButton("Show receipt");
-    private final JButton btnPrintReceipt = new JButton("Print Receipt");
-    private final JButton btnCancel = new JButton("Cancel");
+    private final JButton btnListMovies = new JButton(Buttons.listMovies());
+    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
+    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
+    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+    private final JButton btnCancel = new JButton(Buttons.cancel());
+    private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
 
 
-    private final JTextField txtMovieID = new JTextField(2);
-    private final JTextField txtMovieTitle = new JTextField(20);
+
+
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
     private final String movieTitle = "";
 
-    public ShowReceipt() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException {
+    public ShowReceipt() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
+        model = new DefaultListModel();
+        list = new JList(model);
+        INVOICES = db.getInvoice(1);
+        JScrollPane scrollPane = new JScrollPane(list);
 
-        model2 = new DefaultListModel();
-        list = new JList(model2);
 
 
 
 
-        txtMovieID.addKeyListener(this);
-        txtMovieTitle.addKeyListener(this);
+
+
+
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 250);
@@ -60,7 +72,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         top.add(btnListMovies);
         top.add(btnShowTimes);
-        top.add(txtMovieID);
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
@@ -69,15 +80,9 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
 
         JPanel middle = new JPanel();
-//        middle.add(new Label("Movie Title:"));
-//        middle.add(txtMovieTitle);
-//        middle.add(new Label("Genre"));
-//        middle.add(comboBoxGenres);
-//        middle.add(movieScrollPane);
 
 
-        JScrollPane scrollPane1 = new JScrollPane(list);
-        middle.add(scrollPane1);
+        middle.add(scrollPane);
 
 
         JPanel south = new JPanel();
@@ -85,11 +90,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         south.add(btnCancel);
 
 
-
-
-
-//        JScrollPane movieScrollPane = new JScrollPane(scrollPane);
-//        south.add(movieScrollPane);
 
         add("North", top);
         add("Center", middle);
@@ -99,12 +99,20 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
+        btnPrintReceipt.addActionListener(this);
+
         comboBoxGenres.addActionListener(this);
+        populateList();
+        list.addListSelectionListener((ListSelectionEvent e) -> {
+             index = list.getSelectedIndex() + 1;
+
+//            printInvoice();
+        });
 
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new ShowReceipt();
 
     }
@@ -121,13 +129,24 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnPrintReceipt){
+            printInvoice();
+        }
 
         handleButtonClick(e);
 
 
     }
 
+    private void printInvoice() {
+        System.out.println("the index is " + index);
+        for (var item : INVOICES){
+//            if (item.get)
+        }
 
+
+//        FileHandler.printInvoice("", );
+    }
 
 
     @Override
@@ -137,16 +156,9 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtMovieTitle) {
-            movieGenre.setTitle(txtMovieTitle.getText());
-
-        }
 
 
-        if (e.getSource() == txtMovieID) {
-            Helper.validateNumber(e, txtMovieID);
 
-        }
 
     }
 
@@ -173,12 +185,9 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
                 return;
             }
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to purchase tickets", "Purchase ticket error");
-                return;
-            }
+
             try {
-                new PurchaseTicket();
+                new PurchaseTicket1();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -223,13 +232,9 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         if (e.getSource() == btnShowTimes) {
 
-            if (txtMovieID.getText().isEmpty()) {
-                Helper.showErrorMessage("Please enter a movie ID to view show times", "Movie show time error");
-                return;
-            }
+
             try {
-                MovieInfo.setMovieID(Integer.parseInt(txtMovieID.getText()));
-                new ShowMovieTimes();
+                new ShowTimes();
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -248,10 +253,45 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
     }
 
     @Override
-    public void populateList() throws ParseException {
+    public void populateList() throws ParseException, SQLException {
+        for (var invoice :INVOICES ) {
+            model.addElement(MessageFormat.format("{0}, {1}",
+                    Helper.formatDate(invoice.getSalesDate()),
+                    invoice.getMovieTitle()
 
+            ));
+        }
+//        while (rs.next()){
+//            double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
+//            int numTicket = rs.getInt(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD);
+//            double total = numTicket * price;
+//            model.addElement(
+//                      MessageFormat.format("{0}, {1}, {2}",
+//                              SalesTable.COLUMN_SALES_DATE,
+//                              MovieTable.COLUMN_TITLE,
+//                              Helper.formatMoney(total)
+//
+//                              ));
+//            ;
+//
+//
+//
+//
+//        }
+//        for (var purchases : db.getInvoice()) {
+//            model.addElement(MessageFormat.format("{0}, {1}, {2}, {3}",
+//                    movie.getMovieID(),
+//                    movie.getTitle(),
+//                    Helper.calcDuration(movie.getDuration()),
+//                    movie.getGenres()
+//            ));
     }
+
 }
+
+
+
+
 
 
 

@@ -11,8 +11,17 @@ public enum Buttons {
 
     }
 
+
     public static String listMovies() {
         return "List Movies";
+
+    }
+    public static String cancel() {
+        return "Cancel";
+
+    }
+    public static String printReceipt() {
+        return "Print Receipt";
 
     }
     public static String showTimes() {

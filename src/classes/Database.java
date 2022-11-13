@@ -12,6 +12,7 @@ import java.util.List;
 
 
 public class Database {
+    private int id;
     private static final String DB_NAME = "cinema.db";
     private static volatile Database instance;
 
@@ -182,8 +183,6 @@ public class Database {
 
     public boolean addCustomer(Customer customer)  {
 
-
-
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(new Customer().insert());
             stmt.setNull(1, java.sql.Types.NULL);
@@ -198,6 +197,56 @@ public class Database {
             ex.printStackTrace();
         }
         return false;
+
+    }
+
+
+    public boolean addSales(Sales sales)  {
+
+        try (Connection con = getConnection()) {
+            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
+            stmt1.setNull(1, java.sql.Types.NULL);
+            stmt1.setString(2, sales.getSalesDate());
+            stmt1.setInt(3, sales.getCustomerID());
+            boolean salesAdded = stmt1.executeUpdate() == 1;
+
+
+//            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) FROM Sales");
+            id = rs.getInt(1);
+//            System.out.println();
+
+            return salesAdded;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public boolean addSalesDetails(SalesDetails salesDetails)  {
+
+        try (Connection con = getConnection()) {
+            PreparedStatement stmt1 = con.prepareStatement(new SalesDetails().insert());
+            stmt1.setInt(1, salesDetails.getSalesID());
+            stmt1.setInt(2, salesDetails.getMovieID());
+            stmt1.setInt(3, salesDetails.getTotalTicketsSold());
+            boolean salesAdded = stmt1.executeUpdate() == 1;
+//            ResultSet lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet();
+//            lastInsertedID.getInt(0);
+
+            return salesAdded;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
+    public int lastInsertedID(){
+        return id;
 
     }
 
@@ -304,13 +353,21 @@ public class Database {
                 PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
                 int x = 0;
 
-
                 if (genreID != 0) {
                     x++;
-                    stmt.setString(x, String.valueOf(genreID) + '%');
+                    stmt.setString(x, + '%' +  String.valueOf(genreID) ); // check if genre id starts with the id
+                    x++;
+                    stmt.setString(x,  String.valueOf(genreID) + '%'); // check if genre id ens with
+
+//                    x++;
+//                    String genreMiddleValue = MessageFormat.format("%,{0},%", genreID);
+//                    stmt.setString(x, genreMiddleValue); // check if genre id ens with
+
+
                 }
                 if (!movieTitle.isEmpty()) {
                     x++;
+                    System.out.println("No empty");
 
                     stmt.setString(x, '%' + movieTitle + '%');
                 }
@@ -344,6 +401,8 @@ public class Database {
 
     public List<MovieShowTimes> showMovieTimes(MovieShowTimes movieShowTimes) {
         String showDate = movieShowTimes.getShowDate();
+
+
         List<MovieShowTimes> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             ResultSet rs;
@@ -407,6 +466,84 @@ public class Database {
     }
 
 
+
+    public List<Invoice> getInvoice (int customerID){
+        List<Invoice> invoices = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            try (PreparedStatement stmt = con.prepareStatement(new SalesDetails().getInvoice())){
+                stmt.setInt(1, customerID);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()){
+//                    int numTicket = rs.getInt("");
+                    int price = rs.getInt("price");
+                    Invoice invoice = new Invoice();
+                    invoice.setPrice(price);
+                    invoice.setFirstname(rs.getString("firstname"));
+                    invoice.setLastname(rs.getString("lastname"));
+                    invoice.setSalesDate(rs.getString("sales_date"));
+                    invoice.setShowTime(rs.getString("show_time"));
+                    invoice.setMovieTitle(rs.getString("title"));
+                    invoice.setType(rs.getString("type"));
+                    invoice.setTotalTicket(rs.getDouble(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD));
+
+                    invoices.add(invoice);
+
+
+
+                }
+                return invoices;
+
+//                if(rs.next()){
+//                    //get data
+//                    System.out.println(rs.getString("title"));
+//                    System.out.println(rs.getString("firstname"));
+//
+//                } else{
+//                    System.out.println("N");
+//                }
+//                return rs;
+
+            } catch (Exception ex){}
+
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
+    public List<Movie> getAllMovieShowTimes() {
+//        List<MovieTemp> movies = new ArrayList<>();
+        List<Movie> movies = new ArrayList<>();
+
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieShowTimes().getAllMovieShowTimes();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+//            Movie movie = new Movie();
+
+            while (rs.next()) {
+//                System.out.println(rs.getString("movie_id"));
+//                System.out.println(rs.getString("title"));
+
+//                movie.setTitle(rs.getString(MovieTable.COLUMN_TITLE));
+                movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
+
     public List<String> getMovieTitle() {
         List<String> movieTitleList = new ArrayList<>();
         try (Connection con = getConnection()) {
@@ -432,31 +569,7 @@ public class Database {
     }
 
 
-    public List<Movie> getMovieAllShowTimes() {
-//        List<MovieTemp> movies = new ArrayList<>();
-        List<Movie> movies = new ArrayList<>();
 
-        try (Connection con = getConnection()) {
-
-            String sql = new MovieShowTimes().getAllMovieShowTimes();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-//            Movie movie = new Movie();
-
-            while (rs.next()) {
-//                System.out.println(rs.getString("movie_id"));
-//                System.out.println(rs.getString("title"));
-
-//                movie.setTitle(rs.getString(MovieTable.COLUMN_TITLE));
-                movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return movies;
-    }
 
 
 
@@ -527,6 +640,33 @@ public class Database {
             }
 
             return rs.getInt(MovieTable.COLUMN_ID);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
+
+
+    public int getGenreID(String genre) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", GenreTable.COLUMN_ID, GenreTable.TABLE_NAME, GenreTable.COLUMN_GENRE);
+
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, genre);
+
+            rs = stmt.executeQuery();
+
+            if (isResultSetEmpty(rs)) {
+                return 0;
+            }
+
+            return rs.getInt(GenreTable.COLUMN_ID);
 
 
         } catch (Exception e) {
@@ -668,6 +808,7 @@ public class Database {
         }
         return ticket;
     }
+
 
 
 }

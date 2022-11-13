@@ -235,7 +235,28 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
         }
 
         if (e.getSource() == btnShowReceipt) {
+            System.out.println("s");
+            if (LoginInfo.getCustomerID() == 0){
+                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+                if (dialogButton == JOptionPane.YES_OPTION){
+                    try {
+                        new Login();
+                        dispose();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
+                }
+                return;
+            }
+
+
+            try {
+                new ShowReceipt();
+                dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         }
 
