@@ -133,7 +133,7 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        handleButtonClick(e);
+        navigationMenu(e);
 
 
     }
@@ -189,7 +189,7 @@ public class ShowMovieTimes extends JFrame implements ActionListener, KeyListene
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) {
+    public void navigationMenu(ActionEvent e) {
 
         if (e.getSource() == btnPurchaseTicket) {
             if (LoginInfo.getCustomerID() == 0){

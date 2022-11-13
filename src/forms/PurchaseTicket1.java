@@ -212,7 +212,7 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
 
         }
 
-        handleButtonClick(e);
+        navigationMenu(e);
 
 
     }
@@ -295,7 +295,7 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) {
+    public void navigationMenu(ActionEvent e) {
 
 
         if (e.getSource() == btnListMovies) {

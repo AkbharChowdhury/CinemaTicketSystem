@@ -21,10 +21,6 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-import classes.*;
 
 
 public class ShowTimes extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
@@ -116,7 +112,7 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            handleButtonClick(e);
+            navigationMenu(e);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -161,7 +157,16 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        if (e.getSource() == btnListMovies) {
+            Helper.gotoForm(this, Pages.LIST_MOVIES);
+
+        }
+        if (e.getSource() == btnShowTimes) {
+            Helper.gotoForm(this, Pages.SHOW_TIMES);
+        }
+
         if (e.getSource() == btnPurchaseTicket) {
             if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)) {
                 Helper.gotoForm(this, Pages.LOGIN);
@@ -174,12 +179,7 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
             }
 
         }
-
-        if (e.getSource() == btnShowTimes) {
-            Helper.gotoForm(this, Pages.SHOW_TIMES);
-        }
     }
-
     @Override
     public void clearTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();

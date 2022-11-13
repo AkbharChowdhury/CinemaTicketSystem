@@ -141,7 +141,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     public void actionPerformed(ActionEvent e) {
 
         try {
-            handleButtonClick(e);
+            navigationMenu(e);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -181,7 +181,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        if (e.getSource() == btnListMovies) {
+            Helper.gotoForm(this, Pages.LIST_MOVIES);
+
+        }
+        if (e.getSource() == btnShowTimes) {
+            Helper.gotoForm(this, Pages.SHOW_TIMES);
+        }
+
         if (e.getSource() == btnPurchaseTicket) {
             if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)) {
                 Helper.gotoForm(this, Pages.LOGIN);
@@ -193,10 +202,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                 Helper.gotoForm(this, Pages.LOGIN);
             }
 
-        }
-
-        if (e.getSource() == btnShowTimes) {
-            Helper.gotoForm(this, Pages.SHOW_TIMES);
         }
     }
 

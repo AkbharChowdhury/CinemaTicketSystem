@@ -117,7 +117,7 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        handleButtonClick(e);
+        navigationMenu(e);
 
 
     }
@@ -167,7 +167,7 @@ public class PT extends JFrame implements ActionListener, KeyListener, FormActio
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) {
+    public void navigationMenu(ActionEvent e) {
         if (e.getSource() == btnPurchaseTicket) {
 
             if (txtMovieID.getText().isEmpty()) {

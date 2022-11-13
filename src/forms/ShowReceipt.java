@@ -4,13 +4,10 @@ package forms;
 import classes.*;
 import enums.Buttons;
 import enums.FormDetails;
+import enums.Pages;
 import enums.RedirectPage;
 import interfaces.FormAction;
 import interfaces.ListGUI;
-import tables.MovieTable;
-import tables.SalesDetailsTable;
-import tables.SalesTable;
-import tables.TicketsTable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -131,8 +128,11 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
             printInvoice(salesID);
         }
 
-        handleButtonClick(e);
-
+        try {
+            navigationMenu(e);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 
@@ -211,69 +211,25 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
 
     @Override
-    public void handleButtonClick(ActionEvent e) {
-        if (e.getSource() == btnPurchaseTicket) {
-            if (LoginInfo.getCustomerID() == 0){
-                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-                if (dialogButton == JOptionPane.YES_OPTION){
-                    try {
-                        new Login();
-                        dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-                return;
-            }
-
-
-            try {
-                new PurchaseTicket();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        }
+    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         if (e.getSource() == btnListMovies) {
-            try {
-                new MovieList();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            Helper.gotoForm(this, Pages.LIST_MOVIES);
+
+        }
+        if (e.getSource() == btnShowTimes) {
+            Helper.gotoForm(this, Pages.SHOW_TIMES);
+        }
+
+        if (e.getSource() == btnPurchaseTicket) {
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)) {
+                Helper.gotoForm(this, Pages.LOGIN);
             }
-
-
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (LoginInfo.getCustomerID() == 0){
-                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to view your receipt, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-                if (dialogButton == JOptionPane.YES_OPTION){
-                    try {
-                        new Login();
-                        dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-                return;
-            }
-
-
-        }
-
-        if (e.getSource() == btnShowTimes) {
-
-
-            try {
-                new ShowTimes();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
+                Helper.gotoForm(this, Pages.LOGIN);
             }
 
         }
