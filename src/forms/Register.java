@@ -3,6 +3,7 @@ package forms;
 
 import classes.*;
 import enums.FormDetails;
+import enums.Pages;
 
 import java.awt.*;
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.List;
 
 public class Register
@@ -70,12 +72,17 @@ public class Register
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == btnRegister) {
-            handleRegister();
+            try {
+                handleRegister();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
 
     }
-    private void handleRegister(){
+
+    private void handleRegister() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String firstname = txtFirstname.getText();
         String lastname = txtLastName.getText();
         String email = txtEmail.getText();
@@ -92,13 +99,8 @@ public class Register
             if (db.addCustomer(customer)) {
                 Helper.message("Your account has been created, you can now login");
             }
+            Helper.gotoForm(this, Pages.LOGIN);
 
-            try {
-                new Login();
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
 
         }
     }
