@@ -1,0 +1,7 @@
+-------------------------- Movie Details --------------------
+Movie: You're Next
+Rating -15
+show date and time (2022-11-13, 12:46)
+-------------------------- Ticket Details --------------------
+Senior £10.00 (x7}
+Total £70.00

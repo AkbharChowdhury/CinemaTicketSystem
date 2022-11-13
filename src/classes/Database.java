@@ -7,6 +7,7 @@ import tables.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -410,12 +411,20 @@ public class Database {
             PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getMovieShowTimes(movieShowTimes));
             int param = 0;
             param++;
-            stmt.setInt(param, movieShowTimes.getMovieId());
 
-            if (!showDate.isEmpty()) {
-                param++;
-                stmt.setString(param, "%" + showDate + "%");
-            }
+            // selected movie id
+            stmt.setInt(param, movieShowTimes.getMovieId());
+                if (!showDate.isEmpty()) {
+                    System.out.println(showDate);
+
+                    param++;
+                    String showDateStr = MessageFormat.format("'%{0}%'",showDate);
+                    stmt.setString(param,showDate );
+                }
+
+
+
+
 
             rs = stmt.executeQuery();
 
@@ -481,9 +490,16 @@ public class Database {
                     invoice.setFirstname(rs.getString("firstname"));
                     invoice.setLastname(rs.getString("lastname"));
                     invoice.setSalesDate(rs.getString("sales_date"));
+                    invoice.setShowDate(rs.getString("sales_date"));
                     invoice.setShowTime(rs.getString("show_time"));
                     invoice.setMovieTitle(rs.getString("title"));
                     invoice.setType(rs.getString("type"));
+                    invoice.setRating(rs.getString("rating"));
+                    invoice.setTotalTicket(rs.getInt(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD));
+
+
+
+
                     invoice.setTotalTicket(rs.getDouble(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD));
 
                     invoices.add(invoice);
@@ -519,6 +535,7 @@ public class Database {
 
 
     public List<Movie> getAllMovieShowTimes() {
+        System.out.println("Invoked");
 //        List<MovieTemp> movies = new ArrayList<>();
         List<Movie> movies = new ArrayList<>();
 

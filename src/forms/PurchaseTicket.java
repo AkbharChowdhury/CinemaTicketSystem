@@ -83,7 +83,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         cbMovies.addItem("Select Movie");
         populateMovieComboBox();
         middle.add(cbMovies);
-        lblMovieDetails.setText("sss");
         middle.add(lblMovieDetails);
         JScrollPane movieScrollPane = new JScrollPane(scrollPane);
         middle.add(movieScrollPane);

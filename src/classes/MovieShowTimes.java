@@ -118,15 +118,28 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
     public  String getMovieShowTimes(MovieShowTimes movieShowTimes) {
 
         String sql = """
-                 SELECT mst.movie_id,
-                                  m.title,
-                                 st.*,
-                                  mst.num_tickets_left
-                                 FROM MovieShowTimes mst
-                                 JOIN Movies m ON m.movie_id = mst.movie_id
-                                 JOIN ShowTimes st ON st.show_time_id = mst.show_time_id
-                                 WHERE m.movie_id = ?
-                                                  """;
+                SELECT
+                   mst.movie_id,
+                   m.title,
+                   st.*,
+                   mst.num_tickets_left
+                FROM
+                   MovieShowTimes mst
+                   JOIN
+                      Movies m
+                      ON m.movie_id = mst.movie_id
+                   JOIN
+                      ShowTimes st
+                      ON st.show_time_id = mst.show_time_id
+                WHERE
+                   m.movie_id = ? 
+                    AND show_date >= DATE('NOW')  AND DATE('now', 'start of month', '+1 month' , '-1 day')
+                   				  
+                   --AND show_date BETWEEN DATE('NOW') AND DATE('now', 'start of month', '+1 month','-1 day' )
+                   --AND show_time BETWEEN time('now') AND time('now' , '+9 hours', '+20 minutes')
+                                
+                                
+                """;
 
         if (!movieShowTimes.getShowDate().isEmpty()) {
             sql += " AND st.show_date LIKE ?";

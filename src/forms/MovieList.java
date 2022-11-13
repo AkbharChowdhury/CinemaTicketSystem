@@ -3,6 +3,7 @@ package forms;
 import classes.*;
 import enums.Buttons;
 import enums.FormDetails;
+import enums.RedirectPage;
 import interfaces.FormAction;
 import interfaces.TableGUI;
 import interfaces.TableProperties;
@@ -185,33 +186,45 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void handleButtonClick(ActionEvent e) {
         if (e.getSource() == btnPurchaseTicket) {
+//            if(!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
+//                return;
+//            }
 
-            if (LoginInfo.getCustomerID() == 0){
-                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
-                if (dialogButton == JOptionPane.YES_OPTION){
-                    try {
-                        new Login();
-                        dispose();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                return;
+
+//            if (LoginInfo.getCustomerID() == 0){
+//                int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+//                if (dialogButton == JOptionPane.YES_OPTION){
+//
+//
+//                    try {
+//                        new Login();
+//                        dispose();
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
+//                return;
+//            }
+
+
+
+
+
+            if(Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)){
+                JFrame f = new JFrame();
+
+                Helper.gotoForm(f);
+//                try {
+//                    new PurchaseTicket();
+//
+//                    dispose();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+
             }
 
 
-
-
-
-
-
-            try {
-                new PurchaseTicket();
-
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
 
         }
 

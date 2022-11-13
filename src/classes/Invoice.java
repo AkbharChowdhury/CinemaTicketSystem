@@ -76,6 +76,22 @@ public class Invoice {
     }
 
     private double price;
-    private String salesDate, showDate, showTime, firstname, lastname, movieTitle, type;
+    private String salesDate;
+    private String showDate;
+    private String showTime;
+    private String firstname;
+    private String lastname;
+    private String movieTitle;
+    private String type;
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    private String rating;
 
 }

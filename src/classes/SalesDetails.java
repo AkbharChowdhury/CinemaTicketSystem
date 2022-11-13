@@ -122,7 +122,8 @@ public class SalesDetails implements Queries {
                  c.lastname,
                  m.title,
                  t.type,
-                 t.price
+                 t.price,
+                  r.rating
                FROM
                  SalesDetails sd
                  JOIN Sales s ON s.sales_id = sd.sales_id
@@ -131,8 +132,9 @@ public class SalesDetails implements Queries {
                  JOIN MovieShowTimes mst ON mst.movie_id = sd.movie_id
                  JOIN Movies m ON m.movie_id = mst.movie_id
                  JOIN ShowTimes sh ON sh.show_time_id = mst.show_time_id
+                 JOIN Ratings r ON r.rating_id = m.rating_id
                WHERE
-                 c.customer_id = ?
+                 s.customer_id = ?
                               
                                
                                          

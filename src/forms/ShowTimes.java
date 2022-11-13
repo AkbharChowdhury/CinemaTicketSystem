@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import classes.*;
 
@@ -28,7 +30,6 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
     private final Database db;
     private final MovieShowTimes movieShowTimes = new MovieShowTimes();
     private final JTable table = new JTable();
-    private final JScrollPane scrollPane = new JScrollPane();
     private int movieIDIndex;
 
 
@@ -38,8 +39,10 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
 
     private final DefaultTableCellRenderer cellRenderer;
-    private final MaskFormatter mf1 = new MaskFormatter("####-##-##");
-    private final JFormattedTextField txtShowDate = new JFormattedTextField(mf1);
+    private final MaskFormatter maskFormatter = new MaskFormatter("####-##-##");
+    private final JFormattedTextField txtShowDate = new JFormattedTextField(maskFormatter);
+//    private final JTextField txtShowDate = new JTextField();
+
     private DefaultTableModel model;
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
@@ -47,9 +50,10 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
     public ShowTimes() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
+        maskFormatter.setPlaceholderCharacter('_');
         movieShowTimes.setShowDate("");
-        mf1.setPlaceholderCharacter('_');
 
+        JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(table);
         showColumn();
 
@@ -136,11 +140,9 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtShowDate) {
-            if (!txtShowDate.getText().isEmpty()){
-                movieShowTimes.setShowDate(txtShowDate.getText());
-                populateTable();
-            }
+        if (e.getSource() == txtShowDate && !txtShowDate.getText().isEmpty()) {
+            movieShowTimes.setShowDate(txtShowDate.getText());
+            populateTable();
         }
 
 
@@ -257,16 +259,30 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
             int i = 0;
             for (var showTime : showTimesList) {
                 model.addRow(new Object[0]);
+//                model.setValueAt((Helper.formatDate(showTime.getShowDate())), i, 0);
+
+//                model.setValueAt(Helper.formatDate(showTime.getShowDate()), i, 0);
+
                 model.setValueAt(showTime.getShowDate(), i, 0);
+
+
+
                 model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 1);
                 model.setValueAt(showTime.getNumTicketLeft(), i, 2);
                 i++;
+
+
+
+
+
             }
 
         } catch (ParseException e){
             e.printStackTrace();
 
         }
+
+
 
 
     }

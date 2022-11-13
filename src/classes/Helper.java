@@ -1,10 +1,16 @@
 package classes;
 
 import enums.Files;
+import enums.RedirectPage;
+import forms.Login;
+import forms.MovieList;
+import forms.PurchaseTicket;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -96,6 +102,51 @@ public final class Helper {
             return true;
         }
         return false;
+    }
+    public  static void gotoForm(JFrame frame) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Class<?> className;
+
+
+        try {
+            new PurchaseTicket();
+
+            frame.dispose();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page){
+
+        if (LoginInfo.getCustomerID() == 0){
+            int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets or print invoices, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+
+            if (dialogButton == JOptionPane.YES_OPTION){
+                Form.setRedirectPage(page);
+                try {
+                    frame.dispose();
+
+                    new Login();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+//
+//            if (page == RedirectPage.SHOW_RECEIPT || page == RedirectPage.PURCHASE){
+//                try {
+//                    frame.dispose();
+//                    new MovieList();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//            }
+
+        }
+
+        return LoginInfo.getCustomerID() != 0;
+
     }
 
 
