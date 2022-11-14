@@ -169,13 +169,17 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         showNavigation(e);
 
 
-        if (e.getSource() == cbMovies) {
-            handleMovieComboBox();
-        }
-        if (e.getSource() == btnConfirm) {
-            handlePurchase();
-        }
+        try {
+            if (e.getSource() == cbMovies) {
+                handleMovieComboBox();
+            }
+            if (e.getSource() == btnConfirm) {
+                handlePurchase();
+            }
 
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
 
     }
 
@@ -254,7 +258,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         }
     }
 
-    private void handlePurchase() {
+    private void handlePurchase() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         if(selectedShowTimeID == 0){
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
@@ -266,28 +270,29 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
         String salesDate = LocalDate.now().toString();
         int movieID = getMovieID();
 
-        if (!isValidNumTickets(movieID,numTickets)){
+        if (!this.isValidNumTickets(movieID, numTickets)){
             return;
         }
 
-        Sales sales = new Sales(salesDate, customerID);
-        if (db.addSales(sales)) {
-            int salesID = db.lastInsertedID();
-            SalesDetails salesDetails = new SalesDetails(salesID, 2, numTickets);
-            if (db.addSalesDetails(salesDetails)) {
-                System.out.println("Added");
+        Sales2 sales2 = new Sales2(LocalDate.now().toString(), movieID, selectedShowTimeID, customerID, numTickets);
+
+        if (db.addSales2(sales2)) {
+            updateNumTicksSold(numTickets);
+            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
+            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
 
             }
         }
 
-        String s = MessageFormat.format("""
-                   Purchase details:
-                   Sales Date : {0}
-                  Num Tickets : {1}
-                customerID : {2}
-                Movie ID : {3}
-                   """, salesDate, numTickets, customerID, movieID);
-        System.out.println(s);
+
+
+    private void updateNumTicksSold(int numTickets) {
+        MovieShowTimes validateShowTimes = new MovieShowTimes();
+        validateShowTimes.setMovieId(getMovieID());
+        validateShowTimes.setShowTimeId(selectedShowTimeID);
+        validateShowTimes.setNumTicketsSold(numTickets);
+
+        db.updateNumTickets(validateShowTimes);
     }
 
     private boolean isValidNumTickets(int movieID, int numTickets) {

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieShowTimes extends ShowTimes implements Queries, TableProperties {
-    private int movieId;
-    private int showTimeId;
+    protected int movieId;
+    protected int showTimeId;
     private int numTicketLeft;
 
     public int getNumTicketsSold() {
@@ -48,6 +48,12 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         this.numTicketLeft = numTicketLeft;
     }
     public MovieShowTimes(){
+
+    }
+
+    public MovieShowTimes(int movieId, int showTimeId){
+        this.movieId = movieId;
+        this.showTimeId = showTimeId;
 
     }
 
@@ -145,12 +151,12 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
                       ShowTimes st
                       ON st.show_time_id = mst.show_time_id
                 WHERE
-                   m.movie_id = ? 
+                   m.movie_id = ? AND num_tickets_left > 0
                     AND show_date >= DATE('NOW')  AND DATE('now', 'start of month', '+1 month' , '-1 day')
                    				  
                    --AND show_date BETWEEN DATE('NOW') AND DATE('now', 'start of month', '+1 month','-1 day' )
                    --AND show_time BETWEEN time('now') AND time('now' , '+9 hours', '+20 minutes')
-                                
+                               
                                 
                 """;
 

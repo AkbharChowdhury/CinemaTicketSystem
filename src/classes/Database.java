@@ -83,6 +83,8 @@ public class Database {
         createTable(new Customer().createTable());
         createTable(new Sales().createTable());
         createTable(new SalesDetails().createTable());
+        createTable(new Sales2().createTable());
+
 
 
     }
@@ -200,8 +202,6 @@ public class Database {
         return false;
 
     }
-
-
     public boolean addSales(Sales sales)  {
 
         try (Connection con = getConnection()) {
@@ -209,12 +209,45 @@ public class Database {
             stmt1.setNull(1, java.sql.Types.NULL);
             stmt1.setString(2, sales.getSalesDate());
             stmt1.setInt(3, sales.getCustomerID());
+            boolean salesAdded = stmt1.executeUpdate() == 1;
 
 
 //            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) FROM Sales");
             id = rs.getInt(1);
+//            System.out.println();
+
+            return salesAdded;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+    public boolean addSales2(Sales2 sales2)  {
+
+        try (Connection con = getConnection()) {
+            int param = 1;
+
+            PreparedStatement stmt1 = con.prepareStatement(new Sales2().insert());
+
+            stmt1.setString(param, sales2.getSalesDate());
+            param++;
+
+            stmt1.setInt(param, sales2.getMovieId());
+            param++;
+
+            stmt1.setInt(param, sales2.getShowTimeId());
+            param++;
+
+            stmt1.setInt(param, sales2.getCustomerID());
+            param++;
+
+            stmt1.setInt(param, sales2.getTotalTicketsSold());
 
             return stmt1.executeUpdate() == 1;
 
@@ -244,6 +277,49 @@ public class Database {
         return false;
 
     }
+
+//
+//    public boolean addSales(Sales sales)  {
+//
+//        try (Connection con = getConnection()) {
+//            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
+//            stmt1.setNull(1, java.sql.Types.NULL);
+//            stmt1.setString(2, sales.getSalesDate());
+//            stmt1.setInt(3, sales.getCustomerID());
+//
+//
+//            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
+//            Statement stmt = con.createStatement();
+////            ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) AS lastID FROM Sales");
+//            id = lastInsertedID;
+//            stmt1.executeUpdate();
+//            return true;
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        return false;
+//
+//    }
+//
+//    public boolean addSalesDetails(SalesDetails salesDetails)  {
+//
+//        try (Connection con = getConnection()) {
+//            PreparedStatement stmt1 = con.prepareStatement(new SalesDetails().insert());
+//            stmt1.setInt(1, salesDetails.getSalesID());
+//            stmt1.setInt(2, salesDetails.getMovieID());
+//            stmt1.setInt(3, salesDetails.getTotalTicketsSold());
+//            //            ResultSet lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet();
+////            lastInsertedID.getInt(0);
+//
+//            return stmt1.executeUpdate() == 1;
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        return false;
+//
+//    }
     public int lastInsertedID(){
         return id;
 
@@ -837,7 +913,7 @@ public class Database {
         return 0;
     }
 
-    public int updateNumTickets(MovieShowTimes movieShowTimes) {
+    public boolean updateNumTickets(MovieShowTimes movieShowTimes) {
 
 
         try (Connection conn = getConnection();
@@ -850,11 +926,12 @@ public class Database {
             pstmt.setInt(2, movieShowTimes.getMovieId());
             pstmt.setInt(3, movieShowTimes.getShowTimeId());
             // update
-           return pstmt.executeUpdate();
+            int result = pstmt.executeUpdate();
+           return result!=0;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return 0;
+        return false;
     }
 
     }

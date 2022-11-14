@@ -250,7 +250,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
     }
 
     @Override
-    public void populateList() throws ParseException, SQLException {
+    public void populateList() throws SQLException {
         for (var invoice : INVOICES) {
             model.addElement(MessageFormat.format("{0}, {1}",
                     Helper.formatDate(invoice.getSalesDate()),

@@ -7,30 +7,33 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
-        Database db = Database.getInstance();
-        MovieShowTimes movieShowTimes = new MovieShowTimes();
-
-        movieShowTimes.setMovieId(20);
-        movieShowTimes.setShowTimeId(9);
-        int numTicketsLeft = db.getNumTickets(movieShowTimes);
-
-        System.out.println("Number of tickets left = " + numTicketsLeft);
-        movieShowTimes.setNumTicketsSold(10);
-//        db.updateNumTickets(movieShowTimes);
-//        System.out.println("The num of tickets left is " +  db.getNumTickets(movieShowTimes));
-//        int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
-//        if (remainingTickets <0){
-//            System.out.println("Error: you cannot exceed above " + numTicketsLeft + " tickets");
-//            return;
-//        }
-        if(!Validation.isValidNumTicketsSold(db, movieShowTimes)){
-            System.out.println("Error: you cannot exceed above " + numTicketsLeft + " tickets");
-            return;
-
-
+        for (int i = 0;i<5;i++){
+            System.out.println(i);
         }
-        db.updateNumTickets(movieShowTimes);
-        System.out.println("The new total tickets left is " + db.getNumTickets(movieShowTimes));
+//        Database db = Database.getInstance();
+//        MovieShowTimes movieShowTimes = new MovieShowTimes();
+//        movieShowTimes.setMovieId(20);
+//        movieShowTimes.setShowTimeId(9);
+//
+//
+//        int numTicketsLeft = db.getNumTickets(movieShowTimes);
+//
+//        System.out.println("Number of tickets left = " + numTicketsLeft);
+//        movieShowTimes.setNumTicketsSold(48);
+//
+//        if(!Validation.isValidNumTicketsSold(db, movieShowTimes)){
+//            if (numTicketsLeft == 0){
+//                System.out.println("There are no tickets to purchase");
+//                return;
+//            }
+//
+//            System.out.println("Error: you cannot exceed above " +  numTicketsLeft + " tickets");
+//            return;
+//
+//
+//        }
+//        db.updateNumTickets(movieShowTimes);
+//        System.out.println("The new total tickets left is " + db.getNumTickets(movieShowTimes));
 
 //        if (remainingTickets)
 
