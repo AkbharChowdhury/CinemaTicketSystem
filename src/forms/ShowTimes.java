@@ -168,15 +168,21 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnPurchaseTicket) {
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE)) {
+            if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.LOGIN);
+                return;
             }
+            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
+            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
                 Helper.gotoForm(this, Pages.LOGIN);
+                return;
             }
+
+            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
 
         }
     }

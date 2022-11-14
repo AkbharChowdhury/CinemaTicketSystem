@@ -3,7 +3,6 @@ package forms;
 import classes.*;
 import enums.FormDetails;
 import enums.Pages;
-import enums.RedirectPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,7 +105,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
                 }
                 switch (Form.getRedirectPage()) {
-                    case PURCHASE -> new PurchaseTicket();
+                    case PURCHASE_TICKET -> new PurchaseTicket();
                     case SHOW_RECEIPT -> new ShowReceipt();
                     default -> new MovieList();
 

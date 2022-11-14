@@ -151,7 +151,7 @@ public final class Helper {
 
             }
 //
-//            if (page == RedirectPage.SHOW_RECEIPT || page == RedirectPage.PURCHASE){
+//            if (page == RedirectPage.SHOW_RECEIPT || page == RedirectPage.PURCHASE_TICKET){
 //                try {
 //                    frame.dispose();
 //                    new MovieList();

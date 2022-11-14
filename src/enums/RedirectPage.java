@@ -3,7 +3,7 @@ package enums;
 public enum RedirectPage {
 
     SHOW_RECEIPT,
-    PURCHASE,
+    PURCHASE_TICKET,
     NONE
 
 
