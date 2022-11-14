@@ -209,16 +209,14 @@ public class Database {
             stmt1.setNull(1, java.sql.Types.NULL);
             stmt1.setString(2, sales.getSalesDate());
             stmt1.setInt(3, sales.getCustomerID());
-            boolean salesAdded = stmt1.executeUpdate() == 1;
 
 
 //            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) FROM Sales");
             id = rs.getInt(1);
-//            System.out.println();
 
-            return salesAdded;
+            return stmt1.executeUpdate() == 1;
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -260,7 +258,7 @@ public class Database {
             for (var showMovieTime : movieShowTimesList) {
                 PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().insert());
                 stmt.setInt(1, showMovieTime.getMovieId());
-                stmt.setInt(2, showMovieTime.getShowTimeID());
+                stmt.setInt(2, showMovieTime.getShowTimeId());
                 stmt.setInt(3, showMovieTime.getNumTicketLeft());
 
                 stmt.executeUpdate();
@@ -341,7 +339,6 @@ public class Database {
             String sql;
             ResultSet rs;
             // search by genre and movie title
-
             int genreID = movieGenres.getGenreID();
             String movieTitle = movieGenres.getTitle();
 
@@ -368,8 +365,6 @@ public class Database {
                 }
                 if (!movieTitle.isEmpty()) {
                     x++;
-                    System.out.println("No empty");
-
                     stmt.setString(x, '%' + movieTitle + '%');
                 }
                 rs = stmt.executeQuery();
@@ -382,12 +377,11 @@ public class Database {
 
             // add movies to list
             while (rs.next()) {
-                int movieID = rs.getInt("movie_id");
-                String title = rs.getString("title");
-                int duration = Integer.parseInt(rs.getString("duration"));
-                String genreList = rs.getString("genre_list");
-                String rating = rs.getString("rating");
-
+                int movieID = rs.getInt(MovieTable.COLUMN_ID);
+                String title = rs.getString(MovieTable.COLUMN_TITLE);
+                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+                String rating = rs.getString(RatingTable.COLUMN_RATING);
                 list.add(new MovieGenres(movieID, title, duration, genreList, rating));
 
 
@@ -464,7 +458,7 @@ public class Database {
                 return genreList;
             }
             while (rs.next()) {
-                genreList.add(rs.getString("genre"));
+                genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
 
             }
 
@@ -826,7 +820,53 @@ public class Database {
         return ticket;
     }
 
+    public int getNumTickets(MovieShowTimes movieShowTimes) {
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieShowTimes().getNumTickets();
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, movieShowTimes.getMovieId());
+            stmt.setInt(2, movieShowTimes.getShowTimeId());
+            ResultSet r = stmt.executeQuery();
+
+        if (isResultSetEmpty(r)) {
+            con.close();
+            return 0;
+        }
+        return r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int updateNumTickets(MovieShowTimes movieShowTimes) {
 
 
-}
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(new MovieShowTimes().updateNumTickets())) {
+            int numTicketsLeft = getNumTickets(movieShowTimes);
+            int  remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
+
+            // set the corresponding param
+            pstmt.setInt(1, remainingTickets);
+            pstmt.setInt(2, movieShowTimes.getMovieId());
+            pstmt.setInt(3, movieShowTimes.getShowTimeId());
+            // update
+           return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    }
+
+
+
+
+
+
+
 

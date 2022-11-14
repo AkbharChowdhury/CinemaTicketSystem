@@ -1,8 +1,6 @@
 package classes;
 
 import interfaces.Queries;
-import tables.MovieTable;
-import tables.RatingTable;
 import tables.ShowTimesTable;
 
 public class ShowTimes implements Queries {
@@ -28,12 +26,12 @@ public class ShowTimes implements Queries {
 
 
 
-    public int getShowTimeID() {
+    public int getShowTimeId() {
         return showTimeID;
     }
 
-    public void setShowTimeID(int showTimeID) {
-        this.showTimeID = showTimeID;
+    public void setShowTimeId(int showTimeId) {
+        this.showTimeID = showTimeId;
     }
 
     public String getShowDate() {

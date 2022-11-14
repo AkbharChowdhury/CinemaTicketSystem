@@ -9,8 +9,19 @@ import java.util.List;
 
 public class MovieShowTimes extends ShowTimes implements Queries, TableProperties {
     private int movieId;
-    private int showTimeID;
+    private int showTimeId;
     private int numTicketLeft;
+
+    public int getNumTicketsSold() {
+        return numTicketsSold;
+    }
+
+    public void setNumTicketsSold(int numTicketsSold) {
+        this.numTicketsSold = numTicketsSold;
+    }
+
+    private int numTicketsSold;
+
     private String movieTitle;
 
     public int getMovieId() {
@@ -21,12 +32,12 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         this.movieId = movieId;
     }
 
-    public int getShowTimeID() {
-        return showTimeID;
+    public int getShowTimeId() {
+        return showTimeId;
     }
 
-    public void setShowTimeID(int showTimeID) {
-        this.showTimeID = showTimeID;
+    public void setShowTimeId(int showTimeId) {
+        this.showTimeId = showTimeId;
     }
 
     public int getNumTicketLeft() {
@@ -42,14 +53,14 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
 
     public MovieShowTimes(int movieId, int showTimeID, int numTicketLeft) {
         this.movieId = movieId;
-        this.showTimeID = showTimeID;
+        this.showTimeId = showTimeID;
         this.numTicketLeft = numTicketLeft;
     }
     public MovieShowTimes(String showDate, String ShowTime, String movieTitle, int numTicketLeft, int showTimeID){
         super(showDate, ShowTime);
         this.movieTitle = movieTitle;
         this.numTicketLeft = numTicketLeft;
-        this.showTimeID = showTimeID;
+        this.showTimeId = showTimeID;
 
 
     }
@@ -187,5 +198,26 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
 
     public String getMovieTitle() {
         return movieTitle;
+    }
+
+    public String getNumTickets(){
+        return """
+                SELECT * FROM MovieShowTimes WHERE movie_id = ? and show_time_id = ?
+                """;
+
+    }
+
+    public String updateNumTickets(){
+        return String.format("""
+                UPDATE %s SET %s = ?
+                WHERE %s = ? AND %s =?
+               
+                """,
+                MovieShowTimesTable.TABLE_NAME,
+                MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
+                MovieShowTimesTable.COLUMN_MOVIE_ID,
+                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
+        );
+
     }
 }

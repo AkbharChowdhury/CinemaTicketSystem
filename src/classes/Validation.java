@@ -61,4 +61,11 @@ public final class Validation {
 
     }
 
+    public static boolean isValidNumTicketsSold(Database db, MovieShowTimes movieShowTimes){
+        int numTicketsLeft = db.getNumTickets(movieShowTimes);
+        int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
+        return remainingTickets > 0;
+
+    }
+
 }

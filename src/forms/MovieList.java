@@ -27,6 +27,7 @@ import java.util.List;
 public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties, TableGUI {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
+
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
 
@@ -42,9 +43,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
     private DefaultTableModel model;
-//
-//    MaskFormatter mf1 = new MaskFormatter("##");
-//    JFormattedTextField txtMovieID = new JFormattedTextField(mf1);
 
     public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
@@ -65,7 +63,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         top.add(btnShowTimes);
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
-
 
         populateGenreComboBox();
 
@@ -164,8 +161,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getSource() == txtMovieTitle) {
-
-
             movieGenre.setTitle(txtMovieTitle.getText().trim());
             populateTable();
 
