@@ -255,30 +255,19 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     }
 
     private void handlePurchase() {
-//        if(selectedShowTimeID == 0){
-//            Helper.showErrorMessage("Please enter the movie showtime", "Error");
-//            return;
-//        }
+
+        if(selectedShowTimeID == 0){
+            Helper.showErrorMessage("Please select a show time from the table", "Show time required");
+            return;
+        }
 
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         int customerID = LoginInfo.getCustomerID();
         String salesDate = LocalDate.now().toString();
         int movieID = getMovieID();
-        System.out.println("Movie ID: " + db.getMovieID(cbMovies.getSelectedItem().toString()));
-        System.out.println("Show Time ID: " + selectedShowTimeID);
 
-        MovieShowTimes validateShowTimes = new MovieShowTimes();
-        validateShowTimes.setMovieId(movieID);
-        validateShowTimes.setShowTimeId(selectedShowTimeID);
-        validateShowTimes.setNumTicketsSold(numTickets);
-
-        if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
-            int numTicketsLeft = db.getNumTickets(validateShowTimes);
-            System.out.println("Error: you cannot exceed above " + numTicketsLeft + " tickets");
-            Helper.showErrorMessage("Ypu cannot exceed above " + numTicketsLeft + " tickets", "Ticket Quantity Error");
+        if (!isValidNumTickets(movieID,numTickets)){
             return;
-
-
         }
 
         Sales sales = new Sales(salesDate, customerID);
@@ -299,6 +288,20 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 Movie ID : {3}
                    """, salesDate, numTickets, customerID, movieID);
         System.out.println(s);
+    }
+
+    private boolean isValidNumTickets(int movieID, int numTickets) {
+        MovieShowTimes validateShowTimes = new MovieShowTimes();
+        validateShowTimes.setMovieId(movieID);
+        validateShowTimes.setShowTimeId(selectedShowTimeID);
+        validateShowTimes.setNumTicketsSold(numTickets);
+
+        if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
+            int numTicketsLeft = db.getNumTickets(validateShowTimes);
+            Helper.showErrorMessage("Ypu cannot exceed above " + numTicketsLeft + " tickets", "Ticket Quantity Error");
+            return false;
+        }
+        return true;
     }
 
     private int getMovieID() {
