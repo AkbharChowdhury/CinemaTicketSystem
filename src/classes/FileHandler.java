@@ -2,9 +2,7 @@ package classes;
 
 import enums.Files;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,8 +136,26 @@ public class FileHandler {
 //                .skip(1)
                 .toList();
     }
-    public static boolean printInvoice(String filename, Invoice invoice){
+    public static boolean printInvoice(String output){
 
-        return true;
+        try {
+              new FileWriter("invoice.txt").write(output);
+            return true;
+
+
+        } catch (Exception e){
+            return false;
+
+        }
+//        try(var myWriter = new FileWriter("invoice.txt")) {
+//            myWriter.write(output);
+//            return true;
+//        } catch (IOException e) {
+//            System.err.println("An error occurred.");
+//            e.printStackTrace();
+//            return false;
+//
+//        }
+
     }
 }

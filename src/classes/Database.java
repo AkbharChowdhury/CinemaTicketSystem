@@ -551,7 +551,7 @@ public class Database {
     public List<Invoice> getInvoice (int customerID){
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection()) {
-            try (PreparedStatement stmt = con.prepareStatement(new SalesDetails().getInvoice())){
+            try (PreparedStatement stmt = con.prepareStatement(new Invoice2().getInvoiceDetails())){
                 stmt.setInt(1, customerID);
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()){

@@ -7,9 +7,11 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
-        for (int i = 0;i<5;i++){
-            System.out.println(i);
+        Database db = Database.getInstance();
+        for(var i: db.getInvoice(1)){
+            System.out.println(i.getPrice());
         }
+
 //        Database db = Database.getInstance();
 //        MovieShowTimes movieShowTimes = new MovieShowTimes();
 //        movieShowTimes.setMovieId(20);

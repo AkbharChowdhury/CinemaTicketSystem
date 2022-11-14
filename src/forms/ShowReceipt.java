@@ -68,7 +68,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         setResizable(false);
         setLayout(new BorderLayout());
-        setSize(700, 250);
+        setSize(500, 400);
         setTitle(FormDetails.showReceipt());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -107,6 +107,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         comboBoxGenres.addActionListener(this);
         populateList();
+        list.setPreferredSize(new Dimension(400,600));
         list.addListSelectionListener((ListSelectionEvent e) -> {
              int salesID = list.getSelectedIndex() + 1;
 
@@ -167,7 +168,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
                 );
 
-                if (saveInvoice(output)){
+                if (FileHandler.printInvoice(output)){
                     Helper.message("your invoice has been saved");
                 }
             }
@@ -177,18 +178,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 //        FileHandler.printInvoice("", );
     }
 
-    private boolean saveInvoice(String output) {
-        try(var myWriter = new FileWriter("invoice.txt")) {
-
-            myWriter.write(output);
-            return true;
-        } catch (IOException e) {
-            System.err.println("An error occurred.");
-            e.printStackTrace();
-            return false;
-
-        }
-    }
 
 
     @Override
