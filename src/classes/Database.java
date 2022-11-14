@@ -433,7 +433,9 @@ public class Database {
                 String showTime = rs.getString(ShowTimesTable.COLUMN_TIME);
                 int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
                 int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
-                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID));
+                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
+
+                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID, movieID));
 
             }
 
@@ -529,8 +531,6 @@ public class Database {
 
 
     public List<Movie> getAllMovieShowTimes() {
-        System.out.println("Invoked");
-//        List<MovieTemp> movies = new ArrayList<>();
         List<Movie> movies = new ArrayList<>();
 
         try (Connection con = getConnection()) {
@@ -538,13 +538,9 @@ public class Database {
             String sql = new MovieShowTimes().getAllMovieShowTimes();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-//            Movie movie = new Movie();
 
             while (rs.next()) {
-//                System.out.println(rs.getString("movie_id"));
-//                System.out.println(rs.getString("title"));
 
-//                movie.setTitle(rs.getString(MovieTable.COLUMN_TITLE));
                 movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
 
             }
