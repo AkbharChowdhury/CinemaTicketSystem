@@ -13,9 +13,9 @@ import java.util.List;
 
 
 public class Database {
-    private int id;
     private static final String DB_NAME = "cinema.db";
     private static volatile Database instance;
+    private int id;
 
     private Database() throws SQLException, FileNotFoundException {
 
@@ -82,9 +82,6 @@ public class Database {
         createTable(new MovieShowTimes().createTable());
         createTable(new Customer().createTable());
         createTable(new Sales().createTable());
-        createTable(new SalesDetails().createTable());
-        createTable(new Sales2().createTable());
-
 
 
     }
@@ -184,7 +181,7 @@ public class Database {
     }
 
 
-    public boolean addCustomer(Customer customer)  {
+    public boolean addCustomer(Customer customer) {
 
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(new Customer().insert());
@@ -200,128 +197,6 @@ public class Database {
             ex.printStackTrace();
         }
         return false;
-
-    }
-    public boolean addSales(Sales sales)  {
-
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
-            stmt1.setNull(1, java.sql.Types.NULL);
-            stmt1.setString(2, sales.getSalesDate());
-            stmt1.setInt(3, sales.getCustomerID());
-            boolean salesAdded = stmt1.executeUpdate() == 1;
-
-
-//            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) FROM Sales");
-            id = rs.getInt(1);
-//            System.out.println();
-
-            return salesAdded;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-
-    }
-
-
-    public boolean addSales2(Sales2 sales2)  {
-
-        try (Connection con = getConnection()) {
-            int param = 1;
-
-            PreparedStatement stmt1 = con.prepareStatement(new Sales2().insert());
-
-            stmt1.setString(param, sales2.getSalesDate());
-            param++;
-
-            stmt1.setInt(param, sales2.getMovieId());
-            param++;
-
-            stmt1.setInt(param, sales2.getShowTimeId());
-            param++;
-
-            stmt1.setInt(param, sales2.getCustomerID());
-            param++;
-
-            stmt1.setInt(param, sales2.getTotalTicketsSold());
-
-            return stmt1.executeUpdate() == 1;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-
-    }
-
-    public boolean addSalesDetails(SalesDetails salesDetails)  {
-
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt1 = con.prepareStatement(new SalesDetails().insert());
-            stmt1.setInt(1, salesDetails.getSalesID());
-            stmt1.setInt(2, salesDetails.getMovieID());
-            stmt1.setInt(3, salesDetails.getTotalTicketsSold());
-            boolean salesAdded = stmt1.executeUpdate() == 1;
-//            ResultSet lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet();
-//            lastInsertedID.getInt(0);
-
-            return salesAdded;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-
-    }
-
-//
-//    public boolean addSales(Sales sales)  {
-//
-//        try (Connection con = getConnection()) {
-//            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
-//            stmt1.setNull(1, java.sql.Types.NULL);
-//            stmt1.setString(2, sales.getSalesDate());
-//            stmt1.setInt(3, sales.getCustomerID());
-//
-//
-//            var  lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet().getInt(1);
-//            Statement stmt = con.createStatement();
-////            ResultSet rs = stmt.executeQuery("SELECT MAX(sales_id) AS lastID FROM Sales");
-//            id = lastInsertedID;
-//            stmt1.executeUpdate();
-//            return true;
-//
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return false;
-//
-//    }
-//
-//    public boolean addSalesDetails(SalesDetails salesDetails)  {
-//
-//        try (Connection con = getConnection()) {
-//            PreparedStatement stmt1 = con.prepareStatement(new SalesDetails().insert());
-//            stmt1.setInt(1, salesDetails.getSalesID());
-//            stmt1.setInt(2, salesDetails.getMovieID());
-//            stmt1.setInt(3, salesDetails.getTotalTicketsSold());
-//            //            ResultSet lastInsertedID = con.prepareStatement("SELECT MAX(sales_id) FROM Sales").getResultSet();
-////            lastInsertedID.getInt(0);
-//
-//            return stmt1.executeUpdate() == 1;
-//
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return false;
-//
-//    }
-    public int lastInsertedID(){
-        return id;
 
     }
 
@@ -429,9 +304,9 @@ public class Database {
 
                 if (genreID != 0) {
                     x++;
-                    stmt.setString(x, + '%' +  String.valueOf(genreID) ); // check if genre id starts with the id
+                    stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
                     x++;
-                    stmt.setString(x,  String.valueOf(genreID) + '%'); // check if genre id ens with
+                    stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ens with
 
 //                    x++;
 //                    String genreMiddleValue = MessageFormat.format("%,{0},%", genreID);
@@ -484,16 +359,13 @@ public class Database {
 
             // selected movie id
             stmt.setInt(param, movieShowTimes.getMovieId());
-                if (!showDate.isEmpty()) {
-                    System.out.println(showDate);
+            if (!showDate.isEmpty()) {
+                System.out.println(showDate);
 
-                    param++;
-                    String showDateStr = MessageFormat.format("'%{0}%'",showDate);
-                    stmt.setString(param,showDate );
-                }
-
-
-
+                param++;
+                String showDateStr = MessageFormat.format("'%{0}%'", showDate);
+                stmt.setString(param, showDate);
+            }
 
 
             rs = stmt.executeQuery();
@@ -505,8 +377,8 @@ public class Database {
 
             while (rs.next()) {
                 String title = rs.getString(MovieTable.COLUMN_TITLE);
-                String date = rs.getString(ShowTimesTable.COLUMN_DATE);
-                String showTime = rs.getString(ShowTimesTable.COLUMN_TIME);
+                String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
+                String showTime = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
                 int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
                 int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
                 int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
@@ -546,56 +418,65 @@ public class Database {
         return genreList;
     }
 
+    public boolean addSales(Sales sales) {
+
+        try (Connection con = getConnection()) {
+            int param = 1;
+
+            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
+
+            stmt1.setString(param, sales.getSalesDate());
+            param++;
+
+            stmt1.setInt(param, sales.getMovieId());
+            param++;
+
+            stmt1.setInt(param, sales.getShowTimeId());
+            param++;
+
+            stmt1.setInt(param, sales.getCustomerID());
+            param++;
+
+            stmt1.setInt(param, sales.getTotalTicketsSold());
+
+            return stmt1.executeUpdate() == 1;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
 
 
-    public List<Invoice> getInvoice (int customerID){
+    public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection()) {
-            try (PreparedStatement stmt = con.prepareStatement(new Invoice2().getInvoiceDetails())){
+            try (PreparedStatement stmt = con.prepareStatement(new Invoice().getInvoiceDetails())) {
                 stmt.setInt(1, customerID);
                 ResultSet rs = stmt.executeQuery();
-                while (rs.next()){
-//                    int numTicket = rs.getInt("");
-                    int price = rs.getInt("price");
+                while (rs.next()) {
+                    int price = rs.getInt(TicketsTable.COLUMN_PRICE);
                     Invoice invoice = new Invoice();
                     invoice.setPrice(price);
-                    invoice.setFirstname(rs.getString("firstname"));
-                    invoice.setLastname(rs.getString("lastname"));
-                    invoice.setSalesDate(rs.getString("sales_date"));
-                    invoice.setShowDate(rs.getString("sales_date"));
-                    invoice.setShowTime(rs.getString("show_time"));
-                    invoice.setMovieTitle(rs.getString("title"));
-                    invoice.setType(rs.getString("type"));
-                    invoice.setRating(rs.getString("rating"));
-                    invoice.setTotalTicket(rs.getInt(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD));
-
-
-
-
-                    invoice.setTotalTicket(rs.getDouble(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD));
-
+                    invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
+                    invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
+                    invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
+                    invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+                    invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
+                    invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
+                    invoice.setType(rs.getString(TicketsTable.COLUMN_TYPE));
+                    invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
+                    invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKECTS_SOLD));
                     invoices.add(invoice);
-
 
 
                 }
                 return invoices;
 
-//                if(rs.next()){
-//                    //get data
-//                    System.out.println(rs.getString("title"));
-//                    System.out.println(rs.getString("firstname"));
-//
-//                } else{
-//                    System.out.println("N");
-//                }
-//                return rs;
-
-            } catch (Exception ex){}
-
-
-
-
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
 
         } catch (Exception e) {
@@ -650,10 +531,6 @@ public class Database {
         }
         return movieTitleList;
     }
-
-
-
-
 
 
     public List<Ticket> getTicket() {
@@ -731,7 +608,6 @@ public class Database {
         return 0;
 
     }
-
 
 
     public int getGenreID(String genre) {
@@ -835,9 +711,6 @@ public class Database {
     }
 
 
-
-
-
     public int getCustomerID(String email) {
         String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
 
@@ -849,7 +722,6 @@ public class Database {
             stmt.setString(1, email);
 
             rs3 = stmt.executeQuery();
-
 
 
             return rs3.getInt(CustomerTable.COLUMN_ID);
@@ -901,11 +773,11 @@ public class Database {
             stmt.setInt(2, movieShowTimes.getShowTimeId());
             ResultSet r = stmt.executeQuery();
 
-        if (isResultSetEmpty(r)) {
-            con.close();
-            return 0;
-        }
-        return r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+            if (isResultSetEmpty(r)) {
+                con.close();
+                return 0;
+            }
+            return r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -919,7 +791,7 @@ public class Database {
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(new MovieShowTimes().updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
-            int  remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
+            int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
 
             // set the corresponding param
             pstmt.setInt(1, remainingTickets);
@@ -927,14 +799,14 @@ public class Database {
             pstmt.setInt(3, movieShowTimes.getShowTimeId());
             // update
             int result = pstmt.executeUpdate();
-           return result!=0;
+            return result != 0;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
 
-    }
+}
 
 
 

@@ -1,38 +1,24 @@
 package classes;
 
 import interfaces.Queries;
-import tables.CustomerTable;
-import tables.MovieTable;
-import tables.RatingTable;
-import tables.SalesTable;
+import tables.*;
 
-public class Sales implements Queries {
-    private int salesID;
+public class Sales extends MovieShowTimes  implements Queries {
     private String salesDate;
+    public Sales(){
+
+    }
+
+
+    public Sales(String salesDate, int movieId, int showTimeId, int customerID, int total_tickets_sold) {
+        super(movieId, showTimeId);
+        this.salesDate = salesDate;
+        this.customerID = customerID;
+        this.totalTicketsSold = total_tickets_sold;
+    }
+
     private int customerID;
-
-    public Sales() {
-
-    }
-
-
-    public Sales(int salesID, String salesDate, int customerID) {
-        this.salesID = salesID;
-        this.salesDate = salesDate;
-        this.customerID = customerID;
-    }
-    public Sales(String salesDate, int customerID) {
-        this.salesDate = salesDate;
-        this.customerID = customerID;
-    }
-
-    public int getSalesID() {
-        return salesID;
-    }
-
-    public void setSalesID(int salesID) {
-        this.salesID = salesID;
-    }
+    private int totalTicketsSold;
 
     public String getSalesDate() {
         return salesDate;
@@ -51,32 +37,39 @@ public class Sales implements Queries {
     }
 
 
+    public int getTotalTicketsSold() {
+        return totalTicketsSold;
+    }
+
+    public void setTotalTicketsSold(int totalTicketsSold) {
+        this.totalTicketsSold = totalTicketsSold;
+    }
+
     @Override
     public String createTable() {
-        return String.format("""
-                        CREATE TABLE IF NOT EXISTS %s (
-                        %s INTEGER PRIMARY KEY AUTOINCREMENT,
-                        %s TEXT NOT NULL,
-                        %s INTEGER NOT NULL,
-                        FOREIGN KEY(%s) REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE
-                        );
-                        """,
-                SalesTable.TABLE_NAME,
-                SalesTable.COLUMN_ID,
-                SalesTable.COLUMN_SALES_DATE,
-                SalesTable.COLUMN_CUSTOMER_ID,
-                // rating fk
-                SalesTable.COLUMN_CUSTOMER_ID,
-                CustomerTable.TABLE_NAME,
-                CustomerTable.COLUMN_ID
-        );
+        return """
+                
+                CREATE TABLE "Sales2" (
+                	"sales_date"	TEXT NOT NULL,
+                	"movie_id"	INTEGER NOT NULL,
+                	"show_time_id"	INTEGER NOT NULL,
+                	"customer_id"	INTEGER NOT NULL,
+                	"total_tickets_sold"	INTEGER NOT NULL,
+                	--FOREIGN KEY("movie_id") REFERENCES "MovieShowTimes"("movie_id"),
+                	FOREIGN KEY("customer_id") REFERENCES "Customers"("customer_id"),
+                	--FOREIGN KEY("show_time_id") REFERENCES "MovieShowTimes"("show_time_id"),
+                	PRIMARY KEY("sales_date","movie_id","customer_id","show_time_id")
+                );
+                """;
     }
+
+
 
     @Override
     public String insert() {
         return String.format("""
                         INSERT INTO %s
-                        VALUES (?, ?, ?);
+                        VALUES (?, ?, ?, ?, ?);
                         """,
                 SalesTable.TABLE_NAME
         );

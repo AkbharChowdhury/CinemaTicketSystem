@@ -61,8 +61,8 @@ public class ShowTimes implements Queries {
 //                        """,
 //                ShowTimesTable.TABLE_NAME,
 //                ShowTimesTable.COLUMN_ID,
-//                ShowTimesTable.COLUMN_DATE,
-//                ShowTimesTable.COLUMN_TIME
+//                ShowTimesTable.COLUMN_SHOW_DATE,
+//                ShowTimesTable.COLUMN_SHOW_TIME
 //
 //
 //        );
@@ -79,8 +79,8 @@ public class ShowTimes implements Queries {
                         """,
                 ShowTimesTable.TABLE_NAME,
                 ShowTimesTable.COLUMN_ID,
-                ShowTimesTable.COLUMN_DATE,
-                ShowTimesTable.COLUMN_TIME
+                ShowTimesTable.COLUMN_SHOW_DATE,
+                ShowTimesTable.COLUMN_SHOW_TIME
 
 
         );
