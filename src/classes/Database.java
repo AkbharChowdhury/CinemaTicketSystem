@@ -532,6 +532,50 @@ public class Database {
         return movieTitleList;
     }
 
+    public List<ShowTimes> getShowDateTimeByIDs(int movieID, int showTimeId) {
+        List<ShowTimes> showDetailsList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getShowDetails());
+            stmt.setInt(1, movieID);
+            stmt.setInt(2, showTimeId);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                showDetailsList.add(new ShowTimes(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE), rs.getString(ShowTimesTable.COLUMN_SHOW_TIME)));
+
+            }
+            return showDetailsList;
+
+
+
+        } catch (Exception ex){
+            return showDetailsList;
+
+        }
+
+
+//        try (Connection con = getConnection()) {
+//
+//            String sql = new MovieShowTimes().getShowDetails();
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery(sql);
+//
+//
+//            if (isResultSetEmpty(rs)) {
+//                con.close();
+//                return movieTitleList;
+//            }
+//            while (rs.next()) {
+//                movieTitleList.add(rs.getString("title"));
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return movieTitleList;
+    }
+
 
     public List<Ticket> getTicket() {
         List<Ticket> ticketList = new ArrayList<>();
@@ -574,7 +618,7 @@ public class Database {
                 return "Error: there are no movies that exists with the specified id!";
             }
 
-            return rs.getString("title");
+            return rs.getString(MovieTable.COLUMN_TITLE);
 
 
         } catch (Exception e) {
@@ -767,7 +811,7 @@ public class Database {
     public int getNumTickets(MovieShowTimes movieShowTimes) {
         try (Connection con = getConnection()) {
 
-            String sql = new MovieShowTimes().getNumTickets();
+            String sql = new MovieShowTimes().getSelectedShowDetails();
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, movieShowTimes.getMovieId());
             stmt.setInt(2, movieShowTimes.getShowTimeId());
@@ -783,6 +827,35 @@ public class Database {
             e.printStackTrace();
         }
         return 0;
+    }
+
+
+    public ShowTimes getSelectedShowDetails(MovieShowTimes movieShowTimes) {
+        ShowTimes showTimes = new ShowTimes();
+
+        try (Connection con = getConnection()) {
+
+            String sql = new MovieShowTimes().getSelectedShowDetails();
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, movieShowTimes.getMovieId());
+            stmt.setInt(2, movieShowTimes.getShowTimeId());
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (isResultSetEmpty(resultSet)) {
+                con.close();
+                return showTimes;
+            }
+            while (resultSet.next()){
+                showTimes.setShowDate(resultSet.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+                showTimes.setShowTime(resultSet.getString(ShowTimesTable.COLUMN_SHOW_TIME));
+
+            }
+            return showTimes;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return showTimes;
     }
 
     public boolean updateNumTickets(MovieShowTimes movieShowTimes) {

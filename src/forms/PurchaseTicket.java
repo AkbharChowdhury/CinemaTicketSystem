@@ -22,10 +22,9 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 
-
 public class PurchaseTicket extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI, ChangeListener, MouseListener {
     final String TOTAL_MSG = "Total to pay: ";
-    private final Database db;
+    private  Database db;
     private final MovieShowTimes movieShowTimes = new MovieShowTimes();
     private final JTable table = new JTable();
     private final JScrollPane scrollPane = new JScrollPane();
@@ -34,18 +33,19 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JLabel lblMovieDetails = new JLabel();
-    private final Ticket TICKET_DETAILS;
-    private final DefaultTableCellRenderer cellRenderer;
+    private  Ticket TICKET_DETAILS;
+    private  DefaultTableCellRenderer cellRenderer;
     private final JComboBox<String> cbMovies = new JComboBox<>();
     private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
     private final JButton btnConfirm = new JButton("Confirm Order");
-    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
     private int movieIDIndex;
     private int selectedShowTimeID;
     private DefaultTableModel model;
 
-    public PurchaseTicket() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
+    public PurchaseTicket() throws  SQLException, FileNotFoundException, ParseException {
+        Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET);
         db = Database.getInstance();
         movieShowTimes.setShowDate("");
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
@@ -109,14 +109,23 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
             @Override
             public void mousePressed(MouseEvent e) {
-
-                String showTimeIDStr = model.getValueAt(table.getSelectedRow(), 0).toString();
-                selectedShowTimeID = Integer.parseInt(showTimeIDStr);
-
-                String date = model.getValueAt(table.getSelectedRow(), 2).toString();
-                updateMovieLabel(db.getMovieName(getMovieID()), Helper.formatDate(date));
+                handleTableClickEvent();
 
 
+            }
+
+            private void handleTableClickEvent() {
+                try {
+                    selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
+                    int selectedMovieID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 1).toString());
+                    var showDetails = db.getSelectedShowDetails(new MovieShowTimes(selectedMovieID, selectedShowTimeID));
+                    updateMovieLabel(db.getMovieName(getMovieID()),
+                            Helper.formatDate(showDetails.getShowDate()),
+                            Helper.formatTime(showDetails.getShowTime())
+                    );
+                } catch (ParseException ex){
+                    ex.printStackTrace();
+                }
             }
 
             @Override
@@ -135,6 +144,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
         setVisible(true);
     }
+
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new PurchaseTicket();
@@ -267,7 +277,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             return;
         }
 
-        Sales sales = new Sales(LocalDate.now().toString(), movieID, selectedShowTimeID, customerID, numTickets);
+        Sales sales = new Sales(salesDate, movieID, selectedShowTimeID, customerID, numTickets);
 
         if (db.addSales(sales)) {
             updateNumTicksSold(numTickets);
@@ -338,6 +348,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 i++;
             }
 
+
         } catch (ParseException e) {
             e.printStackTrace();
 
@@ -389,7 +400,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
 
     }
 
-    private void updateMovieLabel(String title, String date) {
-        lblMovieDetails.setText(String.format("%s: %s", title, date));
+    private void updateMovieLabel(String title, String date, String time) {
+        lblMovieDetails.setText(String.format("%s- %s:%s", title, date, time));
     }
+
+
 }

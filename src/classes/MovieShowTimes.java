@@ -121,19 +121,22 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
 
     }
 
-//    public String getMovieShowTimes(){
-//        return """
-//                SELECT mst.movie_id,
-//                 m.title,
-//                st.*,
-//                 mst.num_tickets_left
-//                FROM MovieShowTimes mst
-//                JOIN Movies m ON m.movie_id = mst.movie_id
-//                JOIN ShowTimes st ON st.show_time_id = mst.show_time_id
-//                WHERE mst.movie_id =?
-//                """;
-//    }
+    public String getShowDetails(){
+        return """
+                SELECT
+                                
+                s.show_date,
+                s.show_time,
+                mst.movie_id,
+                mst.show_time_id
+                                
+                 FROM MovieShowTimes mst
+                JOIN ShowTimes s ON s.show_time_id = mst.show_time_id
+                                
+                 WHERE mst.movie_id = ? AND mst.show_time_id = ?
+                """;
 
+    }
     public  String getMovieShowTimes(MovieShowTimes movieShowTimes) {
 
         String sql = """
@@ -208,12 +211,33 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         return movieTitle;
     }
 
-    public String getNumTickets(){
+//    public String getNumTicketsLeft(){
+//        return """
+//                SELECT * FROM MovieShowTimes WHERE movie_id = ? and show_time_id = ?
+//                """;
+//
+//    }
+
+    public String getSelectedShowDetails(){
         return """
-                SELECT * FROM MovieShowTimes WHERE movie_id = ? and show_time_id = ?
+                
+                
+              
+                SELECT * FROM MovieShowTimes mst
+                JOIN ShowTimes s ON s.show_time_id = mst.show_time_id
+                WHERE mst.movie_id = ? and mst.show_time_id = ?;
                 """;
 
     }
+
+
+
+//    public String getShowTimeDetails(){
+//        return """
+//                SELECT * FROM MovieShowTimes WHERE movie_id = ? and show_time_id = ?
+//                """;
+//
+//    }
 
     public String updateNumTickets(){
         return String.format("""

@@ -17,8 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -27,44 +25,26 @@ import java.util.List;
 
 public class ShowReceipt extends JFrame implements ActionListener, KeyListener, FormAction, ListGUI {
     private final Database db;
-
     private final DefaultListModel model;
     private final JList list ;
     int salesID;
     private final List<Invoice> INVOICES;
-
-
-
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JButton btnCancel = new JButton(Buttons.cancel());
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
-
-
-
-
-
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
-    private final String movieTitle = "";
 
-    public ShowReceipt() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
+    public ShowReceipt() throws  SQLException, FileNotFoundException, ParseException {
         Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT);
-
         db = Database.getInstance();
         model = new DefaultListModel();
         list = new JList(model);
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
         JScrollPane scrollPane = new JScrollPane(list);
-
-
-
-
-
-
-
 
         setResizable(false);
         setLayout(new BorderLayout());
@@ -272,6 +252,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 //                    movie.getGenres()
 //            ));
     }
+
 
 }
 

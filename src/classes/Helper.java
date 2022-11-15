@@ -24,31 +24,33 @@ import java.util.Locale;
 
 public final class Helper {
 
-    public static String getCSVPath(){
+    public static String getCSVPath() {
         return "src/csv/";
     }
+
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
         return FileHandler.readSingleColumn(getCSVPath() + filename);
     }
-    public static String calcDuration(int duration){
+
+    public static String calcDuration(int duration) {
         int hours = duration / 60;
         int minutes = duration % 60;
-        return String.format( "%d:%02d", hours, minutes);
+        return String.format("%d:%02d", hours, minutes);
     }
 
 
-//      JComboBox populateComboBox(Database db, JComboBox comboBox){
+    //      JComboBox populateComboBox(Database db, JComboBox comboBox){
 //        for(var item: db.showMovieGenreList()){
 //            comboBox.addItem(item);
 //        }
 //        return comboBox;
 //    }
-    public static void showErrorMessage(String message, String title){
+    public static void showErrorMessage(String message, String title) {
         JOptionPane.showMessageDialog(null, message,
                 title, JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void message(String message){
+    public static void message(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
 
@@ -59,30 +61,33 @@ public final class Helper {
         DateFormat formattedTime = new SimpleDateFormat("h:mm a"); // e.g. 12:30 AM
         return formattedTime.format(unFormattedTime); // "23:00"
     }
+
     public static String formatMoney(double amount) {
         NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.UK);
         return currency.format(amount);
     }
-    public static void validateNumber(KeyEvent e, JTextField textField){
+
+    public static void validateNumber(KeyEvent e, JTextField textField) {
         char c = e.getKeyChar();
         if (Character.isLetter(c)) {
             // disable input if the value is not a number
             textField.setEditable(false);
         }
 
-        boolean isNumber = !Character.isLetter(c) && e.getKeyChar() !=0;
+        boolean isNumber = !Character.isLetter(c) && e.getKeyChar() != 0;
         textField.setEditable(isNumber);
     }
 
-    public static boolean validateMovieID(Database db, int movieID){
-        if (!db.movieIDExists(movieID)){
-            showErrorMessage("This movie ID does not exists. Please enter an existing movie ID","Movie ID error");
+    public static boolean validateMovieID(Database db, int movieID) {
+        if (!db.movieIDExists(movieID)) {
+            showErrorMessage("This movie ID does not exists. Please enter an existing movie ID", "Movie ID error");
             return false;
         }
         return true;
 
     }
-    public static double calcPrice(int numTickets, double price){
+
+    public static double calcPrice(int numTickets, double price) {
         return numTickets * price;
     }
 
@@ -96,16 +101,17 @@ public final class Helper {
         return fullDay;
     }
 
-    public static boolean validateMovieShowTime(Database db, MovieShowTimes movieShowTimes, int movieID){
-        if (db.showMovieTimes(movieShowTimes).size() == 0 ){
-            Helper.showErrorMessage("There are no show times for " + db.getMovieName(movieID),"Show time error");
+    public static boolean validateMovieShowTime(Database db, MovieShowTimes movieShowTimes, int movieID) {
+        if (db.showMovieTimes(movieShowTimes).size() == 0) {
+            Helper.showErrorMessage("There are no show times for " + db.getMovieName(movieID), "Show time error");
             return true;
         }
         return false;
     }
-    public  static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        switch (page){
+    public static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        switch (page) {
             case LOGIN -> {
                 new Login();
                 currentPage.dispose();
@@ -134,12 +140,12 @@ public final class Helper {
 
     }
 
-    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page){
+    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) {
 
-        if (LoginInfo.getCustomerID() == 0){
-            int dialogButton = JOptionPane.showConfirmDialog (null, "You must be logged in to purchase tickets or print invoices, do you want to login?","WARNING",JOptionPane.YES_NO_OPTION);
+        if (LoginInfo.getCustomerID() == 0) {
+            int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
 
-            if (dialogButton == JOptionPane.YES_OPTION){
+            if (dialogButton == JOptionPane.YES_OPTION) {
                 Form.setRedirectPage(page);
                 try {
                     frame.dispose();
@@ -150,16 +156,7 @@ public final class Helper {
                 }
 
             }
-//
-//            if (page == RedirectPage.SHOW_RECEIPT || page == RedirectPage.PURCHASE_TICKET){
-//                try {
-//                    frame.dispose();
-//                    new MovieList();
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//
-//            }
+
 
         }
 
