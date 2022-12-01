@@ -62,7 +62,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
         JPanel middle = new JPanel();
-        middle.add(new Label("Select Movie: "));
+        middle.add(new Label("Movie: "));
         cbMovies.addItem(FormDetails.defaultMovie());
         populateMovieComboBox();
         middle.add(cbMovies);
