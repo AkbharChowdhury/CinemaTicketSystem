@@ -91,6 +91,8 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
         updateTotalLabel();
 
         south.add(btnConfirm);
+
+
         add("North", top);
         add("Center", middle);
         add("South", south);

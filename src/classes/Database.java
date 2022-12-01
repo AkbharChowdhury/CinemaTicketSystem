@@ -137,7 +137,6 @@ public class Database {
     private void insertShowTimes() throws FileNotFoundException {
 
         List<ShowTimes> showTimeList = FileHandler.getShowTimeData();
-        System.out.println(showTimeList);
 
 
         try (Connection con = getConnection()) {
@@ -412,13 +411,9 @@ public class Database {
                 con.close();
                 return genreList;
             }
-            System.out.println(rs);
             while (rs.next()) {
 
-                System.out.println(MessageFormat.format("Genre: {0} ID {1}",
-                        rs.getString(GenreTable.COLUMN_GENRE),
-                        rs.getString(GenreTable.COLUMN_ID)
-                        ));
+
 
                 genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
 
