@@ -50,9 +50,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
 
-
-
     private DefaultTableModel model;
+
+    private boolean hasSelectedMovie = false;
+
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException {
@@ -198,24 +199,20 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
             ex.printStackTrace();
         }
 
-
-
         if (e.getSource() == cbMovies) {
-            if (cbMovies.getSelectedIndex() == 0) {
-                Helper.showErrorMessage("Please select a movie", "Movie Error");
-                return;
-
-            }
-
-            movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
-            populateTable();
+            handleMovieCB();
         }
 
+    }
+    private void handleMovieCB() {
+        if(!hasSelectedMovie){
+            cbMovies.removeItemAt(0);
+            hasSelectedMovie = true;
 
+        }
 
-
-
-
+        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+        populateTable();
     }
 
     @Override
