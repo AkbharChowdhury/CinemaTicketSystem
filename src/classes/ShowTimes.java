@@ -1,86 +1,95 @@
 package classes;
 
 import interfaces.Queries;
+import interfaces.TableProperties;
+import tables.MovieTable;
 import tables.ShowTimesTable;
 
-public class ShowTimes implements Queries {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ShowTimes implements Queries, TableProperties {
     private int showTimeID;
-    private String showDate;
-    private String showTime;
-
-    public ShowTimes() {
-
-    }
-
-    public ShowTimes(int showTimeID, String showDate, String showTime) {
-        this.showTimeID = showTimeID;
-        this.showDate = showDate;
-        this.showTime = showTime;
-    }
-
-    public ShowTimes(String showDate, String showTime) {
-        this.showDate = showDate;
-        this.showTime = showTime;
-
-    }
+    private int movieID;
+    private String date;
+    private String time;
+    private int numTicketsLeft;
 
 
-
-    public int getShowTimeId() {
+    public int getShowTimeID() {
         return showTimeID;
     }
 
-    public void setShowTimeId(int showTimeId) {
-        this.showTimeID = showTimeId;
+    public void setShowTimeID(int showTimeID) {
+        this.showTimeID = showTimeID;
     }
 
-    public String getShowDate() {
-        return showDate;
+    public int getMovieID() {
+        return movieID;
     }
 
-    public void setShowDate(String showDate) {
-        this.showDate = showDate;
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
     }
 
-    public String getShowTime() {
-        return showTime;
+    public String getDate() {
+        return date;
     }
 
-    public void setShowTime(String showTime) {
-        this.showTime = showTime;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-//    @Override
-//    public String createTable() {
-//        return String.format("""
-//                        CREATE TABLE IF NOT EXISTS %s (
-//                        %s INTEGER PRIMARY KEY AUTOINCREMENT,
-//                        %s TEXT NOT NULL,
-//                        %s TEXT NOT NULL
-//                        );
-//                        """,
-//                ShowTimesTable.TABLE_NAME,
-//                ShowTimesTable.COLUMN_ID,
-//                ShowTimesTable.COLUMN_SHOW_DATE,
-//                ShowTimesTable.COLUMN_SHOW_TIME
-//
-//
-//        );
-//    }
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getNumTicketsLeft() {
+        return numTicketsLeft;
+    }
+
+    public void setNumTicketsLeft(int numTicketsLeft) {
+        this.numTicketsLeft = numTicketsLeft;
+    }
+
+    @Override
+    public List<String> tableColumns() {
+        List<String> columns = new ArrayList<>();
+        columns.add("Date");
+        columns.add("Time");
+        columns.add("No of tickets left");
+        return columns;
+    }
+
 
     @Override
     public String createTable() {
         return String.format("""
                         CREATE TABLE IF NOT EXISTS %s (
                         %s INTEGER PRIMARY KEY AUTOINCREMENT,
+                        %s INTEGER NOT NULL,
                         %s TEXT NOT NULL,
-                        %s TEXT NOT NULL
+                        %s TEXT NOT NULL,
+                        %s INTEGER NOT NULL,
+                        FOREIGN KEY(%s) REFERENCES %s(%s)
                         );
                         """,
                 ShowTimesTable.TABLE_NAME,
                 ShowTimesTable.COLUMN_ID,
+                ShowTimesTable.COLUMN_MOVIE_ID,
                 ShowTimesTable.COLUMN_SHOW_DATE,
-                ShowTimesTable.COLUMN_SHOW_TIME
+                ShowTimesTable.COLUMN_SHOW_TIME,
+                ShowTimesTable.NUM_TICKETS_LEFT,
+
+                // movie fk
+                // first key
+                ShowTimesTable.COLUMN_MOVIE_ID,
+                MovieTable.TABLE_NAME,
+                MovieTable.COLUMN_ID
 
 
         );
@@ -90,9 +99,10 @@ public class ShowTimes implements Queries {
     public String insert() {
         return String.format("""
                         INSERT INTO %s
-                        VALUES (?, ?, ?);
+                        VALUES (?, ?, ?, ?, ?);
                         """,
                 ShowTimesTable.TABLE_NAME
         );
     }
+
 }

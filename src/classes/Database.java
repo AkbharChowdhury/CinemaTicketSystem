@@ -54,7 +54,7 @@ public class Database {
         insertMovieGenres();
         insertTickets();
         insertShowTimes();
-        insertMovieShowTimes();
+//        insertMovieShowTimes();
         insertCustomer();
 
 
@@ -79,7 +79,12 @@ public class Database {
         createTable(new Genre().createTable());
         createTable(new MovieGenres().createTable());
         createTable(new ShowTimes().createTable());
-        createTable(new MovieShowTimes().createTable());
+
+
+//        createTable(new ShowTimes().createTable());
+//        createTable(new MovieShowTimes().createTable());
+//        createTable(new ShowTimes().createTable());
+//        createTable(new MovieShowTimes().createTable());
         createTable(new Customer().createTable());
         createTable(new Sales().createTable());
 
@@ -138,15 +143,19 @@ public class Database {
 
     private void insertShowTimes() throws FileNotFoundException {
 
-        List<ShowTimes> showTimeList = FileHandler.getShowTimeData(Helper.getCSVPath() + Files.ShowTimes.DESCRIPTION);
+        List<ShowTimes> showTimeList = FileHandler.getShowTimeData();
+        System.out.println(showTimeList);
 
 
         try (Connection con = getConnection()) {
             for (var showtime : showTimeList) {
                 PreparedStatement stmt = con.prepareStatement(new ShowTimes().insert());
                 stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, showtime.getShowDate());
-                stmt.setString(3, showtime.getShowTime());
+                stmt.setInt(2, showtime.getMovieID());
+                stmt.setString(3, showtime.getDate());
+                stmt.setString(4, showtime.getTime());
+                stmt.setInt(5, showtime.getNumTicketsLeft());
+
                 stmt.executeUpdate();
             }
 
@@ -346,52 +355,63 @@ public class Database {
 
 
     public List<MovieShowTimes> showMovieTimes(MovieShowTimes movieShowTimes) {
-        String showDate = movieShowTimes.getShowDate();
-
-
-        List<MovieShowTimes> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-
-            PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getMovieShowTimes(movieShowTimes));
-            int param = 0;
-            param++;
-
-            // selected movie id
-            stmt.setInt(param, movieShowTimes.getMovieId());
-            if (!showDate.isEmpty()) {
-                System.out.println(showDate);
-
-                param++;
-                String showDateStr = MessageFormat.format("'%{0}%'", showDate);
-                stmt.setString(param, showDate);
-            }
-
-
-            rs = stmt.executeQuery();
-
-
-            if (isResultSetEmpty(rs)) {
+                List<MovieShowTimes> list = new ArrayList<>();
                 return list;
-            }
 
-            while (rs.next()) {
-                String title = rs.getString(MovieTable.COLUMN_TITLE);
-                String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
-                String showTime = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
-                int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
-                int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
-                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
 
-                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID, movieID));
 
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
+//        String showDate = movieShowTimes.getShowDate();
+//
+//
+//        List<MovieShowTimes> list = new ArrayList<>();
+//        try (Connection con = getConnection()) {
+//            ResultSet rs;
+//
+//            PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getMovieShowTimes(movieShowTimes));
+//            int param = 0;
+//            param++;
+//
+//            // selected movie id
+//            stmt.setInt(param, movieShowTimes.getMovieId());
+//            if (!showDate.isEmpty()) {
+//                System.out.println(showDate);
+//
+//                param++;
+//                String showDateStr = MessageFormat.format("'%{0}%'", showDate);
+//                stmt.setString(param, showDate);
+//            }
+//
+//
+//            rs = stmt.executeQuery();
+//
+//
+//            if (isResultSetEmpty(rs)) {
+//                return list;
+//            }
+//
+//            while (rs.next()) {
+//                String title = rs.getString(MovieTable.COLUMN_TITLE);
+//                String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
+//                String showTime = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
+//                int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+//                int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
+//                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
+//
+//                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID, movieID));
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
     }
+
+
+
+
+
+
 
     // for search
     public List<String> getMovieGenreList() {
@@ -541,7 +561,7 @@ public class Database {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
-                showDetailsList.add(new ShowTimes(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE), rs.getString(ShowTimesTable.COLUMN_SHOW_TIME)));
+//                showDetailsList.add(new ShowTimes(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE), rs.getString(ShowTimesTable.COLUMN_SHOW_TIME)));
 
             }
             return showDetailsList;
@@ -846,8 +866,8 @@ public class Database {
                 return showTimes;
             }
             while (resultSet.next()){
-                showTimes.setShowDate(resultSet.getString(ShowTimesTable.COLUMN_SHOW_DATE));
-                showTimes.setShowTime(resultSet.getString(ShowTimesTable.COLUMN_SHOW_TIME));
+//                showTimes.setShowDate(resultSet.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+//                showTimes.setShowTime(resultSet.getString(ShowTimesTable.COLUMN_SHOW_TIME));
 
             }
             return showTimes;

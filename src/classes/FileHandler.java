@@ -41,15 +41,26 @@ public class FileHandler {
         return customerList;
     }
 
-    public static List<ShowTimes> getShowTimeData(String fileName) throws FileNotFoundException {
-
+    public static List<ShowTimes> getShowTimeData() throws FileNotFoundException {
+        String fileName = Helper.getCSVPath() + Files.ShowTimes.DESCRIPTION;
         List<ShowTimes> showTimeList = new ArrayList<>();
 
         for (String line : getCSVFileDetails(fileName)) {
             String[] values = line.split(",");
-            String showDate = values[0];
-            String showTime = values[1];
-            showTimeList.add(new ShowTimes(showDate, showTime));
+            // note that if the first column contains a integer this won't work
+            int movieID = Integer.parseInt(values[1]);
+            String date = values[2];
+            String time = values[3];
+            int numTickets = Integer.parseInt(values[4]);
+
+
+            var showTime = new ShowTimes();
+            showTime.setMovieID(movieID);
+            showTime.setDate(date);
+            showTime.setTime(time);
+            showTime.setNumTicketsLeft(numTickets);
+
+            showTimeList.add(showTime);
 
         }
         return showTimeList;

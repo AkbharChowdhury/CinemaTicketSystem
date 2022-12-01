@@ -49,7 +49,7 @@ public class Sales extends MovieShowTimes  implements Queries {
     public String createTable() {
         return """
                 
-                CREATE TABLE "Sales2" (
+                CREATE TABLE "Sales" (
                 	"sales_date"	TEXT NOT NULL,
                 	"movie_id"	INTEGER NOT NULL,
                 	"show_time_id"	INTEGER NOT NULL,

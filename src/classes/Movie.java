@@ -83,7 +83,7 @@ public class Movie implements Queries {
         return String.format("""
                         CREATE TABLE IF NOT EXISTS %s (
                         %s INTEGER PRIMARY KEY AUTOINCREMENT,
-                        %s TEXT NOT NULL,
+                        %s TEXT NOT NULL UNIQUE,
                         %s TEXT NOT NULL, 
                         %s INTEGER NOT NULL,
                         FOREIGN KEY(%s) REFERENCES %s(%s) ON UPDATE CASCADE ON DELETE CASCADE

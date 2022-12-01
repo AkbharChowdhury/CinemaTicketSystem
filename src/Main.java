@@ -1,15 +1,16 @@
-import classes.Database;
-import classes.MovieShowTimes;
-import classes.Validation;
+import classes.*;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         Database db = Database.getInstance();
-        for(var i: db.getInvoice(1)){
-            System.out.println(i.getPrice());
+
+        List<ShowTimes> showTimeList = FileHandler.getShowTimeData();
+        for(var i: showTimeList){
+            System.out.println(i.getMovieID());
         }
 
 //        Database db = Database.getInstance();

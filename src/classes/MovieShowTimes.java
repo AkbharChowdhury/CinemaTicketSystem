@@ -63,7 +63,7 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
         this.numTicketLeft = numTicketLeft;
     }
     public MovieShowTimes(String showDate, String ShowTime, String movieTitle, int numTicketLeft, int showTimeID, int movieId){
-        super(showDate, ShowTime);
+//        super(showDate, ShowTime);
         this.movieTitle = movieTitle;
         this.numTicketLeft = numTicketLeft;
         this.showTimeId = showTimeID;
@@ -163,7 +163,7 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
                                 
                 """;
 
-        if (!movieShowTimes.getShowDate().isEmpty()) {
+        if (!movieShowTimes.getDate().isEmpty()) {
             sql += " AND st.show_date LIKE ?";
         }
 

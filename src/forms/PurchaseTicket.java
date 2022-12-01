@@ -47,7 +47,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
     public PurchaseTicket() throws  SQLException, FileNotFoundException, ParseException {
         Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET);
         db = Database.getInstance();
-        movieShowTimes.setShowDate("");
+        movieShowTimes.setDate("");
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
 
 
@@ -120,8 +120,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                     int selectedMovieID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 1).toString());
                     var showDetails = db.getSelectedShowDetails(new MovieShowTimes(selectedMovieID, selectedShowTimeID));
                     updateMovieLabel(db.getMovieName(getMovieID()),
-                            Helper.formatDate(showDetails.getShowDate()),
-                            Helper.formatTime(showDetails.getShowTime())
+                            Helper.formatDate(showDetails.getDate()),
+                            Helper.formatTime(showDetails.getTime())
                     );
                 } catch (ParseException ex){
                     ex.printStackTrace();
@@ -342,8 +342,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
                 model.setValueAt(showTime.getMovieId(), i, 1);
 
 
-                model.setValueAt(showTime.getShowDate(), i, 2);
-                model.setValueAt(Helper.formatTime(showTime.getShowTime()), i, 3);
+                model.setValueAt(showTime.getDate(), i, 2);
+                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 3);
                 model.setValueAt(showTime.getNumTicketLeft(), i, 4);
                 i++;
             }
