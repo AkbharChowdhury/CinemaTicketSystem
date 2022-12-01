@@ -125,7 +125,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     }
 
-    private void populateGenreComboBox()  {
+    private void populateGenreComboBox() {
         cbGenres.addItem(FormDetails.defaultGenre());
         for (var genre : db.getMovieGenreList()) {
             cbGenres.addItem(genre);
@@ -144,10 +144,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == cbGenres) {
-            System.out.println(db.getGenreID(cbGenres.getSelectedItem().toString()));
             movieGenre.setGenreID(db.getGenreID(cbGenres.getSelectedItem().toString()));
             populateTable();
-
 
         }
     }

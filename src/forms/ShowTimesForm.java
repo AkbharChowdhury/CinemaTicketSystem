@@ -8,30 +8,21 @@ import enums.RedirectPage;
 import interfaces.FormAction;
 import interfaces.TableGUI;
 
-import javax.swing.text.MaskFormatter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Set;
 
 
-public class ShowTimesForm extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
+public class ShowTimesForm extends JFrame implements ActionListener, FormAction, TableGUI {
     private final Database db;
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
@@ -39,20 +30,14 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
-    private final DefaultTableCellRenderer cellRenderer;
-    private final MaskFormatter maskFormatter = new MaskFormatter("####-##-##");
-    private final JFormattedTextField txtShowDate = new JFormattedTextField(maskFormatter);
     private final JComboBox<String> cbMovies = new JComboBox<>();
     private final JComboBox<String> cbDate = new JComboBox<>();
 
-    //    private final JTextField txtShowDate = new JTextField();
-    private int movieIDIndex;
     private DefaultTableModel model;
 
 
-    public ShowTimesForm() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
+    public ShowTimesForm() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
-        maskFormatter.setPlaceholderCharacter('_');
         movieShowTimes.setDate("");
 
         JScrollPane scrollPane = new JScrollPane();
@@ -72,7 +57,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         top.add(btnPurchaseTicket);
         top.add(btnShowReceipt);
 
-        cellRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
@@ -86,7 +71,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
 
         populateShowDateComboBox();
 
-//        middle.add(txtShowDate);
         cbDate.addItem(FormDetails.defaultShowDate());
         middle.add(cbDate);
 
@@ -104,10 +88,8 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         btnShowTimes.addActionListener(this);
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
-        txtShowDate.addKeyListener(this);
         cbMovies.addActionListener(this);
         cbDate.addActionListener(this);
-
 
         setVisible(true);
     }
@@ -120,31 +102,30 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
 
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         try {
             navigationMenu(e);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-
-        if (e.getSource() == cbDate && cbDate.getSelectedItem()!=null){
-            System.out.println(cbDate.getSelectedIndex());
-            if (cbDate.getSelectedIndex() !=0){
-
+        if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
+            // filter show times by date
+            if (cbDate.getSelectedIndex() != 0) {
 
                 try {
                     movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
+                    populateTable();
                 } catch (ParseException ex) {
                     throw new RuntimeException(ex);
                 }
-                populateTable();
+
                 return;
 
             }
 
+            // display all show times
             movieShowTimes.setDate("");
-
             populateTable();
 
         }
@@ -152,11 +133,10 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         if (e.getSource() == cbMovies) {
             if (cbMovies.getSelectedIndex() == 0) {
                 Helper.showErrorMessage("Please select a movie", "Movie Error");
-                cbMovies.setSelectedIndex(movieIDIndex);
                 return;
 
             }
-            movieIDIndex = cbMovies.getSelectedIndex();
+
             movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
             populateShowDateComboBox();
             populateTable();
@@ -164,28 +144,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
 
 
     }
-
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtShowDate && !txtShowDate.getText().isEmpty()) {
-            movieShowTimes.setDate(txtShowDate.getText());
-            populateTable();
-        }
-
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
 
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -261,9 +219,9 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         }
 
     }
-    void  populateShowDateComboBox(){
-        cbDate.removeAllItems();
 
+    void populateShowDateComboBox() {
+        cbDate.removeAllItems();
         var showTimesList = db.showMovieTimes(movieShowTimes);
         Set<String> linkedHashSet = new LinkedHashSet<>();
         for (var show : showTimesList) {
