@@ -42,7 +42,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
-    private final JLabel lblMovieDetails = new JLabel("d");
+    private final JLabel lblMovieDetails = new JLabel();
 
 
     private  Ticket TICKET_DETAILS;
@@ -59,6 +59,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         db = Database.getInstance();
         movieShowTimes.setDate("");
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
+        lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
 
 
         JScrollPane scrollPane = new JScrollPane();
@@ -135,15 +136,15 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
             private void handleTableClickEvent() {
                 try {
-                    String s = model.getValueAt(table.getSelectedRow(), 0).toString();
-                    System.out.println(s);
-//                    selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
-//                    int selectedMovieID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 1).toString());
-//                    var showDetails = db.getSelectedShowDetails(new MovieShowTimes(selectedMovieID, selectedShowTimeID));
-//                    updateMovieLabel(db.getMovieName(getMovieID()),
-//                            Helper.formatDate(showDetails.getDate()),
-//                            Helper.formatTime(showDetails.getTime())
-//                    );
+                    String id = model.getValueAt(table.getSelectedRow(), 0).toString();
+                    String date = model.getValueAt(table.getSelectedRow(), 1).toString();
+                    String time = model.getValueAt(table.getSelectedRow(), 2).toString();
+                    String numTickets = model.getValueAt(table.getSelectedRow(), 3).toString();
+
+                    int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
+
+                    lblMovieDetails.setText(String.format("%s-%s: %s",db.getMovieName(movieID), date, time));
+
                 } catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -211,6 +212,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         }
 
 
+
+
+
+
     }
 
     @Override
@@ -252,7 +257,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     @Override
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
-        new MovieShowTimes().tableColumns().forEach(i -> model.addColumn(i));
+        new ShowTimes().tableColumnsWithID().forEach(i -> model.addColumn(i));
 
     }
 
@@ -263,9 +268,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
             int i = 0;
             for (var showTime : db.showMovieTimes(movieShowTimes)) {
                 model.addRow(new Object[0]);
-                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
-                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
-                model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
+                model.setValueAt(showTime.getShowTimeID(), i, 0);
+                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 1);
+                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 2);
+                model.setValueAt(showTime.getNumTicketsLeft(), i, 3);
                 i++;
 
             }

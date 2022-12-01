@@ -66,6 +66,15 @@ public class ShowTimes implements Queries, TableProperties {
         columns.add("No of tickets left");
         return columns;
     }
+    public List<String> tableColumnsWithID() {
+        List<String> columns = new ArrayList<>();
+        columns.add("Show ID");
+//        columns.add("Movie ID");
+        columns.add("Date");
+        columns.add("Time");
+        columns.add("No of Tickets left");
+        return columns;
+    }
 
 
     @Override
@@ -148,7 +157,6 @@ public class ShowTimes implements Queries, TableProperties {
 
 
     public ShowTimes(String date, String time, String movieTitle, int numTicketLeft, int showTimeID, int movieId){
-//        super(showDate, ShowTime);
         this.date = date;
         this.time = time;
         this.movieTitle = movieTitle;

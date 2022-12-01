@@ -43,6 +43,8 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
     private int movieIDIndex;
     private int selectedShowTimeID;
     private DefaultTableModel model;
+    private boolean hasSelectedMovie = false;
+
 
     public PurchaseTicket1() throws  SQLException, FileNotFoundException, ParseException {
         Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET);
@@ -198,16 +200,21 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
     }
 
     private void handleMovieComboBox() {
+        if(!hasSelectedMovie){
+            cbMovies.removeItemAt(0);
+            hasSelectedMovie = true;
+
+        }
 
         String movieTitle = cbMovies.getSelectedItem().toString();
         int movieID = cbMovies.getSelectedIndex();
 
-        if (movieID == 0) {
-            Helper.showErrorMessage("Please select a movie", "Movie Error");
-            cbMovies.setSelectedIndex(movieIDIndex);
-            return;
-
-        }
+//        if (movieID == 0) {
+//            Helper.showErrorMessage("Please select a movie", "Movie Error");
+//            cbMovies.setSelectedIndex(movieIDIndex);
+//            return;
+//
+//        }
         movieShowTimes.setMovieId(db.getMovieID(movieTitle));
         String title = db.getMovieName(movieID);
         lblMovieDetails.setText(title);

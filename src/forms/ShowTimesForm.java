@@ -34,6 +34,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
     private final JComboBox<String> cbDate = new JComboBox<>();
 
     private DefaultTableModel model;
+    private boolean hasSelectedMovie = false;
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
@@ -110,39 +111,47 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         }
 
         if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
-            // filter show times by date
-            if (cbDate.getSelectedIndex() != 0) {
-
-                try {
-                    movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
-                    populateTable();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                return;
-
-            }
-
-            // display all show times
-            movieShowTimes.setDate("");
-            populateTable();
+            showFilteredDateResults();
 
         }
 
         if (e.getSource() == cbMovies) {
-            if (cbMovies.getSelectedIndex() == 0) {
-                Helper.showErrorMessage("Please select a movie", "Movie Error");
-                return;
-
-            }
-
-            movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
-            populateShowDateComboBox();
-            populateTable();
+            handleMovieCB();
         }
 
 
+    }
+
+    private void handleMovieCB() {
+        if(!hasSelectedMovie){
+            cbMovies.removeItemAt(0);
+            hasSelectedMovie = true;
+
+        }
+
+        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+        populateShowDateComboBox();
+        populateTable();
+    }
+
+    private void showFilteredDateResults() {
+        // filter show times by date
+        if (cbDate.getSelectedIndex() != 0) {
+
+            try {
+                movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
+                populateTable();
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            return;
+
+        }
+
+        // display all show times
+        movieShowTimes.setDate("");
+        populateTable();
     }
 
     @Override
