@@ -21,28 +21,33 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.Set;
 
 
 public class ShowTimesForm extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
     private final Database db;
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
-    private int movieIDIndex;
-
-
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
-
     private final DefaultTableCellRenderer cellRenderer;
     private final MaskFormatter maskFormatter = new MaskFormatter("####-##-##");
     private final JFormattedTextField txtShowDate = new JFormattedTextField(maskFormatter);
-//    private final JTextField txtShowDate = new JTextField();
-
-    private DefaultTableModel model;
     private final JComboBox<String> cbMovies = new JComboBox<>();
+    private final JComboBox<String> cbDate = new JComboBox<>();
 
+    //    private final JTextField txtShowDate = new JTextField();
+    private int movieIDIndex;
+    private DefaultTableModel model;
 
 
     public ShowTimesForm() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
@@ -78,7 +83,12 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         middle.add(cbMovies);
 
         middle.add(new Label("Filter Date:"));
-        middle.add(txtShowDate);
+
+        populateShowDateComboBox();
+
+//        middle.add(txtShowDate);
+        cbDate.addItem(FormDetails.defaultShowDate());
+        middle.add(cbDate);
 
 
         JPanel south = new JPanel();
@@ -96,17 +106,17 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
         btnShowReceipt.addActionListener(this);
         txtShowDate.addKeyListener(this);
         cbMovies.addActionListener(this);
+        cbDate.addActionListener(this);
+
 
         setVisible(true);
     }
-
 
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new ShowTimesForm();
 
     }
-
 
 
     @Override
@@ -117,19 +127,40 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
             ex.printStackTrace();
         }
 
-        if (e.getSource() == cbMovies){
-            if(cbMovies.getSelectedIndex()== 0 ){
-                Helper.showErrorMessage("Please select a movie","Movie Error");
+
+        if (e.getSource() == cbDate && cbDate.getSelectedItem()!=null){
+            System.out.println(cbDate.getSelectedIndex());
+            if (cbDate.getSelectedIndex() !=0){
+
+
+                try {
+                    movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+                populateTable();
+                return;
+
+            }
+
+            movieShowTimes.setDate("");
+
+            populateTable();
+
+        }
+
+        if (e.getSource() == cbMovies) {
+            if (cbMovies.getSelectedIndex() == 0) {
+                Helper.showErrorMessage("Please select a movie", "Movie Error");
                 cbMovies.setSelectedIndex(movieIDIndex);
                 return;
 
             }
             movieIDIndex = cbMovies.getSelectedIndex();
-
             movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+            populateShowDateComboBox();
             populateTable();
         }
-
 
 
     }
@@ -146,7 +177,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
             movieShowTimes.setDate(txtShowDate.getText());
             populateTable();
         }
-
 
 
     }
@@ -187,6 +217,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
 
         }
     }
+
     @Override
     public void clearTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -205,33 +236,43 @@ public class ShowTimesForm extends JFrame implements ActionListener, KeyListener
     public void populateTable() {
         try {
             clearTable(table);
-            var showTimesList = db.showMovieTimes(movieShowTimes);
             int i = 0;
-            for (var showTime : showTimesList) {
+            for (var showTime : db.showMovieTimes(movieShowTimes)) {
                 model.addRow(new Object[0]);
-                model.setValueAt(showTime.getDate(), i, 0);
+                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
                 model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
                 i++;
-                
+
             }
 
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
 
         }
-
-
 
 
     }
 
     private void populateMovieComboBox() {
 
-        for (var movie : db.getAllMovieShowTimes()){
+        for (var movie : db.getAllMovieShowTimes()) {
             cbMovies.addItem(movie.getTitle());
         }
 
+    }
+    void  populateShowDateComboBox(){
+        cbDate.removeAllItems();
 
+        var showTimesList = db.showMovieTimes(movieShowTimes);
+        Set<String> linkedHashSet = new LinkedHashSet<>();
+        for (var show : showTimesList) {
+            linkedHashSet.add(show.getDate());
         }
+        cbDate.addItem(FormDetails.defaultShowDate());
+        for (var date : linkedHashSet) {
+            cbDate.addItem(Helper.formatDate(date));
+        }
+
+    }
 }

@@ -96,8 +96,16 @@ public final class Helper {
         int month = Integer.parseInt(dateSplit[1]);
         int day = Integer.parseInt(dateSplit[2]);
         LocalDate selectedDate = LocalDate.of(year, month, day);
-        String fullDay = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(selectedDate);
-        return fullDay;
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(selectedDate);
+
+    }
+
+    public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+//        String dateStr = "7 Jun 2022";
+        Date date = formatter.parse(dateStr);
+        DateFormat  formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter2.format(date);
     }
 
     public static boolean validateMovieShowTime(Database db, MovieShowTimes movieShowTimes, int movieID) {

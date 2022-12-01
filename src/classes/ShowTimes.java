@@ -14,6 +14,8 @@ public class ShowTimes implements Queries, TableProperties {
     private String date;
     private String time;
     private int numTicketsLeft;
+    private String movieTitle;
+
 
 
     public int getShowTimeID() {
@@ -134,39 +136,13 @@ public class ShowTimes implements Queries, TableProperties {
                     m.movie_id = ? AND num_tickets_left > 0                                                         
                 """;
 
-
-//        String sql = """
-//                SELECT
-//                   mst.movie_id,
-//                   m.title,
-//                   st.*,
-//                   mst.num_tickets_left
-//                FROM
-//                   MovieShowTimes mst
-//                   JOIN
-//                      Movies m
-//                      ON m.movie_id = mst.movie_id
-//                   JOIN
-//                      ShowTimes st
-//                      ON st.show_time_id = mst.show_time_id
-//                WHERE
-//                   m.movie_id = ? AND num_tickets_left > 0
-//                    AND show_date >= DATE('NOW')  AND DATE('now', 'start of month', '+1 month' , '-1 day')
-//
-//                   --AND show_date BETWEEN DATE('NOW') AND DATE('now', 'start of month', '+1 month','-1 day' )
-//                   --AND show_time BETWEEN time('now') AND time('now' , '+9 hours', '+20 minutes')
-//
-//
-//                """;
-
         if (!movieShowTimes.getDate().isEmpty()) {
-            sql += " AND st.show_date LIKE ?";
+            sql += " AND show_date LIKE ?";
         }
 
         return sql;
 
     }
-    private String movieTitle;
 
 
     public ShowTimes(String date, String time, String movieTitle, int numTicketLeft, int showTimeID, int movieId){

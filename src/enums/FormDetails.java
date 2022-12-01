@@ -49,6 +49,12 @@ public enum FormDetails {
         return "Select Movie";
 
     }
+    public static String defaultShowDate() {
+        return "Show All Dates";
+
+    }
+
+
 
 
 

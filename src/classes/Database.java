@@ -368,7 +368,6 @@ public class Database {
             stmt.setInt(param, movieShowTimes.getMovieID());
             if (!showDate.isEmpty()) {
                 param++;
-//                String showDateStr = MessageFormat.format("'%{0}%'", showDate);
                 stmt.setString(param, showDate);
             }
 
@@ -380,7 +379,6 @@ public class Database {
             }
 
             while (rs.next()) {
-//                System.out.println(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
                 String title = rs.getString(MovieTable.COLUMN_TITLE);
                 String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
                 String time = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
@@ -388,8 +386,8 @@ public class Database {
                 int showTimeID = rs.getInt(ShowTimesTable.COLUMN_ID);
                 int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
 
-                String msg = MessageFormat.format("Title {0}, Date: {1}, Time {2}, TicketsLeft {3}, ShowTimeID:{4}, MovieID: {5}", title, date, time, ticketsLeft, showTimeID, movieID);
-                System.out.println(msg);
+//                String msg = MessageFormat.format("Title {0}, Date: {1}, Time {2}, TicketsLeft {3}, ShowTimeID:{4}, MovieID: {5}", title, date, time, ticketsLeft, showTimeID, movieID);
+//                System.out.println(msg);
                 list.add(new ShowTimes(date, time, title, ticketsLeft, showTimeID, movieID));
 //                list.add(new ShowTimes("2022-12-01","20:00", "test", 2, 1,1));
 
