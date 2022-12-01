@@ -239,17 +239,6 @@ public class MovieShowTimes extends ShowTimes implements Queries, TablePropertie
 //
 //    }
 
-    public String updateNumTickets(){
-        return String.format("""
-                UPDATE %s SET %s = ?
-                WHERE %s = ? AND %s =?
-               
-                """,
-                MovieShowTimesTable.TABLE_NAME,
-                MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
-                MovieShowTimesTable.COLUMN_MOVIE_ID,
-                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
-        );
 
-    }
+
 }

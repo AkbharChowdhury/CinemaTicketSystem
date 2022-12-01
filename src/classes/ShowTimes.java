@@ -2,6 +2,7 @@ package classes;
 
 import interfaces.Queries;
 import interfaces.TableProperties;
+import tables.MovieShowTimesTable;
 import tables.MovieTable;
 import tables.ShowTimesTable;
 
@@ -16,7 +17,15 @@ public class ShowTimes implements Queries, TableProperties {
     private int numTicketsLeft;
     private String movieTitle;
 
+    private int numTicketsSold;
 
+    public int getNumTicketsSold() {
+        return numTicketsSold;
+    }
+
+    public void setNumTicketsSold(int numTicketsSold) {
+        this.numTicketsSold = numTicketsSold;
+    }
 
     public int getShowTimeID() {
         return showTimeID;
@@ -152,6 +161,20 @@ public class ShowTimes implements Queries, TableProperties {
         }
 
         return sql;
+
+    }
+
+    public String getSelectedShowDetails() {
+        return  "SELECT "+ ShowTimesTable.NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
+
+    }
+
+    public String updateNumTickets(){
+        return String.format( "UPDATE %s SET %s = ? WHERE %s = ?",
+                ShowTimesTable.TABLE_NAME,
+                ShowTimesTable.NUM_TICKETS_LEFT,
+                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
+        );
 
     }
 

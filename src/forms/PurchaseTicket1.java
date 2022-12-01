@@ -288,12 +288,12 @@ public class PurchaseTicket1 extends JFrame implements ActionListener, KeyListen
 
         Sales sales = new Sales(salesDate, movieID, selectedShowTimeID, customerID, numTickets);
 
-        if (db.addSales(sales)) {
-            updateNumTicksSold(numTickets);
-            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
-        }
+//        if (db.addSales(sales)) {
+//            updateNumTicksSold(numTickets);
+//            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
+//            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+//
+//        }
     }
 
 

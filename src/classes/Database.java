@@ -425,23 +425,22 @@ public class Database {
         return genreList;
     }
 
-    public boolean addSales(Sales sales) {
+    public boolean addSales(SalesNew sales) {
 
         try (Connection con = getConnection()) {
             int param = 1;
 
             PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
 
-            stmt1.setString(param, sales.getSalesDate());
-            param++;
 
-            stmt1.setInt(param, sales.getMovieId());
-            param++;
 
-            stmt1.setInt(param, sales.getShowTimeId());
+            stmt1.setInt(param, sales.getShowTimeID());
             param++;
 
             stmt1.setInt(param, sales.getCustomerID());
+            param++;
+
+            stmt1.setString(param, sales.getSalesDate());
             param++;
 
             stmt1.setInt(param, sales.getTotalTicketsSold());
@@ -815,19 +814,19 @@ public class Database {
         return ticket;
     }
 
-    public int getNumTickets(MovieShowTimes movieShowTimes) {
+    public int getNumTickets(ShowTimes movieShowTimes) {
         try (Connection con = getConnection()) {
 
-            String sql = new MovieShowTimes().getSelectedShowDetails();
+            String sql = new ShowTimes().getSelectedShowDetails();
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, movieShowTimes.getMovieId());
-            stmt.setInt(2, movieShowTimes.getShowTimeId());
+            stmt.setInt(1, movieShowTimes.getShowTimeID());
             ResultSet r = stmt.executeQuery();
 
             if (isResultSetEmpty(r)) {
                 con.close();
                 return 0;
             }
+            System.out.println("Number of tickets are " +r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT));
             return r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
@@ -865,18 +864,19 @@ public class Database {
         return showTimes;
     }
 
-    public boolean updateNumTickets(MovieShowTimes movieShowTimes) {
+    public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(new MovieShowTimes().updateNumTickets())) {
+             PreparedStatement pstmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
 
+            System.out.println("left " + remainingTickets);
+
             // set the corresponding param
             pstmt.setInt(1, remainingTickets);
-            pstmt.setInt(2, movieShowTimes.getMovieId());
-            pstmt.setInt(3, movieShowTimes.getShowTimeId());
+            pstmt.setInt(2, movieShowTimes.getShowTimeID());
             // update
             int result = pstmt.executeUpdate();
             return result != 0;
