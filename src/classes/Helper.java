@@ -1,10 +1,9 @@
 package classes;
 
-import enums.Files;
 import enums.Pages;
 import enums.RedirectPage;
 import forms.*;
-import forms.ShowTimes;
+import forms.ShowTimesForm;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -133,7 +132,7 @@ public final class Helper {
                 currentPage.dispose();
             }
             case SHOW_TIMES -> {
-                new ShowTimes();
+                new ShowTimesForm();
                 currentPage.dispose();
             }
         }

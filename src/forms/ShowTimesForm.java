@@ -23,9 +23,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 
-public class ShowTimes extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
+public class ShowTimesForm extends JFrame implements ActionListener, KeyListener, FormAction, TableGUI {
     private final Database db;
-    private final MovieShowTimes movieShowTimes = new MovieShowTimes();
+    private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
     private int movieIDIndex;
 
@@ -45,7 +45,7 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
 
 
-    public ShowTimes() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
+    public ShowTimesForm() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
         maskFormatter.setPlaceholderCharacter('_');
         movieShowTimes.setDate("");
@@ -73,7 +73,7 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
         JPanel middle = new JPanel();
         middle.add(new Label("Select Movie: "));
-        cbMovies.addItem("Select Movie");
+        cbMovies.addItem(FormDetails.defaultMovie());
         populateMovieComboBox();
         middle.add(cbMovies);
 
@@ -103,7 +103,7 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
-        new ShowTimes();
+        new ShowTimesForm();
 
     }
 
@@ -125,7 +125,8 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
 
             }
             movieIDIndex = cbMovies.getSelectedIndex();
-            movieShowTimes.setMovieId(db.getMovieID(cbMovies.getSelectedItem().toString()));
+
+            movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
             populateTable();
         }
 
@@ -208,22 +209,11 @@ public class ShowTimes extends JFrame implements ActionListener, KeyListener, Fo
             int i = 0;
             for (var showTime : showTimesList) {
                 model.addRow(new Object[0]);
-//                model.setValueAt((Helper.formatDate(showTime.getShowDate())), i, 0);
-
-//                model.setValueAt(Helper.formatDate(showTime.getShowDate()), i, 0);
-
                 model.setValueAt(showTime.getDate(), i, 0);
-
-
-
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
-                model.setValueAt(showTime.getNumTicketLeft(), i, 2);
+                model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
                 i++;
-
-
-
-
-
+                
             }
 
         } catch (ParseException e){

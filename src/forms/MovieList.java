@@ -102,7 +102,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new MovieList();
 
     }
@@ -125,8 +125,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     }
 
-    private void populateGenreComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        cbGenres.addItem("Any Genre");
+    private void populateGenreComboBox()  {
+        cbGenres.addItem(FormDetails.defaultGenre());
         for (var genre : db.getMovieGenreList()) {
             cbGenres.addItem(genre);
         }

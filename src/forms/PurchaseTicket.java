@@ -338,13 +338,13 @@ public class PurchaseTicket extends JFrame implements ActionListener, KeyListene
             int i = 0;
             for (var showTime : showTimesList) {
                 model.addRow(new Object[0]);
-                model.setValueAt(showTime.getShowTimeId(), i, 0);
-                model.setValueAt(showTime.getMovieId(), i, 1);
+                model.setValueAt(showTime.getShowTimeID(), i, 0);
+                model.setValueAt(showTime.getMovieID(), i, 1);
 
 
                 model.setValueAt(showTime.getDate(), i, 2);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 3);
-                model.setValueAt(showTime.getNumTicketLeft(), i, 4);
+                model.setValueAt(showTime.getNumTicketsLeft(), i, 4);
                 i++;
             }
 

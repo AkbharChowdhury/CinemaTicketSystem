@@ -354,57 +354,51 @@ public class Database {
     }
 
 
-    public List<MovieShowTimes> showMovieTimes(MovieShowTimes movieShowTimes) {
-                List<MovieShowTimes> list = new ArrayList<>();
-                return list;
+    public List<ShowTimes> showMovieTimes(ShowTimes movieShowTimes) {
+        String showDate = movieShowTimes.getDate();
+        List<ShowTimes> list = new ArrayList<>();
 
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+            String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
+            PreparedStatement stmt = con.prepareStatement(sql);
+            int param = 1;
 
-
-//        String showDate = movieShowTimes.getShowDate();
-//
-//
-//        List<MovieShowTimes> list = new ArrayList<>();
-//        try (Connection con = getConnection()) {
-//            ResultSet rs;
-//
-//            PreparedStatement stmt = con.prepareStatement(new MovieShowTimes().getMovieShowTimes(movieShowTimes));
-//            int param = 0;
-//            param++;
-//
-//            // selected movie id
-//            stmt.setInt(param, movieShowTimes.getMovieId());
-//            if (!showDate.isEmpty()) {
-//                System.out.println(showDate);
-//
-//                param++;
+            // selected movie id
+            stmt.setInt(param, movieShowTimes.getMovieID());
+            if (!showDate.isEmpty()) {
+                param++;
 //                String showDateStr = MessageFormat.format("'%{0}%'", showDate);
-//                stmt.setString(param, showDate);
-//            }
-//
-//
-//            rs = stmt.executeQuery();
-//
-//
-//            if (isResultSetEmpty(rs)) {
-//                return list;
-//            }
-//
-//            while (rs.next()) {
-//                String title = rs.getString(MovieTable.COLUMN_TITLE);
-//                String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
-//                String showTime = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
-//                int ticketsLeft = rs.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
-//                int showTimeID = rs.getInt(MovieShowTimesTable.COLUMN_SHOW_TIME_ID);
-//                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
-//
-//                list.add(new MovieShowTimes(date, showTime, title, ticketsLeft, showTimeID, movieID));
-//
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return list;
+                stmt.setString(param, showDate);
+            }
+
+
+            rs = stmt.executeQuery();
+
+            if (isResultSetEmpty(rs)) {
+                return list;
+            }
+
+            while (rs.next()) {
+//                System.out.println(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+                String title = rs.getString(MovieTable.COLUMN_TITLE);
+                String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
+                String time = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
+                int ticketsLeft = rs.getInt(ShowTimesTable.NUM_TICKETS_LEFT);
+                int showTimeID = rs.getInt(ShowTimesTable.COLUMN_ID);
+                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
+
+                String msg = MessageFormat.format("Title {0}, Date: {1}, Time {2}, TicketsLeft {3}, ShowTimeID:{4}, MovieID: {5}", title, date, time, ticketsLeft, showTimeID, movieID);
+                System.out.println(msg);
+                list.add(new ShowTimes(date, time, title, ticketsLeft, showTimeID, movieID));
+//                list.add(new ShowTimes("2022-12-01","20:00", "test", 2, 1,1));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 
@@ -413,7 +407,7 @@ public class Database {
 
 
 
-    // for search
+    // for movie search
     public List<String> getMovieGenreList() {
         List<String> genreList = new ArrayList<>();
         try (Connection con = getConnection()) {
@@ -427,7 +421,14 @@ public class Database {
                 con.close();
                 return genreList;
             }
+            System.out.println(rs);
             while (rs.next()) {
+
+                System.out.println(MessageFormat.format("Genre: {0} ID {1}",
+                        rs.getString(GenreTable.COLUMN_GENRE),
+                        rs.getString(GenreTable.COLUMN_ID)
+                        ));
+
                 genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
 
             }
@@ -512,13 +513,13 @@ public class Database {
 
         try (Connection con = getConnection()) {
 
-            String sql = new MovieShowTimes().getAllMovieShowTimes();
+            String sql = new ShowTimes().getAllMovieShowTimes();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
 
-                movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString("title")));
+                movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString(MovieTable.COLUMN_TITLE)));
 
             }
 

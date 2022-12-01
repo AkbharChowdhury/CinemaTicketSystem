@@ -40,4 +40,16 @@ public enum FormDetails {
 
     }
 
+    public static String defaultGenre() {
+        return "Any Genre";
+
+    }
+
+    public static String defaultMovie() {
+        return "Select Movie";
+
+    }
+
+
+
 }
