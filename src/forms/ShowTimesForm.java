@@ -178,9 +178,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
 
     @Override
     public void clearTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-
+        ((DefaultTableModel) table.getModel()).setRowCount(0);
     }
 
     @Override
@@ -223,7 +221,10 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
     void populateShowDateComboBox() {
         cbDate.removeAllItems();
         var showTimesList = db.showMovieTimes(movieShowTimes);
+
+        // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
+
         for (var show : showTimesList) {
             linkedHashSet.add(show.getDate());
         }

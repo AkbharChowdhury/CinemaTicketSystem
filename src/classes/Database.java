@@ -79,15 +79,8 @@ public class Database {
         createTable(new Genre().createTable());
         createTable(new MovieGenres().createTable());
         createTable(new ShowTimes().createTable());
-
-
-//        createTable(new ShowTimes().createTable());
-//        createTable(new MovieShowTimes().createTable());
-//        createTable(new ShowTimes().createTable());
-//        createTable(new MovieShowTimes().createTable());
         createTable(new Customer().createTable());
         createTable(new Sales().createTable());
-
 
     }
 
@@ -486,7 +479,7 @@ public class Database {
                     invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
                     invoice.setType(rs.getString(TicketsTable.COLUMN_TYPE));
                     invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
-                    invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKECTS_SOLD));
+                    invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
                     invoices.add(invoice);
 
 

@@ -29,7 +29,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
-    private final JScrollPane scrollPane = new JScrollPane();
 
 
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
@@ -40,13 +39,13 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
-    private final DefaultTableCellRenderer cellRenderer;
     private final String movieTitle = "";
     private DefaultTableModel model;
 
     public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
         db = Database.getInstance();
-        scrollPane.setViewportView(table);
+        JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setViewportView(table);
         setupTableProperties();
 
         txtMovieTitle.addKeyListener(this);
@@ -71,7 +70,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         table.getColumnModel().getColumn(1).setPreferredWidth(30);
 
         table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        cellRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
@@ -213,8 +212,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     @Override
     public void clearTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
+         ((DefaultTableModel) table.getModel()).setRowCount(0);
     }
 
     @Override

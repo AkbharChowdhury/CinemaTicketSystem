@@ -120,6 +120,7 @@ public class ShowTimes implements Queries, TableProperties {
                         ShowTimes s
                     JOIN Movies m ON
                         m.movie_id = s.movie_id
+                    WHERE show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day')        
                 """;
     }
 
@@ -133,7 +134,8 @@ public class ShowTimes implements Queries, TableProperties {
                 JOIN Movies m ON
                     m.movie_id = s.movie_id
                 WHERE
-                    m.movie_id = ? AND num_tickets_left > 0                                                         
+                    m.movie_id = ? AND num_tickets_left > 0    
+                    AND show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day')                                                     
                 """;
 
         if (!movieShowTimes.getDate().isEmpty()) {

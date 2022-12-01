@@ -47,20 +47,21 @@ public class Sales extends MovieShowTimes  implements Queries {
 
     @Override
     public String createTable() {
-        return """
-                
-                CREATE TABLE "Sales" (
-                	"sales_date"	TEXT NOT NULL,
-                	"movie_id"	INTEGER NOT NULL,
-                	"show_time_id"	INTEGER NOT NULL,
-                	"customer_id"	INTEGER NOT NULL,
-                	"total_tickets_sold"	INTEGER NOT NULL,
-                	--FOREIGN KEY("movie_id") REFERENCES "MovieShowTimes"("movie_id"),
-                	FOREIGN KEY("customer_id") REFERENCES "Customers"("customer_id"),
-                	--FOREIGN KEY("show_time_id") REFERENCES "MovieShowTimes"("show_time_id"),
-                	PRIMARY KEY("sales_date","movie_id","customer_id","show_time_id")
-                );
-                """;
+
+        return String.format("""
+                             
+                CREATE TABLE %s(
+                	"show_time_id"	INTEGER,
+                	"customer_id"	INTEGER,
+                	"sales_date"	TEXT,
+                	"total_tickets_sold" INTEGER,
+                	PRIMARY KEY("show_time_id","customer_id","sales_date"),
+                	FOREIGN KEY("customer_id") REFERENCES "Customers"("customer_id") ON UPDATE CASCADE
+                   ON DELETE CASCADE,
+                	FOREIGN KEY("show_time_id") REFERENCES "ShowTimes"("show_time_id") ON UPDATE CASCADE
+                    ON DELETE CASCADE    
+                    );               
+                """, SalesTable.TABLE_NAME);
     }
 
 
@@ -69,7 +70,7 @@ public class Sales extends MovieShowTimes  implements Queries {
     public String insert() {
         return String.format("""
                         INSERT INTO %s
-                        VALUES (?, ?, ?, ?, ?);
+                        VALUES (?,?,?,?);
                         """,
                 SalesTable.TABLE_NAME
         );
