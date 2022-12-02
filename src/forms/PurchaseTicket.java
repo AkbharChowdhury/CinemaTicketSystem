@@ -59,7 +59,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     public PurchaseTicket() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
-        if (LoginInfo.getCustomerID() == 0 | db.customerSalesExists(LoginInfo.getCustomerID())) {
+        if (LoginInfo.getCustomerID() == 0 |!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             btnShowReceipt.setEnabled(false);
         }
         movieShowTimes.setDate("");
@@ -255,15 +255,15 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         System.out.println(sales.getTotalTicketsSold());
 
 
-//        if(db.SalesExists(sales)){
-//            Helper.showErrorMessage("You have already booked this show time","booking error");
-//            return;
-//        }
+        if(db.SalesExists(sales)){
+            Helper.showErrorMessage("You have already booked this show time","booking error");
+            return;
+        }
 
         if (db.addSales(sales)) {
             updateNumTicksSold(numTickets);
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
 
         }
     }

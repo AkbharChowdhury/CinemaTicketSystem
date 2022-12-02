@@ -392,7 +392,7 @@ public class Database {
 
 
 
-    public boolean customerSalesExists(int customerID) {
+    public boolean customerSalesExists(Sales sales) {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
                 SalesTable.COLUMN_CUSTOMER_ID,
@@ -403,11 +403,13 @@ public class Database {
         try (Connection con = getConnection()) {
             ResultSet rs2;
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, customerID);
+            stmt.setInt(1, sales.getShowTimeID());
+            stmt.setInt(2, sales.getCustomerID());
+            stmt.setString(3, sales.getSalesDate());
 
             rs2 = stmt.executeQuery();
 
-            return isResultSetEmpty(rs2);
+            return !isResultSetEmpty(rs2);
 
 
         } catch (Exception e) {
@@ -707,7 +709,7 @@ public class Database {
     }
 
 
-    public boolean customerSalesExists(int customerID) {
+    public boolean customerInvoiceExists(int customerID) {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
                 SalesTable.COLUMN_CUSTOMER_ID,
@@ -722,7 +724,7 @@ public class Database {
 
             rs2 = stmt.executeQuery();
 
-            return isResultSetEmpty(rs2);
+            return !isResultSetEmpty(rs2);
 
 
         } catch (Exception e) {
