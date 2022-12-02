@@ -353,9 +353,9 @@ public class Database {
                 String title = rs.getString(MovieTable.COLUMN_TITLE);
                 String date = rs.getString(ShowTimesTable.COLUMN_SHOW_DATE);
                 String time = rs.getString(ShowTimesTable.COLUMN_SHOW_TIME);
-                int ticketsLeft = rs.getInt(ShowTimesTable.NUM_TICKETS_LEFT);
+                int ticketsLeft = rs.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
                 int showTimeID = rs.getInt(ShowTimesTable.COLUMN_ID);
-                int movieID = rs.getInt(MovieShowTimesTable.COLUMN_MOVIE_ID);
+                int movieID = rs.getInt(ShowTimesTable.COLUMN_MOVIE_ID);
 
 
                 list.add(new ShowTimes(date, time, title, ticketsLeft, showTimeID, movieID));
@@ -785,7 +785,7 @@ public class Database {
                 con.close();
                 return 0;
             }
-            return r.getInt(MovieShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+            return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
             e.printStackTrace();

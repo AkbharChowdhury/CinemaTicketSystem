@@ -2,9 +2,7 @@ package classes;
 
 import interfaces.Queries;
 import interfaces.TableProperties;
-import tables.MovieShowTimesTable;
 import tables.MovieTable;
-import tables.SalesTable;
 import tables.ShowTimesTable;
 
 import java.util.ArrayList;
@@ -104,7 +102,7 @@ public class ShowTimes implements Queries, TableProperties {
                 ShowTimesTable.COLUMN_MOVIE_ID,
                 ShowTimesTable.COLUMN_SHOW_DATE,
                 ShowTimesTable.COLUMN_SHOW_TIME,
-                ShowTimesTable.NUM_TICKETS_LEFT,
+                ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
 
                 // movie fk
                 // first key
@@ -166,7 +164,7 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
     public String getSelectedShowDetails() {
-        return  "SELECT "+ ShowTimesTable.NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
+        return  "SELECT "+ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
 
     }
 
@@ -175,8 +173,8 @@ public class ShowTimes implements Queries, TableProperties {
     public String updateNumTickets(){
         return String.format( "UPDATE %s SET %s = ? WHERE %s = ?",
                 ShowTimesTable.TABLE_NAME,
-                ShowTimesTable.NUM_TICKETS_LEFT,
-                MovieShowTimesTable.COLUMN_SHOW_TIME_ID
+                ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
+                ShowTimesTable.COLUMN_MOVIE_ID
         );
 
     }
