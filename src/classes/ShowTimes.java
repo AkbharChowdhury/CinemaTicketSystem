@@ -170,7 +170,7 @@ public class ShowTimes implements Queries, TableProperties {
         return String.format("UPDATE %s SET %s = ? WHERE %s = ?",
                 ShowTimesTable.TABLE_NAME,
                 ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
-                ShowTimesTable.COLUMN_MOVIE_ID
+                ShowTimesTable.COLUMN_ID
         );
 
     }

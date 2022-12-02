@@ -225,12 +225,11 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
         populateTable();
     }
-    private void updateNumTicksSold(int numTickets) {
+    private boolean updateNumTicksSold(int numTickets) {
         var updater = new ShowTimes();
         updater.setShowTimeID(selectedShowTimeID);
         updater.setNumTicketsSold(numTickets);
-
-        db.updateNumTickets(updater);
+        return db.updateNumTickets(updater);
     }
 
 
@@ -261,9 +260,12 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         }
 
         if (db.addSales(sales)) {
-            updateNumTicksSold(numTickets);
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+           if ( updateNumTicksSold(numTickets)){
+               Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+           } else{
+               System.out.println("error");
+           }
 
         }
     }
