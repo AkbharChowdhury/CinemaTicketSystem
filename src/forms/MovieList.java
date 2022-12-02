@@ -42,8 +42,12 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final String movieTitle = "";
     private DefaultTableModel model;
 
-    public MovieList() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, ParseException {
+    public MovieList() throws  SQLException, FileNotFoundException {
         db = Database.getInstance();
+        if (LoginInfo.getCustomerID() == 0 | db.customerSalesExists(LoginInfo.getCustomerID())) {
+            btnShowReceipt.setEnabled(false);
+        }
+
         JScrollPane scrollPane1 = new JScrollPane();
         scrollPane1.setViewportView(table);
         setupTableProperties();

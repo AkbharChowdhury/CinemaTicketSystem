@@ -44,7 +44,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private final JLabel lblMovieDetails = new JLabel();
 
 
-    private Ticket TICKET_DETAILS;
+    private final Ticket TICKET_DETAILS;
 
     private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
@@ -59,6 +59,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     public PurchaseTicket() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
+        if (LoginInfo.getCustomerID() == 0 | db.customerSalesExists(LoginInfo.getCustomerID())) {
+            btnShowReceipt.setEnabled(false);
+        }
         movieShowTimes.setDate("");
         TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
@@ -140,7 +143,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
                     String id = model.getValueAt(table.getSelectedRow(), 0).toString();
                     String date = model.getValueAt(table.getSelectedRow(), 1).toString();
                     String time = model.getValueAt(table.getSelectedRow(), 2).toString();
-                    String numTickets = model.getValueAt(table.getSelectedRow(), 3).toString();
                     selectedShowTimeID = Integer.parseInt(id);
                     System.out.println(selectedShowTimeID);
 
@@ -173,7 +175,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         new PurchaseTicket();
 
     }
@@ -225,7 +227,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     }
     private void updateNumTicksSold(int numTickets) {
         var updater = new ShowTimes();
-//        validateShowTimes.setMovieId(getMovieID());
         updater.setShowTimeID(selectedShowTimeID);
         updater.setNumTicketsSold(numTickets);
 
@@ -252,21 +253,19 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         System.out.println(sales.getCustomerID());
         System.out.println(sales.getSalesDate());
         System.out.println(sales.getTotalTicketsSold());
-        db.addSales(sales);
 
 
-        if(db.SalesExists(sales)){
-            Helper.showErrorMessage("You have already booked this show time","booking error");
-            return;
-        }
-        System.out.println("done");
-
-//        if (db.addSales(sales)) {
-//            updateNumTicksSold(numTickets);
-//            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-//            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-//
+//        if(db.SalesExists(sales)){
+//            Helper.showErrorMessage("You have already booked this show time","booking error");
+//            return;
 //        }
+
+        if (db.addSales(sales)) {
+            updateNumTicksSold(numTickets);
+            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
+            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+
+        }
     }
 
 
@@ -287,7 +286,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
 
@@ -369,9 +367,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     }
 
-    private void updateMovieLabel(String title, String date, String time) {
-        lblMovieDetails.setText(String.format("%s- %s:%s", title, date, time));
-    }
 
 }
 

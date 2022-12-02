@@ -74,10 +74,10 @@ public class ShowTimes implements Queries, TableProperties {
         columns.add("No of tickets left");
         return columns;
     }
+
     public List<String> tableColumnsWithID() {
         List<String> columns = new ArrayList<>();
         columns.add("Show ID");
-//        columns.add("Movie ID");
         columns.add("Date");
         columns.add("Time");
         columns.add("No of Tickets left");
@@ -125,11 +125,8 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
 
-
-
-
     public String getAllMovieShowTimes() {
-        return  """
+        return """
                     SELECT DISTINCT
                         (s.movie_id),
                         m.title
@@ -141,7 +138,7 @@ public class ShowTimes implements Queries, TableProperties {
                 """;
     }
 
-    public  String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
+    public String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
         String sql = """
                 SELECT
                     m.title,
@@ -164,14 +161,13 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
     public String getSelectedShowDetails() {
-        return  "SELECT "+ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
+        return "SELECT " + ShowTimesTable.COLUMN_NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
 
     }
 
 
-
-    public String updateNumTickets(){
-        return String.format( "UPDATE %s SET %s = ? WHERE %s = ?",
+    public String updateNumTickets() {
+        return String.format("UPDATE %s SET %s = ? WHERE %s = ?",
                 ShowTimesTable.TABLE_NAME,
                 ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
                 ShowTimesTable.COLUMN_MOVIE_ID
@@ -180,7 +176,7 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
 
-    public ShowTimes(String date, String time, String movieTitle, int numTicketLeft, int showTimeID, int movieId){
+    public ShowTimes(String date, String time, String movieTitle, int numTicketLeft, int showTimeID, int movieId) {
         this.date = date;
         this.time = time;
         this.movieTitle = movieTitle;
@@ -189,9 +185,9 @@ public class ShowTimes implements Queries, TableProperties {
         this.movieID = movieId;
 
 
-
     }
-    public ShowTimes(){
+
+    public ShowTimes() {
 
     }
 

@@ -3,7 +3,6 @@ package classes;
 import enums.Files;
 import org.sqlite.SQLiteConfig;
 import tables.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
@@ -37,7 +36,6 @@ public class Database {
         }
         return instance;
 
-//        return instance == null ? new Database() : null;
     }
 
     private static boolean isResultSetEmpty(ResultSet rs) throws SQLException {
@@ -52,7 +50,6 @@ public class Database {
         insertMovieGenres();
         insertTickets();
         insertShowTimes();
-//        insertMovieShowTimes();
         insertCustomer();
 
 
@@ -134,7 +131,7 @@ public class Database {
 
     private void insertShowTimes() throws FileNotFoundException {
 
-        List<ShowTimes> showTimeList = FileHandler.getShowTimeData();
+        var showTimeList = FileHandler.getShowTimeData();
 
 
         try (Connection con = getConnection()) {
@@ -157,7 +154,7 @@ public class Database {
 
     private void insertCustomer() throws FileNotFoundException {
 
-        List<Customer> customerList = FileHandler.getCustomerData();
+        var customerList = FileHandler.getCustomerData();
 
 
         try (Connection con = getConnection()) {
@@ -198,7 +195,6 @@ public class Database {
         return false;
 
     }
-
 
 
     private void insertMovieGenres() throws FileNotFoundException {
@@ -288,9 +284,6 @@ public class Database {
                     x++;
                     stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ens with
 
-//                    x++;
-//                    String genreMiddleValue = MessageFormat.format("%,{0},%", genreID);
-//                    stmt.setString(x, genreMiddleValue); // check if genre id ends with
 
 
                 }
@@ -369,11 +362,6 @@ public class Database {
     }
 
 
-
-
-
-
-
     // for movie search
     public List<String> getMovieGenreList() {
         List<String> genreList = new ArrayList<>();
@@ -391,7 +379,6 @@ public class Database {
             while (rs.next()) {
 
 
-
                 genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
 
             }
@@ -403,6 +390,32 @@ public class Database {
     }
 
 
+
+
+    public boolean customerSalesExists(int customerID) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
+                SalesTable.COLUMN_CUSTOMER_ID,
+                SalesTable.TABLE_NAME,
+                SalesTable.COLUMN_CUSTOMER_ID
+        );
+
+        try (Connection con = getConnection()) {
+            ResultSet rs2;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, customerID);
+
+            rs2 = stmt.executeQuery();
+
+            return isResultSetEmpty(rs2);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
 
 
     public boolean SalesExists(Sales sales) {
@@ -428,8 +441,6 @@ public class Database {
         return false;
 
     }
-
-
 
 
     public boolean addSales(Sales sales) {
@@ -542,8 +553,6 @@ public class Database {
 //        }
 //        return movieTitleList;
 //    }
-
-
 
 
     public List<Ticket> getTicket() {
@@ -698,6 +707,33 @@ public class Database {
     }
 
 
+    public boolean customerSalesExists(int customerID) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
+                SalesTable.COLUMN_CUSTOMER_ID,
+                SalesTable.TABLE_NAME,
+                SalesTable.COLUMN_CUSTOMER_ID
+        );
+
+        try (Connection con = getConnection()) {
+            ResultSet rs2;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, customerID);
+
+            rs2 = stmt.executeQuery();
+
+            return isResultSetEmpty(rs2);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+
     public boolean movieIDExists(int movieID) {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
@@ -792,7 +828,6 @@ public class Database {
         }
         return 0;
     }
-
 
 
     public boolean updateNumTickets(ShowTimes movieShowTimes) {

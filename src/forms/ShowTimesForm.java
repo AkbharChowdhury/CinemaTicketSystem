@@ -39,6 +39,9 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
+        if (LoginInfo.getCustomerID() == 0 | db.customerSalesExists(LoginInfo.getCustomerID())) {
+            btnShowReceipt.setEnabled(false);
+        }
         movieShowTimes.setDate("");
 
         JScrollPane scrollPane = new JScrollPane();
