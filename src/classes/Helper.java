@@ -102,19 +102,12 @@ public final class Helper {
 
     public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-//        String dateStr = "7 Jun 2022";
         Date date = formatter.parse(dateStr);
         DateFormat  formatter2 = new SimpleDateFormat("yyyy-MM-dd");
         return formatter2.format(date);
     }
 
-    public static boolean validateMovieShowTime(Database db, MovieShowTimes movieShowTimes, int movieID) {
-        if (db.showMovieTimes(movieShowTimes).size() == 0) {
-            Helper.showErrorMessage("There are no show times for " + db.getMovieName(movieID), "Show time error");
-            return true;
-        }
-        return false;
-    }
+
 
     public static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 

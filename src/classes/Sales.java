@@ -3,18 +3,28 @@ package classes;
 import interfaces.Queries;
 import tables.*;
 
-public class Sales extends MovieShowTimes  implements Queries {
+public class Sales implements Queries {
     private String salesDate;
+    private int showTimeID;
+
+    public int getShowTimeID() {
+        return showTimeID;
+    }
+
+    public void setShowTimeID(int showTimeID) {
+        this.showTimeID = showTimeID;
+    }
+
     public Sales(){
 
     }
 
 
-    public Sales(String salesDate, int movieId, int showTimeId, int customerID, int total_tickets_sold) {
-        super(movieId, showTimeId);
+    public Sales(int showTimeID, int customerID, String salesDate, int totalTicketsSold) {
+        this.showTimeID = showTimeID;
         this.salesDate = salesDate;
         this.customerID = customerID;
-        this.totalTicketsSold = total_tickets_sold;
+        this.totalTicketsSold = totalTicketsSold;
     }
 
     private int customerID;
@@ -43,6 +53,12 @@ public class Sales extends MovieShowTimes  implements Queries {
 
     public void setTotalTicketsSold(int totalTicketsSold) {
         this.totalTicketsSold = totalTicketsSold;
+    }
+
+
+    public String salesExists() {
+        return  "SELECT * FROM Sales WHERE show_time_id = ? AND customer_id = ? AND sales_date =?" ;
+
     }
 
     @Override

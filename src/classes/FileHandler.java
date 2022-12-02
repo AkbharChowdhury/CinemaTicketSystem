@@ -32,10 +32,10 @@ public class FileHandler {
             String firstname = values[0];
             String lastname = values[1];
             String email = values[2];
-            String password =  Encryption.encode(values[3]);
+            String password = Encryption.encode(values[3]);
             int ticketID = Integer.parseInt(values[4]);
 
-            customerList.add(new Customer(firstname, lastname, email,password, ticketID));
+            customerList.add(new Customer(firstname, lastname, email, password, ticketID));
 
         }
         return customerList;
@@ -66,40 +66,6 @@ public class FileHandler {
         return showTimeList;
     }
 
-    public static List<MovieShowTimes> getMovieShowTimesData(String fileName) throws FileNotFoundException {
-
-        List<MovieShowTimes> movieShowTimesList = new ArrayList<>();
-
-        for (String line : getCSVFileDetails(fileName)) {
-            String[] values = line.split(",");
-            // note that the zero index is ignored
-            int movieID = Integer.parseInt(values[1]);
-            int showTimeID = Integer.parseInt(values[2]);
-            int numTicketsLeft = Integer.parseInt(values[3]);
-            movieShowTimesList.add(new MovieShowTimes(movieID, showTimeID, numTicketsLeft));
-
-        }
-        return movieShowTimesList;
-    }
-
-//    public static List<MovieShowTimes> getMovieShowTimesDatas() throws FileNotFoundException{
-//        List<MovieShowTimes> movieShowTimesList = new ArrayList<>();
-//
-//        String line;
-//        try (BufferedReader br = new BufferedReader(new FileReader(Helper.getCSVPath() + Files.MovieShowTimes.DESCRIPTION))) {
-//            while (( line = br.readLine()) != null) {
-//                String[] data = line.split(",");
-//                int movieID = Integer.parseInt(data[1]);
-//                int showTimeID = Integer.parseInt(data[2]);
-//                int numTicketsLeft = Integer.parseInt(data[3]);
-//                movieShowTimesList.add(new MovieShowTimes(movieID, showTimeID, numTicketsLeft));
-//
-//            }
-//        } catch (Exception e) {
-//           e.printStackTrace();
-//        }
-//        return movieShowTimesList;
-//    }
 
 
 
@@ -135,7 +101,6 @@ public class FileHandler {
     }
 
 
-
     // reads the first line in the csv file
     public static List<String> readSingleColumn(String filename) throws FileNotFoundException {
         return new ArrayList<>(getCSVFileDetails(filename));
@@ -144,29 +109,22 @@ public class FileHandler {
     private static List<String> getCSVFileDetails(String filename) throws FileNotFoundException {
         return new BufferedReader(new FileReader(filename))
                 .lines()
-//                .skip(1)
                 .toList();
     }
-    public static boolean printInvoice(String output){
 
-        try {
-              new FileWriter("invoice.txt").write(output);
+
+    public static boolean printInvoice(String output) {
+
+        try (var file = new FileWriter(Invoice.INVOICE_FILE)) {
+            file.write(output);
             return true;
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
 
         }
-//        try(var myWriter = new FileWriter("invoice.txt")) {
-//            myWriter.write(output);
-//            return true;
-//        } catch (IOException e) {
-//            System.err.println("An error occurred.");
-//            e.printStackTrace();
-//            return false;
-//
-//        }
+
 
     }
 }

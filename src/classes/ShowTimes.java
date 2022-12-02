@@ -4,6 +4,7 @@ import interfaces.Queries;
 import interfaces.TableProperties;
 import tables.MovieShowTimesTable;
 import tables.MovieTable;
+import tables.SalesTable;
 import tables.ShowTimesTable;
 
 import java.util.ArrayList;
@@ -168,6 +169,8 @@ public class ShowTimes implements Queries, TableProperties {
         return  "SELECT "+ ShowTimesTable.NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
 
     }
+
+
 
     public String updateNumTickets(){
         return String.format( "UPDATE %s SET %s = ? WHERE %s = ?",

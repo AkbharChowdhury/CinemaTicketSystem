@@ -24,8 +24,6 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 
 public class PurchaseTicket extends JFrame implements ActionListener, FormAction, TableGUI, ChangeListener {
@@ -250,15 +248,25 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
             return;
         }
 
-        var sales = new SalesNew(selectedShowTimeID, customerID, salesDate, numTickets);
+        var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
+        System.out.println(sales.getCustomerID());
+        System.out.println(sales.getSalesDate());
+        System.out.println(sales.getTotalTicketsSold());
+        db.addSales(sales);
 
 
-        if (db.addSales(sales)) {
-            updateNumTicksSold(numTickets);
-            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
+        if(db.SalesExists(sales)){
+            Helper.showErrorMessage("You have already booked this show time","booking error");
+            return;
         }
+        System.out.println("done");
+
+//        if (db.addSales(sales)) {
+//            updateNumTicksSold(numTickets);
+//            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
+//            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+//
+//        }
     }
 
 

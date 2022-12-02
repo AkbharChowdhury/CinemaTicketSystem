@@ -89,7 +89,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         populateList();
         list.setPreferredSize(new Dimension(400,600));
         list.addListSelectionListener((ListSelectionEvent e) -> {
-             int salesID = list.getSelectedIndex() + 1;
+            salesID = list.getSelectedIndex();
 
 //            printInvoice(salesID);
         });
@@ -118,16 +118,17 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
     }
 
     private void printInvoice(int salesID) {
-//        System.out.println("the index is " + index);
 
         for (int i= 0; i< INVOICES.size(); i++){
+//            System.out.println("iterator " + i);
+//            System.out.println("salesID " + salesID);
 
             if (i == salesID){
                 double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
                 String output = MessageFormat.format("""
                             -------------------------- Movie Details --------------------
                             Movie: {0} 
-                            Rating -{1}
+                            Rating: {1}
                             show date and time ({2}, {3})
                             -------------------------- Ticket Details --------------------
                             {4} {5} (x{6}}
@@ -147,17 +148,16 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
                         Helper.formatMoney(total)
 
                 );
+                System.out.println(output);
 
-                if (FileHandler.printInvoice(output)){
-                    Helper.message("your invoice has been saved");
-                }
+//                if (FileHandler.printInvoice(output)){
+//                    Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
+//                }
             }
         }
 
 
-//        FileHandler.printInvoice("", );
     }
-
 
 
     @Override
@@ -167,8 +167,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-
 
 
     }
@@ -213,44 +211,23 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     @Override
     public void clearList(JList table) {
-        DefaultListModel listModel = (DefaultListModel) list.getModel();
-        listModel.removeAllElements();
+        ((DefaultListModel) list.getModel()).removeAllElements();
 
     }
 
     @Override
-    public void populateList() throws SQLException {
+    public void populateList() {
         for (var invoice : INVOICES) {
-            model.addElement(MessageFormat.format("{0}, {1}",
+            double total = invoice.getPrice() * invoice.getTotalTicket();
+
+            model.addElement(MessageFormat.format("{0}, {1} {2}",
                     Helper.formatDate(invoice.getSalesDate()),
-                    invoice.getMovieTitle()
+                    invoice.getMovieTitle(),
+                    Helper.formatMoney(total)
 
             ));
         }
-//        while (rs.next()){
-//            double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
-//            int numTicket = rs.getInt(SalesDetailsTable.COLUMN_TOTAL_TICKETS_SOLD);
-//            double total = numTicket * price;
-//            model.addElement(
-//                      MessageFormat.format("{0}, {1}, {2}",
-//                              SalesTable.COLUMN_SALES_DATE,
-//                              MovieTable.COLUMN_TITLE,
-//                              Helper.formatMoney(total)
-//
-//                              ));
-//            ;
-//
-//
-//
-//
-//        }
-//        for (var purchases : db.getInvoice()) {
-//            model.addElement(MessageFormat.format("{0}, {1}, {2}, {3}",
-//                    movie.getMovieID(),
-//                    movie.getTitle(),
-//                    Helper.calcDuration(movie.getDuration()),
-//                    movie.getGenres()
-//            ));
+
     }
 
 

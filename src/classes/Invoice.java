@@ -1,6 +1,8 @@
 package classes;
 
 public class Invoice {
+
+    public static final String INVOICE_FILE = "invoice.txt";
     private double totalTicket;
 
     public double getTotalTicket() {
@@ -97,32 +99,31 @@ public class Invoice {
 
     public String getInvoiceDetails(){
         return """
-                SELECT 
-                s.*,
-                                
-                                 sh.show_date,
-                                 sh.show_time,
-                                 c.firstname,
-                                 c.lastname,
-                                 m.title,
-                                 t.type,
-                                 t.price,
-                                  r.rating
-                                
-                FROM Sales2 s
-                --JOIN MovieShowTimes  mst ON  mst.movie_id = s.movie_id
-                                
-                                
-                                
-                JOIN MovieShowTimes  mst ON  mst.show_time_id = s.show_time_id
-                JOIN Movies m ON m.movie_id = mst.movie_id
-                JOIN ShowTimes sh ON sh.show_time_id = mst.show_time_id
-                JOIN Ratings r ON r.rating_id = m.rating_id
-                 JOIN Customers c ON c.customer_id = s.customer_id
-                    JOIN Tickets t ON t.ticket_id = c.ticket_id
-                                
-                				 WHERE
-                                 s.customer_id = ?
+                 
+                SELECT
+                    s.*,
+                    sh.show_date,
+                    sh.show_time,
+                    c.firstname,
+                    c.lastname,
+                    m.title,
+                    t.type,
+                    t.price,
+                    r.rating
+                FROM
+                    Sales s
+                JOIN ShowTimes sh ON
+                    sh.show_time_id = s.show_time_id
+                JOIN Movies m ON
+                    m.movie_id = sh.movie_id
+                JOIN Ratings r ON
+                    r.rating_id = m.rating_id
+                JOIN Customers c ON
+                    c.customer_id = s.customer_id
+                JOIN Tickets t ON
+                    t.ticket_id = c.ticket_id
+                WHERE
+                    s.customer_id = ?
                                 
                                 
                 """;

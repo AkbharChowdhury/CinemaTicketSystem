@@ -193,7 +193,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
     @Override
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
-        new MovieShowTimes().tableColumns().forEach(i -> model.addColumn(i));
+        new ShowTimes().tableColumns().forEach(i -> model.addColumn(i));
 
     }
 
