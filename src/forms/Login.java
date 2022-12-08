@@ -19,7 +19,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     private static JButton btnLogin = new JButton("Login");
 
     JButton btnRegister = new JButton("Register");
-    JLabel hyperlink = new JLabel("Movie list");
+    JLabel hyperlink = new JLabel("Return to Movie list");
 
     private static JPasswordField txtPassword;
 
@@ -57,7 +57,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
         btnLogin.setBounds(100, 110, 90, 25);
         btnRegister.setBounds(200, 110, 90, 25);
-        hyperlink.setBounds(100, 130, 90, 30);
+        hyperlink.setBounds(100, 130, 120, 30);
 
         panel.add(btnLogin);
         panel.add(btnRegister);
@@ -76,7 +76,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         hyperlink.setForeground(Color.BLUE.darker());
         hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         hyperlinkClick(this);
-        
+
     }
 
     private void hyperlinkClick(JFrame currentPage) {
