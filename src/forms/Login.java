@@ -76,28 +76,11 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         hyperlink.setForeground(Color.BLUE.darker());
         hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         hyperlinkClick(this);
-
-
-//        hyperlink.addMouseListener(new MouseAdapter() {
-//            public void mouseClicked(MouseEvent e) {
-//
-//                try {
-//                    currentPage.dispose();
-//
-//
-//                    Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//
-//
-//            }
-//        });
+        
     }
 
     private void hyperlinkClick(JFrame currentPage) {
-
-                hyperlink.addMouseListener(new MouseAdapter() {
+        hyperlink.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
 
                 try {
