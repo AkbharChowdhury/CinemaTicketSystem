@@ -270,8 +270,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
            if ( updateNumTicksSold(numTickets)){
                Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-           } else{
-               System.out.println("error");
+               new ShowReceipt();
+               dispose();
+           } else {
+               System.err.println("There was an error updating the number of tickets remaining");
            }
 
         }
