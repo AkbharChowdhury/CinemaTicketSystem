@@ -60,7 +60,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         setResizable(false);
         setLayout(new BorderLayout());
-        setSize(500, 400);
+        setSize(600, 400);
         setTitle(FormDetails.showReceipt());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -155,9 +155,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
                             Total {7} 
                             -------------------------- Customer Details --------------------
                             {8} {9}
-                            Purchase date: {10}
-                                               
-                                                                                                      
+                            Purchase date: {10}                                                                                                                                                 
                             """,
 
                     // movie details

@@ -29,6 +29,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
+    JFrame frame = new JFrame();
 
 
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
@@ -197,12 +198,17 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
-                Helper.gotoForm(this, Pages.LOGIN);
-                return;
-            }
-
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+
+//            System.out.println("Hello");
+//            new ShowReceipt();
+//            dispose();
+//            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
+//                Helper.gotoForm(this, Pages.LOGIN);
+//                return;
+//            }
+//
+//            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
 
         }
     }

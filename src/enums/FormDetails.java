@@ -24,6 +24,9 @@ public enum FormDetails {
         return APP_NAME + "Login";
 
     }
+    public static String hyperlink(){
+        return "Return to movie list";
+    }
 
     public static String showTimes() {
         return APP_NAME + "Show Times";
