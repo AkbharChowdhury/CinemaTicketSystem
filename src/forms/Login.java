@@ -16,14 +16,17 @@ import java.sql.SQLException;
 
 public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
-    JTextField txtEmail;
+    private JTextField txtEmail  =new JTextField();
 
     private static JButton   btnLogin = new JButton("Login");
 
     JButton btnRegister = new JButton("Register");
+    JLabel hyperlink = new JLabel("return to Movie list");
 
     private static JPasswordField txtPassword;
     public Login() throws SQLException, FileNotFoundException {
+        hyperlink.setForeground(Color.BLUE.darker());
+        hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         db = Database.getInstance();
         JPanel panel = new JPanel();
@@ -41,7 +44,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
 
 
-        txtEmail= new JTextField();
+
         txtEmail.setBounds(100, 27, 193, 28);
         panel.add(txtEmail);
 
@@ -60,9 +63,12 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
         btnLogin.setBounds(100, 110, 90, 25);
         btnRegister.setBounds(200, 110, 90, 25);
+        hyperlink.setBounds(100, 130, 90, 30);
 
         panel.add(btnLogin);
         panel.add(btnRegister);
+        panel.add(hyperlink);
+
 
 
 
