@@ -16,7 +16,7 @@ public enum FormDetails {
 
     }
     public static String register() {
-        return APP_NAME + "Customer registration";
+        return "Customer registration";
 
     }
 

@@ -1,8 +1,8 @@
 package forms;
-
 import classes.*;
 import enums.FormDetails;
 import enums.Pages;
+import enums.RedirectPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,56 +14,74 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-
 public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
-    private final JButton btnLogin = new JButton("Login");
+    JTextField txtEmail;
 
-    private final JTextField txtEmail = new JTextField(20);
-    private final JPasswordField txtPassword = new JPasswordField(20);
+    private static JButton   btnLogin = new JButton("Login");
 
+    JButton btnRegister = new JButton("Register");
 
+    private static JPasswordField txtPassword;
     public Login() throws SQLException, FileNotFoundException {
 
         db = Database.getInstance();
-        setResizable(false);
-        setLayout(new BorderLayout());
-        setSize(300, 250);
-        setTitle(FormDetails.login());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         JPanel panel = new JPanel();
-        add(panel);
-
         panel.setLayout(null);
+        // JFrame class
+        setTitle(FormDetails.login());
+        setLocation(new Point(500, 300));
+        add(panel);
+        setSize(new Dimension(400, 200));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Username label constructor
+        JLabel label = new JLabel("Email");
+        label.setBounds(100, 8, 70, 20);
+        panel.add(label);
 
-        JLabel lblUsername = new JLabel("Username");
-        lblUsername.setBounds(10, 20, 80, 25);
-        txtEmail.setBounds(100, 20, 165, 25);
-
-        JLabel lblPassword = new JLabel("Password");
-        lblPassword.setBounds(10, 50, 80, 25);
-        txtPassword.setBounds(100, 50, 165, 25);
-        btnLogin.setBounds(10, 80, 80, 25);
-        JButton btnRegister = new JButton("Register");
-        btnRegister.setBounds(100, 80, 95, 25);
 
 
-        panel.add(lblUsername);
+        txtEmail= new JTextField();
+        txtEmail.setBounds(100, 27, 193, 28);
         panel.add(txtEmail);
-        panel.add(lblPassword);
+
+
+
+        JLabel password1 = new JLabel("Password");
+        password1.setBounds(100, 55, 70, 20);
+        panel.add(password1);
+
+
+
+        txtPassword = new JPasswordField();
+        txtPassword.setBounds(100, 75, 193, 28);
         panel.add(txtPassword);
+
+
+        btnLogin.setBounds(100, 110, 90, 25);
+        btnRegister.setBounds(200, 110, 90, 25);
+
         panel.add(btnLogin);
         panel.add(btnRegister);
+
+
 
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
 
-        txtEmail.setText("john@gmail.com");
-        txtPassword.setText("password");
         setVisible(true);
+
+        setRegisteredCustomerDetails();
     }
 
+    private void setRegisteredCustomerDetails() {
+        if (!LoginInfo.getEmail().isEmpty()){
+            txtEmail.setText(LoginInfo.getEmail());
+            LoginInfo.setEmail("");
+
+
+        }
+    }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new Login();
@@ -101,15 +119,14 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
                 if (Form.getRedirectPage() == null) {
                     Helper.gotoForm(this, Pages.LIST_MOVIES);
+                    new MovieList();
                     return;
 
                 }
-                switch (Form.getRedirectPage()) {
-                    case PURCHASE_TICKET -> new PurchaseTicket();
-                    case SHOW_RECEIPT -> new ShowReceipt();
-                    default -> new MovieList();
-
-
+                if (Form.getRedirectPage() == RedirectPage.PURCHASE_TICKET) {
+                    new PurchaseTicket();
+                } else {
+                    new MovieList();
                 }
                 dispose();
 
@@ -139,5 +156,8 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
-}
 
+
+
+
+}

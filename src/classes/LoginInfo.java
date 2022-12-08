@@ -2,6 +2,17 @@ package classes;
 
 public final class LoginInfo {
     private static int customerID;
+    private static String email;
+
+
+    public static String getEmail(){
+        return email;
+    }
+    public static void setEmail(String email){
+       LoginInfo.email = email;
+    }
+
+
 
     public static int getCustomerID() {
         return customerID;
