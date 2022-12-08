@@ -11,7 +11,6 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.ParseException;
 
 public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
@@ -76,33 +75,8 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     private void setupHyperLink() {
         hyperlink.setForeground(Color.BLUE.darker());
         hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        JFrame currentPage = new JFrame();
-        hyperlink.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        hyperlinkClick(this);
 
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
 
 //        hyperlink.addMouseListener(new MouseAdapter() {
 //            public void mouseClicked(MouseEvent e) {
@@ -119,6 +93,25 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 //
 //            }
 //        });
+    }
+
+    private void hyperlinkClick(JFrame currentPage) {
+
+                hyperlink.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+
+                try {
+                    Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
+                    currentPage.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
+
+
     }
 
     private void setRegisteredCustomerDetails() {
