@@ -1,4 +1,5 @@
 package forms;
+
 import classes.*;
 import enums.FormDetails;
 import enums.Pages;
@@ -6,27 +7,25 @@ import enums.RedirectPage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
-    private JTextField txtEmail  =new JTextField();
+    private JTextField txtEmail = new JTextField();
 
-    private static JButton   btnLogin = new JButton("Login");
+    private static JButton btnLogin = new JButton("Login");
 
     JButton btnRegister = new JButton("Register");
-    JLabel hyperlink = new JLabel("return to Movie list");
+    JLabel hyperlink = new JLabel("Movie list");
 
     private static JPasswordField txtPassword;
+
     public Login() throws SQLException, FileNotFoundException {
-        hyperlink.setForeground(Color.BLUE.darker());
-        hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setupHyperLink();
 
         db = Database.getInstance();
         JPanel panel = new JPanel();
@@ -43,17 +42,13 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         panel.add(label);
 
 
-
-
         txtEmail.setBounds(100, 27, 193, 28);
         panel.add(txtEmail);
-
 
 
         JLabel password1 = new JLabel("Password");
         password1.setBounds(100, 55, 70, 20);
         panel.add(password1);
-
 
 
         txtPassword = new JPasswordField();
@@ -70,8 +65,6 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         panel.add(hyperlink);
 
 
-
-
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
 
@@ -80,8 +73,56 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         setRegisteredCustomerDetails();
     }
 
+    private void setupHyperLink() {
+        hyperlink.setForeground(Color.BLUE.darker());
+        hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        JFrame currentPage = new JFrame();
+        hyperlink.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+//        hyperlink.addMouseListener(new MouseAdapter() {
+//            public void mouseClicked(MouseEvent e) {
+//
+//                try {
+//                    currentPage.dispose();
+//
+//
+//                    Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//
+//            }
+//        });
+    }
+
     private void setRegisteredCustomerDetails() {
-        if (!LoginInfo.getEmail().isEmpty()){
+        if (!LoginInfo.getEmail().isEmpty()) {
             txtEmail.setText(LoginInfo.getEmail());
             LoginInfo.setEmail("");
 
@@ -162,8 +203,6 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
-
-
 
 
 }
