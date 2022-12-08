@@ -66,10 +66,9 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
-
+        setRegisteredCustomerDetails();
         setVisible(true);
 
-        setRegisteredCustomerDetails();
     }
 
     private void setupHyperLink() {
@@ -98,7 +97,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     }
 
     private void setRegisteredCustomerDetails() {
-        if (!LoginInfo.getEmail().isEmpty()) {
+        if (LoginInfo.getEmail() != null) {
             txtEmail.setText(LoginInfo.getEmail());
             LoginInfo.setEmail("");
 
@@ -106,7 +105,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         new Login();
     }
 
@@ -144,12 +143,9 @@ public class Login extends JFrame implements ActionListener, KeyListener {
                     Helper.gotoForm(this, Pages.LIST_MOVIES);
                     new MovieList();
                     return;
-
                 }
                 if (Form.getRedirectPage() == RedirectPage.PURCHASE_TICKET) {
                     new PurchaseTicket();
-                } else {
-                    new MovieList();
                 }
                 dispose();
 
