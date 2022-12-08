@@ -180,6 +180,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
+
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
 
@@ -193,24 +194,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
                 Helper.gotoForm(this, Pages.LOGIN);
                 return;
             }
+
             Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
         }
-
         if (e.getSource() == btnShowReceipt) {
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
-//            System.out.println("Hello");
-//            new ShowReceipt();
-//            dispose();
-//            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
-//                Helper.gotoForm(this, Pages.LOGIN);
-//                return;
-//            }
-//
-//            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
         }
+
+
+
     }
 
 

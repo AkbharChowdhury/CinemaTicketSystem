@@ -112,26 +112,33 @@ public final class Helper {
     public static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         switch (page) {
+
             case LOGIN -> {
                 new Login();
                 currentPage.dispose();
             }
+
             case REGISTER -> {
                 new Register();
                 currentPage.dispose();
             }
+
             case LIST_MOVIES -> {
                 new MovieList();
                 currentPage.dispose();
             }
+
             case PURCHASE_TICKET -> {
                 new PurchaseTicket();
                 currentPage.dispose();
             }
+
             case SHOW_RECEIPT -> {
                 new ShowReceipt();
                 currentPage.dispose();
             }
+
+
             case SHOW_TIMES -> {
                 new ShowTimesForm();
                 currentPage.dispose();

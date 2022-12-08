@@ -24,7 +24,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
 
-public class ShowReceipt extends JFrame implements ActionListener, KeyListener, FormAction, ListGUI {
+public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
     private final Database db;
     private final DefaultListModel model;
     private final JList list;
@@ -105,7 +105,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
 
         new ShowReceipt();
 
@@ -187,82 +187,10 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         }
     }
 
-//    private void printInvoice(int salesID)  {
-//
-//        try {
-//            for(int i= 0; i< INVOICES.size(); i++){
-//
-//
-//                if (i == salesID){
-//
-//
-//
-//                    double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
-//                    String output = MessageFormat.format("""
-//                            -------------------------- Movie Details --------------------
-//                            Movie: {0}
-//                            Rating: {1}
-//                            show date and time ({2}, {3})
-//                            -------------------------- Ticket Details --------------------
-//                            {4} {5} (x{6}}
-//                            Total {7}
-//                            -------------------------- Customer Details --------------------
-//                            {8} {9}
-//                            Purchase date: {10}
-//
-//
-//                            """,
-//
-//                            // movie details
-//                            INVOICES.get(i).getMovieTitle(),
-//                            INVOICES.get(i).getRating(),
-//                            Helper.formatDate(INVOICES.get(i).getShowDate()),
-//                            Helper.formatTime(INVOICES.get(i).getShowTime()),
-//
-//                            // ticket details
-//                            INVOICES.get(i).getType(),
-//                            Helper.formatMoney(INVOICES.get(i).getPrice()),
-//                            INVOICES.get(i).getTotalTicket(),
-//                            Helper.formatMoney(total),
-//
-//                            // customer details
-//                            INVOICES.get(i).getFirstname(),
-//                            INVOICES.get(i).getLastname(),
-//                            Helper.formatDate(INVOICES.get(i).getSalesDate())
-//
-//                    );
-//                    System.out.println(output);
-//
-//                    if (FileHandler.printInvoice(output)){
-//                        Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
-//                    }
-//                }
-//            }
-//
-//        } catch (ParseException ex){
-//           Helper.showErrorMessage("the time cannot be formatted", "time parse error");
-//
-//        }
-//
-//
-//    }
 
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
 
 
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
 
 
     @Override
@@ -319,10 +247,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
     }
 
 
-//    @Override
-//    public String toString() {
-//        return getName();
-//    }
+
 
 
 }
