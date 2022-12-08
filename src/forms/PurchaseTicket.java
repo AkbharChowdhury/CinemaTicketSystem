@@ -44,7 +44,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private final JLabel lblMovieDetails = new JLabel();
 
 
-    private final Ticket TICKET_DETAILS;
+    private Ticket ticketDetails;
 
     private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
@@ -59,11 +59,18 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     public PurchaseTicket() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
+
+        if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+            return;
+        }
+
+
+
         if (LoginInfo.getCustomerID() == 0 |!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             btnShowReceipt.setEnabled(false);
         }
         movieShowTimes.setDate("");
-        TICKET_DETAILS = db.getCustomerTicketType(LoginInfo.getCustomerID());
+        ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
 
 
@@ -182,8 +189,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     private void showTicketPricesLabel() {
         String output = MessageFormat.format("Ticket: {0} ({1})",
-                TICKET_DETAILS.getType(),
-                Helper.formatMoney(TICKET_DETAILS.getPrice())
+                ticketDetails.getType(),
+                Helper.formatMoney(ticketDetails.getPrice())
         );
         lblTicket.setText(output);
 
@@ -191,7 +198,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     }
 
     private void updateTotalLabel() {
-        double ticketPrice = TICKET_DETAILS.getPrice();
+        double ticketPrice = ticketDetails.getPrice();
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
     }

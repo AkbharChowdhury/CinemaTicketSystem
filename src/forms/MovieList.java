@@ -198,6 +198,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
         }
+
         if (e.getSource() == btnShowReceipt) {
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }

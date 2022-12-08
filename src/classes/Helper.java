@@ -155,13 +155,17 @@ public final class Helper {
             if (dialogButton == JOptionPane.YES_OPTION) {
                 Form.setRedirectPage(page);
                 try {
-                    frame.dispose();
 
                     new Login();
+                    frame.dispose();
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
+            } else{
+                System.err.println("You must be logged in to view invoices or purchase tickets!");
+                System.exit(0);
             }
 
 
