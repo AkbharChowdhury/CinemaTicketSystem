@@ -21,7 +21,7 @@ public enum FormDetails {
     }
 
     public static String login() {
-        return APP_NAME + "Customer Login";
+        return APP_NAME + "Login";
 
     }
 

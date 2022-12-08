@@ -124,8 +124,7 @@ public class Invoice {
                     t.ticket_id = c.ticket_id
                 WHERE
                     s.customer_id = ?
-                                
-                                
+                                                           
                 """;
     }
 

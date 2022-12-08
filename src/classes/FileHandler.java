@@ -67,9 +67,6 @@ public class FileHandler {
     }
 
 
-
-
-
     public static List<MovieGenres> getMovieGenreData(String fileName) throws FileNotFoundException {
 
         List<MovieGenres> movieGenreList = new ArrayList<>();

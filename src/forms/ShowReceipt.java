@@ -11,6 +11,7 @@ import interfaces.ListGUI;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,23 +27,34 @@ import java.util.List;
 public class ShowReceipt extends JFrame implements ActionListener, KeyListener, FormAction, ListGUI {
     private final Database db;
     private final DefaultListModel model;
-    private final JList list ;
+    private final JList list;
     int salesID;
     private final List<Invoice> INVOICES;
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
-    private final JButton btnCancel = new JButton(Buttons.cancel());
+
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
+
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
 
-    public ShowReceipt() throws  SQLException, FileNotFoundException, ParseException {
+    public ShowReceipt() throws SQLException, FileNotFoundException, ParseException {
         Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT);
         db = Database.getInstance();
         model = new DefaultListModel();
         list = new JList(model);
+
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        // get selected list id
+        list.addListSelectionListener(e -> {
+            if (e.getValueIsAdjusting()) {
+                var item =  ((JList) e.getSource())
+                        .getSelectedValue();
+                System.out.println("ID is " + item);
+            }
+
+        });
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
         JScrollPane scrollPane = new JScrollPane(list);
 
@@ -60,9 +72,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         top.add(btnShowReceipt);
 
 
-
-
-
         JPanel middle = new JPanel();
 
 
@@ -71,8 +80,6 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         JPanel south = new JPanel();
         south.add(btnPrintReceipt);
-        south.add(btnCancel);
-
 
 
         add("North", top);
@@ -87,11 +94,12 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
         comboBoxGenres.addActionListener(this);
         populateList();
-        list.setPreferredSize(new Dimension(400,600));
+        list.setPreferredSize(new Dimension(400, 600));
         list.addListSelectionListener((ListSelectionEvent e) -> {
             salesID = list.getSelectedIndex();
+            System.out.println(list.toString());
 
-//            printInvoice(salesID);
+
         });
 
         setVisible(true);
@@ -105,7 +113,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnPrintReceipt){
+        if (e.getSource() == btnPrintReceipt) {
             printInvoice(salesID);
         }
 
@@ -117,47 +125,129 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
 
     }
 
-    private void printInvoice(int salesID) {
+    private boolean printInvoice(int salesID) {
+        for (int i = 0; i < INVOICES.size(); i++) {
 
-        for (int i= 0; i< INVOICES.size(); i++){
-//            System.out.println("iterator " + i);
-//            System.out.println("salesID " + salesID);
+            if (i == salesID) {
+                p(i);
+                return true;
 
-            if (i == salesID){
-                double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
-                String output = MessageFormat.format("""
+            }
+        }
+        return false;
+
+    }
+
+
+
+
+
+    void p(int i){
+        try{
+            double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
+            String output = MessageFormat.format("""
                             -------------------------- Movie Details --------------------
                             Movie: {0} 
                             Rating: {1}
                             show date and time ({2}, {3})
                             -------------------------- Ticket Details --------------------
                             {4} {5} (x{6}}
-                            Total {7}                                                                             
+                            Total {7} 
+                            -------------------------- Customer Details --------------------
+                            {8} {9}
+                            Purchase date: {10}
+                                               
+                                                                                                      
                             """,
 
-                        // movie details
-                        INVOICES.get(i).getMovieTitle(),
-                        INVOICES.get(i).getRating(),
-                        INVOICES.get(i).getShowDate(),
-                        INVOICES.get(i).getShowTime(),
+                    // movie details
+                    INVOICES.get(i).getMovieTitle(),
+                    INVOICES.get(i).getRating(),
+                    Helper.formatDate(INVOICES.get(i).getShowDate()),
+                    Helper.formatTime(INVOICES.get(i).getShowTime()),
 
-                        // ticket details
-                        INVOICES.get(i).getType(),
-                        Helper.formatMoney(INVOICES.get(i).getPrice()),
-                        INVOICES.get(i).getTotalTicket(),
-                        Helper.formatMoney(total)
+                    // ticket details
+                    INVOICES.get(i).getType(),
+                    Helper.formatMoney(INVOICES.get(i).getPrice()),
+                    INVOICES.get(i).getTotalTicket(),
+                    Helper.formatMoney(total),
 
-                );
-                System.out.println(output);
+                    // customer details
+                    INVOICES.get(i).getFirstname(),
+                    INVOICES.get(i).getLastname(),
+                    Helper.formatDate(INVOICES.get(i).getSalesDate())
 
-//                if (FileHandler.printInvoice(output)){
-//                    Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
-//                }
+            );
+            System.out.println(output);
+
+            if (FileHandler.printInvoice(output)){
+                Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
             }
+
+        } catch (ParseException ex){
+            Helper.showErrorMessage("the time cannot be formatted", "time parse error");
         }
-
-
     }
+
+//    private void printInvoice(int salesID)  {
+//
+//        try {
+//            for(int i= 0; i< INVOICES.size(); i++){
+//
+//
+//                if (i == salesID){
+//
+//
+//
+//                    double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
+//                    String output = MessageFormat.format("""
+//                            -------------------------- Movie Details --------------------
+//                            Movie: {0}
+//                            Rating: {1}
+//                            show date and time ({2}, {3})
+//                            -------------------------- Ticket Details --------------------
+//                            {4} {5} (x{6}}
+//                            Total {7}
+//                            -------------------------- Customer Details --------------------
+//                            {8} {9}
+//                            Purchase date: {10}
+//
+//
+//                            """,
+//
+//                            // movie details
+//                            INVOICES.get(i).getMovieTitle(),
+//                            INVOICES.get(i).getRating(),
+//                            Helper.formatDate(INVOICES.get(i).getShowDate()),
+//                            Helper.formatTime(INVOICES.get(i).getShowTime()),
+//
+//                            // ticket details
+//                            INVOICES.get(i).getType(),
+//                            Helper.formatMoney(INVOICES.get(i).getPrice()),
+//                            INVOICES.get(i).getTotalTicket(),
+//                            Helper.formatMoney(total),
+//
+//                            // customer details
+//                            INVOICES.get(i).getFirstname(),
+//                            INVOICES.get(i).getLastname(),
+//                            Helper.formatDate(INVOICES.get(i).getSalesDate())
+//
+//                    );
+//                    System.out.println(output);
+//
+//                    if (FileHandler.printInvoice(output)){
+//                        Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
+//                    }
+//                }
+//            }
+//
+//        } catch (ParseException ex){
+//           Helper.showErrorMessage("the time cannot be formatted", "time parse error");
+//
+//        }
+//
+//
+//    }
 
 
     @Override
@@ -221,7 +311,7 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
             double total = invoice.getPrice() * invoice.getTotalTicket();
 
             model.addElement(MessageFormat.format("{0}, {1} {2}",
-                    Helper.formatDate(invoice.getSalesDate()),
+                    Helper.formatDate(invoice.getShowDate()),
                     invoice.getMovieTitle(),
                     Helper.formatMoney(total)
 
@@ -229,6 +319,12 @@ public class ShowReceipt extends JFrame implements ActionListener, KeyListener, 
         }
 
     }
+
+
+//    @Override
+//    public String toString() {
+//        return getName();
+//    }
 
 
 }

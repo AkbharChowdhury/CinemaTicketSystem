@@ -1,0 +1,12 @@
+-------------------------- Movie Details --------------------
+Movie: Mirrors 2
+Rating: 15
+show date and time (21 Dec 2022, 7:00 pm)
+-------------------------- Ticket Details --------------------
+Senior £10.00 (x6}
+Total £60.00
+-------------------------- Customer Details --------------------
+﻿John Smith
+Purchase date: 8 Dec 2022
+
+
