@@ -260,62 +260,118 @@ public class Database {
     }
 
 
-    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
-        List<MovieGenres> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            String sql;
-            ResultSet rs;
-            // search by genre and movie title
-            int genreID = movieGenres.getGenreID();
-            String movieTitle = movieGenres.getTitle();
+//    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
+//        List<MovieGenres> list = new ArrayList<>();
+//        try (Connection con = getConnection()) {
+//            String sql;
+//            ResultSet rs;
+//            // search by genre and movie title
+//            int genreID = movieGenres.getGenreID();
+//            String movieTitle = movieGenres.getTitle();
+//
+//            if (genreID == 0 && movieTitle.isEmpty()) {
+//                sql = new MovieGenres().showMovieList(movieGenres);
+//                Statement stmtAllMovies = con.createStatement();
+//                rs = stmtAllMovies.executeQuery(sql);
+//
+//            } else {
+//                PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
+//                int x = 0;
+//
+//                if (genreID != 0) {
+//                    x++;
+//                    stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
+//                    x++;
+//                    stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ens with
+//
+//
+//
+//                }
+//                if (!movieTitle.isEmpty()) {
+//                    x++;
+//                    stmt.setString(x, '%' + movieTitle + '%');
+//                }
+//                rs = stmt.executeQuery();
+//            }
+//
+//
+//            if (isResultSetEmpty(rs)) {
+//                return list;
+//            }
+//
+//            // add movies to list
+//            while (rs.next()) {
+//                int movieID = rs.getInt(MovieTable.COLUMN_ID);
+//                String title = rs.getString(MovieTable.COLUMN_TITLE);
+//                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+//                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+//                String rating = rs.getString(RatingTable.COLUMN_RATING);
+//                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
+//
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
+    List<MovieGenres> list = new ArrayList<>();
+    try (Connection con = getConnection()) {
+        String sql;
+        ResultSet rs;
+        // search by genre and movie title
+        int genreID = movieGenres.getGenreID();
+        String movieTitle = movieGenres.getTitle();
 
-            if (genreID == 0 && movieTitle.isEmpty()) {
-                sql = new MovieGenres().showMovieList(movieGenres);
-                Statement stmtAllMovies = con.createStatement();
-                rs = stmtAllMovies.executeQuery(sql);
+        if (genreID == 0 && movieTitle.isEmpty()) {
+            sql = new MovieGenres().showMovieList(movieGenres);
+            Statement stmtAllMovies = con.createStatement();
+            rs = stmtAllMovies.executeQuery(sql);
 
-            } else {
-                PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
-                int x = 0;
+        } else {
+            PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
+            int x = 0;
 
-                if (genreID != 0) {
-                    x++;
-                    stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
-                    x++;
-                    stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ens with
+            if (genreID != 0) {
+                x++;
+                stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
+                x++;
+                stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ends with
 
 
 
-                }
-                if (!movieTitle.isEmpty()) {
-                    x++;
-                    stmt.setString(x, '%' + movieTitle + '%');
-                }
-                rs = stmt.executeQuery();
             }
-
-
-            if (isResultSetEmpty(rs)) {
-                return list;
+            if (!movieTitle.isEmpty()) {
+                x++;
+                stmt.setString(x, '%' + movieTitle + '%');
             }
-
-            // add movies to list
-            while (rs.next()) {
-                int movieID = rs.getInt(MovieTable.COLUMN_ID);
-                String title = rs.getString(MovieTable.COLUMN_TITLE);
-                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
-                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
-                String rating = rs.getString(RatingTable.COLUMN_RATING);
-                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
-
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            rs = stmt.executeQuery();
         }
-        return list;
+
+
+        if (isResultSetEmpty(rs)) {
+            return list;
+        }
+
+        // add movies to list
+        while (rs.next()) {
+            int movieID = rs.getInt(MovieTable.COLUMN_ID);
+            String title = rs.getString(MovieTable.COLUMN_TITLE);
+            int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+            String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+            String rating = rs.getString(RatingTable.COLUMN_RATING);
+            list.add(new MovieGenres(movieID, title, duration, genreList, rating));
+
+
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
 
 
     public List<ShowTimes> showMovieTimes(ShowTimes movieShowTimes) {
