@@ -89,10 +89,7 @@ public class Register
         String password = txtPassword.getText();
         Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
         if (Validation.validateRegisterForm(customer)) {
-            if (db.emailExists(customer.getEmail())) {
-                Helper.showErrorMessage("This email already exists", "Email error");
-                return;
-            }
+
             // encrypt the password
             customer.setPassword(Encryption.encode(password));
             // add customer

@@ -2,13 +2,16 @@ package classes;
 
 import tables.CustomerTable;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Validation {
-    public static boolean validateRegisterForm(Customer customer){
+    public static boolean validateRegisterForm(Customer customer) throws SQLException, FileNotFoundException {
+        Database db = Database.getInstance();
         List<String> errors = new ArrayList<>();
         if (customer.getFirstname().isEmpty()){
             errors.add(CustomerTable.COLUMN_FIRSTNAME + " is required");
@@ -20,6 +23,9 @@ public final class Validation {
             errors.add(CustomerTable.COLUMN_EMAIL + " is required");
         } else if (!isValidEmail(customer.getEmail())){
             errors.add("Please enter a valid email");
+
+        } else if (db.emailExists(customer.getEmail())) {
+            errors.add("This email already exists");
         }
         if (customer.getPassword().isEmpty()){
             errors.add(CustomerTable.COLUMN_PASSWORD + " is required");
