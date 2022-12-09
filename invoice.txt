@@ -1,10 +1,10 @@
 -------------------------- Movie Details --------------------
-Movie: You're Next
+Movie: Mortal Thoughts
 Rating: 15
-show date and time (27 Dec 2022, 4:00 pm)
+show date and time (16 Dec 2022, 8:00 pm)
 -------------------------- Ticket Details --------------------
-Student £8.00 (x8}
-Total £64.00
+Senior £10.00 (x1}
+Total £10.00
 -------------------------- Customer Details --------------------
-Julie Adam
-Purchase date: 9 Dec 2022
+﻿John Smith
+Purchase date: 8 Dec 2022

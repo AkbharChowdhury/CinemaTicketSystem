@@ -129,16 +129,11 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
             Invoice invoiceDetails = new Invoice(true);
-            invoiceDetails.writeInvoice(INVOICES,i);
+            invoiceDetails.writePDFInvoice(INVOICES, i);
+            System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
 
-            String output = Invoice.getSelectedInvoiceDetails(INVOICES, i);
+            Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
-
-            System.out.println(output);
-
-            if (FileHandler.printInvoice(output)){
-                Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
-            }
 
         } catch (ParseException ex){
             Helper.showErrorMessage("the time cannot be formatted", "time parse error");
