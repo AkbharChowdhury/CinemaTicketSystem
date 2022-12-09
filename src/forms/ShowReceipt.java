@@ -137,7 +137,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             System.out.println(output);
 
             if (FileHandler.printInvoice(output)){
-                Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE);
+                Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
             }
 
         } catch (ParseException ex){

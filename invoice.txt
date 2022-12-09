@@ -3,8 +3,8 @@ Movie: You're Next
 Rating: 15
 show date and time (27 Dec 2022, 4:00 pm)
 -------------------------- Ticket Details --------------------
-Senior £10.00 (x1}
-Total £10.00
+Student £8.00 (x8}
+Total £64.00
 -------------------------- Customer Details --------------------
-﻿John Smith
-Purchase date: 8 Dec 2022
+Julie Adam
+Purchase date: 9 Dec 2022

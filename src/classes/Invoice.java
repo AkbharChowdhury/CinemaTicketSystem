@@ -18,6 +18,8 @@ public class Invoice {
 
 
     public static final String INVOICE_FILE = "invoice.txt";
+    public static final String INVOICE_FILE_NAME = "invoice.pdf";
+
     private int totalTicket;
 
 

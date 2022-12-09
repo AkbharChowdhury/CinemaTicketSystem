@@ -48,7 +48,7 @@ public enum FormDetails {
 
     }
     public static String getInvoiceTitle(){
-        return  "Customer Invoice";
+        return  "Cinema Ticket System Customer Invoice";
     }
 
     public static String defaultGenre() {
