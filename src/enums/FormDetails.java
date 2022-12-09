@@ -6,9 +6,14 @@ public enum FormDetails {
     private static final String APP_NAME = "Cinema Ticket Machine - ";
     public final String DESCRIPTION;
 
+
+
     FormDetails(String title) {
         this.DESCRIPTION = title;
 
+    }
+    public static String invoiceTitle(){
+        return APP_NAME + " Invoice";
     }
 
     public static String movieList() {

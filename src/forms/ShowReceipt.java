@@ -126,6 +126,11 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     void printInvoice(int i){
         try{
+
+
+            Invoice invoiceDetails = new Invoice(true);
+            invoiceDetails.writeInvoice(INVOICES,i);
+
             String output = Invoice.getSelectedInvoiceDetails(INVOICES, i);
 
 

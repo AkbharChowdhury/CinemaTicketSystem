@@ -1,13 +1,43 @@
 package classes;
 
+import enums.FormDetails;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 public class Invoice {
+    private PDDocument invc;
+    private int n;
+
 
     public static final String INVOICE_FILE = "invoice.txt";
     private double totalTicket;
+
+
+    public Invoice(){
+
+    }
+    public  Invoice(boolean pdf){
+        //Create Document
+        invc = new PDDocument();
+        //Create Blank Page
+        PDPage newpage = new PDPage();
+        //Add the blank page
+        invc.addPage(newpage);
+
+    }
+
+
+
+
 
     public double getTotalTicket() {
         return totalTicket;
@@ -133,8 +163,8 @@ public class Invoice {
     }
 
 
-    public static String getSelectedInvoiceDetails(List<Invoice> INVOICES, int i) throws ParseException {
-        double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
+    public static String getSelectedInvoiceDetails(List<Invoice> invoice, int i) throws ParseException {
+        double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
 
         return MessageFormat.format("""
                             -------------------------- Movie Details --------------------
@@ -150,22 +180,323 @@ public class Invoice {
                             """,
 
                 // movie details
-                INVOICES.get(i).getMovieTitle(),
-                INVOICES.get(i).getRating(),
-                Helper.formatDate(INVOICES.get(i).getShowDate()),
-                Helper.formatTime(INVOICES.get(i).getShowTime()),
+                invoice.get(i).getMovieTitle(),
+                invoice.get(i).getRating(),
+                Helper.formatDate(invoice.get(i).getShowDate()),
+                Helper.formatTime(invoice.get(i).getShowTime()),
 
                 // ticket details
-                INVOICES.get(i).getType(),
-                Helper.formatMoney(INVOICES.get(i).getPrice()),
-                INVOICES.get(i).getTotalTicket(),
+                invoice.get(i).getType(),
+                Helper.formatMoney(invoice.get(i).getPrice()),
+                invoice.get(i).getTotalTicket(),
                 Helper.formatMoney(total),
 
                 // customer details
-                INVOICES.get(i).getFirstname(),
-                INVOICES.get(i).getLastname(),
-                Helper.formatDate(INVOICES.get(i).getSalesDate()));
+                invoice.get(i).getFirstname(),
+                invoice.get(i).getLastname(),
+                Helper.formatDate(invoice.get(i).getSalesDate()));
 
     }
+
+    public void writeInvoice(List<Invoice> invoice, int i) throws ParseException {
+        PDType1Font font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
+
+        //get the page
+        PDPage mypage = invc.getPage(0);
+        try {
+            //Prepare Content Stream
+            PDPageContentStream cs = new PDPageContentStream(invc, mypage);
+
+            //Writing Single Line text
+            //Writing the Invoice title
+            cs.beginText();
+
+            cs.setFont(font, 20);
+            cs.newLineAtOffset(140, 750);
+            cs.showText("Cinema Ticket System Customer Invoice");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 18);
+            cs.newLineAtOffset(270, 690);
+            cs.showText(invoice.get(i).movieTitle);
+            cs.endText();
+
+
+            cs.beginText();
+            cs.setFont(font, 16);
+            cs.newLineAtOffset(220, 650);
+            cs.showText(MessageFormat.format("Show Date/time ({0}, {1})" ,
+                    Helper.formatDate(invoice.get(i).getShowDate()),
+                    Helper.formatTime(invoice.get(i).getShowTime())
+
+
+                    ));
+            cs.endText();
+
+            //Writing Multiple Lines
+            //writing the customer details
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(60, 610);
+            cs.showText("Customer Name: ");
+            cs.newLine();
+            cs.showText("Purchase date: ");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(170, 610);
+            cs.showText("s");
+            cs.newLine();
+            cs.showText(" 8 Dec 2022");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.newLineAtOffset(80, 540);
+            cs.showText("Ticket Type:");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.newLineAtOffset(200, 540);
+            cs.showText("Unit Price");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.newLineAtOffset(310, 540);
+            cs.showText("Quantity");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.newLineAtOffset(410, 540);
+            cs.showText("Price");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 12);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(80, 520);
+//            for(int i =0; i<n; i++) {
+//                cs.showText(ProductName.get(i));
+//                cs.newLine();
+//            }
+            cs.showText( invoice.get(i).getType());
+            cs.newLine();
+            cs.endText();
+//
+            cs.beginText();
+            cs.setFont(font, 12);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(200, 520);
+//            for(int i =0; i<n; i++) {
+            cs.showText("£10.00");
+            cs.newLine();
+//            }
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 12);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(310, 520);
+//            for(int i =0; i<n; i++) {
+            cs.showText("6");
+            cs.newLine();
+//            }
+            cs.endText();
+//
+            cs.beginText();
+            cs.setFont(font, 12);
+            cs.setLeading(20f);
+            cs.newLineAtOffset(410, 520);
+            cs.showText("23");
+            cs.newLine();
+//            for (int i = 0; i < n; i++) {
+////                price = ProductPrice.get(i)*ProductQty.get(i);
+//                cs.showText("23");
+//                cs.newLine();
+//            }
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            cs.newLineAtOffset(310, (500-(20*n)));
+            cs.showText("Total: ");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(font, 14);
+            //Calculating where total is to be written using number of products
+            cs.newLineAtOffset(410, (500-(20*n)));
+            cs.showText("50");
+            cs.endText();
+
+            //Close the content stream
+            cs.close();
+            //Save the PDF
+            invc.save("invoice.pdf");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public void writeInvoice(List<Invoice> INVOICES, int i)  {
+//        double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
+//
+//        PDType1Font font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
+//
+//        //get the page
+//        PDPage mypage = invc.getPage(0);
+//        try {
+//            //Prepare Content Stream
+//            PDPageContentStream cs = new PDPageContentStream(invc, mypage);
+//
+//            //Writing Single Line text
+//            //Writing the Invoice title
+//            cs.beginText();
+//
+//            cs.setFont(font, 20);
+//            cs.newLineAtOffset(140, 750);
+//            cs.showText(FormDetails.invoiceTitle());
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 18);
+//            cs.newLineAtOffset(270, 690);
+//            cs.showText(MessageFormat.format("{0} (1)", INVOICES.get(i).getMovieTitle(),
+//                    INVOICES.get(i).getRating()
+//            ));
+//
+//
+//
+//            cs.endText();
+//
+//
+//            cs.beginText();
+//            cs.setFont(font, 16);
+//            cs.newLineAtOffset(220, 650);
+//            cs.showText("Show Date/time (21 Dec 2022, 7:00 pm)");
+//            cs.endText();
+//
+//            //Writing Multiple Lines
+//            //writing the customer details
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(60, 610);
+//            cs.showText("Customer Name: ");
+//            cs.newLine();
+//            cs.showText("Purchase date: ");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(170, 610);
+//            cs.showText(INVOICES.get(i).getFirstname() + " "+
+//                    INVOICES.get(i).getLastname());
+//            cs.newLine();
+//            cs.showText(" " + Helper.formatDate(INVOICES.get(i).getSalesDate()));
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(80, 540);
+//            cs.showText("Ticket Type:");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(200, 540);
+//            cs.showText("Unit Price");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(310, 540);
+//            cs.showText("Quantity");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(410, 540);
+//            cs.showText("Price");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 12);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(80, 520);
+//
+//            cs.showText(INVOICES.get(i).getType());
+//
+//
+//
+//
+//
+//            cs.newLine();
+//            cs.endText();
+////
+//            cs.beginText();
+//            cs.setFont(font, 12);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(200, 520);
+//            cs.showText(Helper.formatMoney(INVOICES.get(i).getPrice()));
+//
+//
+//
+//
+//            cs.newLine();
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 12);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(310, 520);
+//            cs.showText(String.valueOf(INVOICES.get(i).getTotalTicket()));
+//
+//
+//            cs.newLine();
+//            cs.endText();
+////
+//            cs.beginText();
+//            cs.setFont(font, 12);
+//            cs.setLeading(20f);
+//            cs.newLineAtOffset(410, 520);
+//            cs.showText("ss");
+//            cs.newLine();
+//
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(310, (500-(20*0)));
+//            cs.showText("Total: ");
+//            cs.endText();
+//
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            //Calculating where total is to be written using number of products
+////            cs.newLineAtOffset(410, (500-(20*0)));
+//            cs.newLineAtOffset(410, (500));
+//
+//            cs.showText(Helper.formatMoney(total));
+//            cs.endText();
+//
+//            //Close the content stream
+//            cs.close();
+//            //Save the PDF
+//            invc.save("invoice.pdf");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
