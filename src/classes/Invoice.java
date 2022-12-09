@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Locale;
 
 public class Invoice {
     private PDDocument invc;
@@ -19,7 +18,7 @@ public class Invoice {
 
 
     public static final String INVOICE_FILE = "invoice.txt";
-    private double totalTicket;
+    private int totalTicket;
 
 
     public Invoice(){
@@ -39,11 +38,11 @@ public class Invoice {
 
 
 
-    public double getTotalTicket() {
+    public int getTotalTicket() {
         return totalTicket;
     }
 
-    public void setTotalTicket(double totalTicket) {
+    public void setTotalTicket(int totalTicket) {
         this.totalTicket = totalTicket;
     }
 
@@ -199,13 +198,15 @@ public class Invoice {
     }
 
     public void writeInvoice(List<Invoice> invoice, int i) throws ParseException {
-        PDType1Font font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
+        var font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
 
         //get the page
-        PDPage mypage = invc.getPage(0);
+        PDPage page = invc.getPage(0);
         try {
+            double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
+
             //Prepare Content Stream
-            PDPageContentStream cs = new PDPageContentStream(invc, mypage);
+            PDPageContentStream cs = new PDPageContentStream(invc, page);
 
             //Writing Single Line text
             //Writing the Invoice title
@@ -213,7 +214,7 @@ public class Invoice {
 
             cs.setFont(font, 20);
             cs.newLineAtOffset(140, 750);
-            cs.showText("Cinema Ticket System Customer Invoice");
+             cs.showText(FormDetails.getInvoiceTitle());
             cs.endText();
 
             cs.beginText();
@@ -240,18 +241,35 @@ public class Invoice {
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
-            cs.showText("Customer Name: ");
+//            cs.showText(invoice.get(i).getFirstname());
+            cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
             cs.newLine();
             cs.showText("Purchase date: ");
             cs.endText();
+
+//            cs.beginText();
+//            cs.setFont(font, 14);
+//            cs.newLineAtOffset(60, 610);
+//            String na = invoice.get(i).getLastname();
+////                    invoice.get(i).getLastname())
+//                    ;
+//            cs.showText(na);
+//            cs.endText();
+
+
+
 
             cs.beginText();
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(170, 610);
-            cs.showText("s");
+//            String f = String.format(" %s",invoice.get(i).getFirstname().trim().toString() );
+//            System.out.println(String.format(" %s",invoice.get(i).getFirstname().trim().toString() ));
+            cs.showText("");
             cs.newLine();
-            cs.showText(" 8 Dec 2022");
+            cs.showText( " "+ Helper.formatDate(invoice.get(i).getSalesDate()));
+
+
             cs.endText();
 
             cs.beginText();
@@ -294,33 +312,26 @@ public class Invoice {
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(200, 520);
-//            for(int i =0; i<n; i++) {
-            cs.showText("£10.00");
+            cs.showText(Helper.formatMoney(invoice.get(i).getPrice()));
             cs.newLine();
-//            }
             cs.endText();
 
             cs.beginText();
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(310, 520);
-//            for(int i =0; i<n; i++) {
-            cs.showText("6");
+
+            cs.showText(String.valueOf(invoice.get(i).getTotalTicket()));
             cs.newLine();
-//            }
             cs.endText();
 //
             cs.beginText();
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(410, 520);
-            cs.showText("23");
+            cs.showText(Helper.formatMoney(total));
             cs.newLine();
-//            for (int i = 0; i < n; i++) {
-////                price = ProductPrice.get(i)*ProductQty.get(i);
-//                cs.showText("23");
-//                cs.newLine();
-//            }
+
             cs.endText();
 
             cs.beginText();
@@ -333,7 +344,7 @@ public class Invoice {
             cs.setFont(font, 14);
             //Calculating where total is to be written using number of products
             cs.newLineAtOffset(410, (500-(20*n)));
-            cs.showText("50");
+            cs.showText(Helper.formatMoney(total));
             cs.endText();
 
             //Close the content stream

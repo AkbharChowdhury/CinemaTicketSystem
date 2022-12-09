@@ -36,6 +36,9 @@ public final class Helper {
         int minutes = duration % 60;
         return String.format("%d:%02d", hours, minutes);
     }
+    public static String capitalise(String str){
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
 
 
     //      JComboBox populateComboBox(Database db, JComboBox comboBox){

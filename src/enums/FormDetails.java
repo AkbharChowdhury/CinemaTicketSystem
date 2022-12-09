@@ -47,6 +47,9 @@ public enum FormDetails {
         return APP_NAME + "Show Receipt";
 
     }
+    public static String getInvoiceTitle(){
+        return  "Customer Invoice";
+    }
 
     public static String defaultGenre() {
         return "Any Genre";
