@@ -166,10 +166,11 @@ public final class Helper {
                     ex.printStackTrace();
                 }
 
-            } else{
-                System.err.println("You must be logged in to view invoices or purchase tickets!");
-                System.exit(0);
             }
+//            else{
+//                System.err.println("You must be logged in to view invoices or purchase tickets!");
+//                System.exit(0);
+//            }
 
 
         }

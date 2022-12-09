@@ -205,7 +205,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         try {
             clearTable(table);
             int i = 0;
-            for (var showTime : db.showMovieTimes(movieShowTimes)) {
+            for(var showTime : db.showMovieTimes(movieShowTimes)) {
                 model.addRow(new Object[0]);
                 model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);

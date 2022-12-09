@@ -155,6 +155,7 @@ public class ShowTimes implements Queries, TableProperties {
         if (!movieShowTimes.getDate().isEmpty()) {
             sql += " AND show_date LIKE ?";
         }
+        sql+=" ORDER BY show_date, show_time";
 
         return sql;
 
