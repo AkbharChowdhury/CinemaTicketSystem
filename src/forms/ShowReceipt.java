@@ -11,12 +11,9 @@ import interfaces.ListGUI;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -28,7 +25,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     private final Database db;
     private final DefaultListModel model;
     private final JList list;
-    int salesID;
+    int selectedListInvoiceItem;
     private final List<Invoice> INVOICES;
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
@@ -73,14 +70,10 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
         JPanel middle = new JPanel();
-
-
         middle.add(scrollPane);
-
 
         JPanel south = new JPanel();
         south.add(btnPrintReceipt);
-
 
         add("North", top);
         add("Center", middle);
@@ -95,12 +88,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         comboBoxGenres.addActionListener(this);
         populateList();
         list.setPreferredSize(new Dimension(400, 600));
-        list.addListSelectionListener((ListSelectionEvent e) -> {
-            salesID = list.getSelectedIndex();
-            System.out.println(list.toString());
-
-
-        });
+        list.addListSelectionListener((ListSelectionEvent e) -> selectedListInvoiceItem = list.getSelectedIndex());
 
         setVisible(true);
     }
@@ -114,7 +102,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
-            printInvoice(salesID);
+            processSelectedListItem(selectedListInvoiceItem);
         }
 
         try {
@@ -125,57 +113,22 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     }
 
-    private boolean printInvoice(int salesID) {
+    private boolean processSelectedListItem(int salesID) {
         for (int i = 0; i < INVOICES.size(); i++) {
-
             if (i == salesID) {
-                p(i);
+                printInvoice(i);
                 return true;
-
             }
         }
         return false;
 
     }
 
-
-
-
-
-    void p(int i){
+    void printInvoice(int i){
         try{
-            double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
-            String output = MessageFormat.format("""
-                            -------------------------- Movie Details --------------------
-                            Movie: {0} 
-                            Rating: {1}
-                            show date and time ({2}, {3})
-                            -------------------------- Ticket Details --------------------
-                            {4} {5} (x{6}}
-                            Total {7} 
-                            -------------------------- Customer Details --------------------
-                            {8} {9}
-                            Purchase date: {10}                                                                                                                                                 
-                            """,
+            String output = Invoice.getSelectedInvoiceDetails(INVOICES, i);
 
-                    // movie details
-                    INVOICES.get(i).getMovieTitle(),
-                    INVOICES.get(i).getRating(),
-                    Helper.formatDate(INVOICES.get(i).getShowDate()),
-                    Helper.formatTime(INVOICES.get(i).getShowTime()),
 
-                    // ticket details
-                    INVOICES.get(i).getType(),
-                    Helper.formatMoney(INVOICES.get(i).getPrice()),
-                    INVOICES.get(i).getTotalTicket(),
-                    Helper.formatMoney(total),
-
-                    // customer details
-                    INVOICES.get(i).getFirstname(),
-                    INVOICES.get(i).getLastname(),
-                    Helper.formatDate(INVOICES.get(i).getSalesDate())
-
-            );
             System.out.println(output);
 
             if (FileHandler.printInvoice(output)){
@@ -186,12 +139,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             Helper.showErrorMessage("the time cannot be formatted", "time parse error");
         }
     }
-
-
-
-
-
-
 
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -243,11 +190,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
             ));
         }
-
     }
-
-
-
 
 
 }

@@ -1,5 +1,9 @@
 package classes;
 
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.util.List;
+
 public class Invoice {
 
     public static final String INVOICE_FILE = "invoice.txt";
@@ -126,6 +130,42 @@ public class Invoice {
                     s.customer_id = ?
                                                            
                 """;
+    }
+
+
+    public static String getSelectedInvoiceDetails(List<Invoice> INVOICES, int i) throws ParseException {
+        double total = INVOICES.get(i).getPrice() * INVOICES.get(i).getTotalTicket();
+
+        return MessageFormat.format("""
+                            -------------------------- Movie Details --------------------
+                            Movie: {0} 
+                            Rating: {1}
+                            show date and time ({2}, {3})
+                            -------------------------- Ticket Details --------------------
+                            {4} {5} (x{6}}
+                            Total {7} 
+                            -------------------------- Customer Details --------------------
+                            {8} {9}
+                            Purchase date: {10}                                                                                                                                                 
+                            """,
+
+                // movie details
+                INVOICES.get(i).getMovieTitle(),
+                INVOICES.get(i).getRating(),
+                Helper.formatDate(INVOICES.get(i).getShowDate()),
+                Helper.formatTime(INVOICES.get(i).getShowTime()),
+
+                // ticket details
+                INVOICES.get(i).getType(),
+                Helper.formatMoney(INVOICES.get(i).getPrice()),
+                INVOICES.get(i).getTotalTicket(),
+                Helper.formatMoney(total),
+
+                // customer details
+                INVOICES.get(i).getFirstname(),
+                INVOICES.get(i).getLastname(),
+                Helper.formatDate(INVOICES.get(i).getSalesDate()));
+
     }
 
 }
