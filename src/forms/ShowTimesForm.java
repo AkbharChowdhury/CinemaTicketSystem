@@ -163,20 +163,21 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
 
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
-
         }
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
         }
 
         if (e.getSource() == btnPurchaseTicket) {
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
+
+            if (LoginInfo.getCustomerID() == 0){
                 LoginInfo.setHasOpenFormOnStartUp(true);
-                Helper.gotoForm(this, Pages.LOGIN);
-                return;
             }
 
-            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+
+            }
 
         }
 
@@ -184,8 +185,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }
-
-
 
     }
 
@@ -215,7 +214,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
 
             }
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }

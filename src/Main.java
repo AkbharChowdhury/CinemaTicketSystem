@@ -13,7 +13,13 @@ import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
+        String s = Helper.formatTime("13:32");
+        System.out.println(s);
+        System.exit(0);
         Database db = Database.getInstance();
+        var f = db.getCustomerTicketType(1);
+        System.out.println(f.getType());
+        System.exit(0);
         System.out.println(db.getFirstname(2));
         String dateStr = "13 Nov 1999";
 //

@@ -36,7 +36,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
 
-    public ShowReceipt() throws SQLException, FileNotFoundException, ParseException {
+    public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
 
 
@@ -53,7 +53,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             if (e.getValueIsAdjusting()) {
                 var item =  ((JList) e.getSource())
                         .getSelectedValue();
-                System.out.println("ID is " + item);
             }
 
         });
@@ -98,7 +97,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         new ShowReceipt();
 
@@ -121,7 +120,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     private boolean processSelectedListItem(int salesID) {
 
 
-        if (list. isSelectionEmpty()){
+        if (list.isSelectionEmpty()){
             Helper.showErrorMessage("You must select an item from the invoice list!","Receipt error");
             return false;
         }
@@ -136,10 +135,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     }
 
-    void printInvoice(int i){
+    public void printInvoice(int i){
         try{
-
-
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
             System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
@@ -166,21 +163,15 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         }
 
         if (e.getSource() == btnPurchaseTicket) {
+
             if (LoginInfo.getCustomerID() == 0){
                 LoginInfo.setHasOpenFormOnStartUp(true);
             }
 
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                if (LoginInfo.getCustomerID() == 0){
-//                    Helper.gotoForm(this, Pages.LOGIN);
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
-
-                }
-//                Helper.gotoForm(this, Pages.LOGIN);
-                return;
             }
-
-            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
         }
 
@@ -188,8 +179,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }
-
-
 
     }
 
@@ -200,16 +189,17 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     }
 
     @Override
-    public void populateList() {
-        for (var invoice : INVOICES) {
+    public void populateList() throws ParseException {
+        for(var invoice : INVOICES) {
             double total = invoice.getPrice() * invoice.getTotalTicket();
-
-            model.addElement(MessageFormat.format("{0}, {1} {2}",
-                    Helper.formatDate(invoice.getShowDate()),
+            System.out.println(invoice.getPrice());
+            model.addElement(String.format("%s, %s, %s, %s",
                     invoice.getMovieTitle(),
+                    Helper.formatDate(invoice.getShowDate()),
+                    Helper.formatTime(invoice.getShowTime()),
                     Helper.formatMoney(total)
-
             ));
+
         }
     }
 

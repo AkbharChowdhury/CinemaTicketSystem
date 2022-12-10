@@ -473,7 +473,8 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
                 stmt.setInt(1, customerID);
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    int price = rs.getInt(TicketsTable.COLUMN_PRICE);
+                    System.out.println("price is");
+                    System.out.println(rs.getString("price"));
                     Invoice invoice = new Invoice();
                     invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
                     invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
@@ -484,7 +485,7 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
                     invoice.setType(rs.getString(TicketsTable.COLUMN_TYPE));
                     invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
                     invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
-                    invoice.setPrice(price);
+                    invoice.setPrice(rs.getDouble(TicketsTable.COLUMN_PRICE));
 
                     invoices.add(invoice);
 
@@ -626,6 +627,9 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         return 0;
 
     }
+
+
+
 
     public String getFirstname(int customerID) {
 

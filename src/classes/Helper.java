@@ -15,6 +15,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
@@ -56,12 +57,19 @@ public final class Helper {
         JOptionPane.showMessageDialog(null, message);
     }
 
-    public static String formatTime(String time) throws ParseException {
-        DateFormat f1 = new SimpleDateFormat("hh:mm"); //12:30
-        Date unFormattedTime = f1.parse(time);
 
-        DateFormat formattedTime = new SimpleDateFormat("h:mm a"); // e.g. 12:30 AM
-        return formattedTime.format(unFormattedTime); // "23:00"
+
+    public static String formatTime(String time) {
+        String[] timeSplit = time.split(":");
+        String timeColonPattern = "hh:mm a";
+
+        int hour = Integer.parseInt(timeSplit[0]);
+        int minute = Integer.parseInt(timeSplit[1]);
+        LocalTime colonTime = LocalTime.of(hour, minute);
+
+        DateTimeFormatter timeColonFormatter = DateTimeFormatter.ofPattern(timeColonPattern);
+        return timeColonFormatter.format(colonTime);
+
     }
 
     public static String formatMoney(double amount) {
@@ -150,7 +158,7 @@ public final class Helper {
 
     }
 
-    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) {
+    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         if (LoginInfo.getCustomerID() == 0) {
             int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
@@ -158,6 +166,9 @@ public final class Helper {
             if (dialogButton == JOptionPane.YES_OPTION) {
 
                 Form.setRedirectPage(page);
+
+
+
                 if (!LoginInfo.hasOpenFormOnStartUp()) {
                     try {
 
@@ -167,6 +178,10 @@ public final class Helper {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+                } else{
+                    // go to login
+                    Helper.gotoForm(frame, Pages.LOGIN);
+
                 }
 
 

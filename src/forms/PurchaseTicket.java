@@ -57,7 +57,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
 
 
-    public PurchaseTicket() throws SQLException, FileNotFoundException {
+    public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
 
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
@@ -182,7 +182,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new PurchaseTicket();
 
     }
@@ -241,6 +241,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
 
     private void handlePurchase() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+//        if (table.isSelectionEmpty()){
+//            Helper.showErrorMessage("You must select an item from the invoice list!","Receipt error");
+//            return false;
+//        }
 
         if (selectedShowTimeID == 0) {
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
@@ -354,7 +358,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
             }
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }

@@ -145,9 +145,9 @@ public class Login extends JFrame implements ActionListener, KeyListener {
                 }
 
                 if (Form.getRedirectPage() == RedirectPage.PURCHASE_TICKET) {
-                    new PurchaseTicket();
+                    Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+
                 }
-                dispose();
 
 
             } catch (Exception ex) {
