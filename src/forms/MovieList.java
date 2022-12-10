@@ -187,15 +187,23 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
-
         }
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
         }
 
         if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                LoginInfo.setHasOpenFormOnStartUp(true);
+            }
+
             if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                Helper.gotoForm(this, Pages.LOGIN);
+                if (LoginInfo.getCustomerID() == 0){
+//                    Helper.gotoForm(this, Pages.LOGIN);
+
+
+                }
+//                Helper.gotoForm(this, Pages.LOGIN);
                 return;
             }
 
@@ -204,6 +212,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == btnShowReceipt) {
+            LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }
 

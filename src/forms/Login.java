@@ -134,17 +134,13 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         if (!Validation.validateLoginForm(email, password)) {
             return;
         }
-        if (!db.emailExists(txtEmail.getText())) {
-            Helper.showErrorMessage("This email does not exist!", "Login Error");
-            return;
-        }
+
         if (db.isAuthorised(email, Encryption.encode(password))) {
             LoginInfo.setCustomerID(db.getCustomerID(email));
             try {
 
                 if (Form.getRedirectPage() == null) {
                     Helper.gotoForm(this, Pages.LIST_MOVIES);
-                    new MovieList();
                     return;
                 }
 

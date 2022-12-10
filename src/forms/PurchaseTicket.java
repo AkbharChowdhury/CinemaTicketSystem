@@ -297,6 +297,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
 
@@ -307,22 +309,22 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
         if (e.getSource() == btnPurchaseTicket) {
             if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
+                LoginInfo.setHasOpenFormOnStartUp(true);
                 Helper.gotoForm(this, Pages.LOGIN);
                 return;
             }
+
             Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
-                Helper.gotoForm(this, Pages.LOGIN);
-                return;
-            }
-
+            LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
         }
+
+
+
     }
 
     @Override

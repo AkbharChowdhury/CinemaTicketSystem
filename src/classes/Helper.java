@@ -156,21 +156,28 @@ public final class Helper {
             int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
 
             if (dialogButton == JOptionPane.YES_OPTION) {
+
                 Form.setRedirectPage(page);
-                try {
+                if (!LoginInfo.hasOpenFormOnStartUp()) {
+                    try {
 
-                    new Login();
-                    frame.dispose();
+                        new Login();
+                        frame.dispose();
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+
+            } else {
+                if (!LoginInfo.hasOpenFormOnStartUp()) {
+                    System.err.println("You must be logged in to view invoices or purchase tickets!");
+                    System.exit(0);
+
                 }
 
             }
-//            else{
-//                System.err.println("You must be logged in to view invoices or purchase tickets!");
-//                System.exit(0);
-//            }
 
 
         }

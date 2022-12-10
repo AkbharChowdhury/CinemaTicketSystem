@@ -23,10 +23,10 @@ import java.util.List;
 
 public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
     private final Database db;
-    private final DefaultListModel model;
-    private final JList list;
+    private  DefaultListModel model = new DefaultListModel();
+    private  JList list = new JList(model);
     int selectedListInvoiceItem;
-    private final List<Invoice> INVOICES;
+    private  List<Invoice> INVOICES;
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
@@ -37,10 +37,15 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     private final JComboBox<String> comboBoxGenres = new JComboBox<>();
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException {
-        Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT);
         db = Database.getInstance();
-        model = new DefaultListModel();
-        list = new JList(model);
+
+
+        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
+            return;
+        }
+
+
+
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         // get selected list id
@@ -114,6 +119,13 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     }
 
     private boolean processSelectedListItem(int salesID) {
+
+
+        if (list. isSelectionEmpty()){
+            Helper.showErrorMessage("You must select an item from the invoice list!","Receipt error");
+            return false;
+        }
+
         for (int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);
@@ -145,34 +157,41 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
+
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
-
         }
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
         }
 
         if (e.getSource() == btnPurchaseTicket) {
+            if (LoginInfo.getCustomerID() == 0){
+                LoginInfo.setHasOpenFormOnStartUp(true);
+            }
+
             if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                Helper.gotoForm(this, Pages.LOGIN);
+                if (LoginInfo.getCustomerID() == 0){
+//                    Helper.gotoForm(this, Pages.LOGIN);
+
+
+                }
+//                Helper.gotoForm(this, Pages.LOGIN);
                 return;
             }
+
             Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
         }
 
         if (e.getSource() == btnShowReceipt) {
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
-                Helper.gotoForm(this, Pages.LOGIN);
-                return;
-            }
-
+            LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
         }
-    }
 
+
+
+    }
 
     @Override
     public void clearList(JList table) {
