@@ -129,7 +129,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
             Invoice invoiceDetails = new Invoice(true);
-            invoiceDetails.writePDFInvoice(INVOICES, i);
+            invoiceDetails.generatePDFInvoice(INVOICES, i);
             System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
 
             Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);

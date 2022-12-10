@@ -538,7 +538,6 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
                 while (rs.next()) {
                     int price = rs.getInt(TicketsTable.COLUMN_PRICE);
                     Invoice invoice = new Invoice();
-                    invoice.setPrice(price);
                     invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
                     invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
                     invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
@@ -548,6 +547,8 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
                     invoice.setType(rs.getString(TicketsTable.COLUMN_TYPE));
                     invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
                     invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
+                    invoice.setPrice(price);
+
                     invoices.add(invoice);
 
 

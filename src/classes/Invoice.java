@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -27,6 +28,7 @@ public class Invoice {
     private String movieTitle;
     private String type;
     private String rating;
+    public  String f;
 
     public Invoice() {
 
@@ -188,7 +190,7 @@ public class Invoice {
                 """;
     }
 
-    public void writePDFInvoice(List<Invoice> invoice, int i) throws ParseException {
+    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException {
         var font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
 
         //get the page
@@ -207,6 +209,8 @@ public class Invoice {
             cs.setFont(font, 20);
             cs.newLineAtOffset(140, 750);
             cs.showText(FormDetails.getInvoiceTitle());
+//            cs.showText(invoice.get(i).getFirstname());
+
             cs.endText();
 
             cs.beginText();
@@ -227,16 +231,15 @@ public class Invoice {
             ));
             cs.endText();
 
-            //Writing Multiple Lines
-            //writing the customer details
+
             cs.beginText();
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
-//            cs.showText(invoice.get(i).getFirstname());
-            cs.showText(" ");
 
             cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
+            // firstname is causing error
+//            cs.showText(String.format("%s %s", invoice.get(i).firstname, invoice.get(i).getLastname()));
 
             cs.newLine();
             cs.showText("Purchase date: ");
