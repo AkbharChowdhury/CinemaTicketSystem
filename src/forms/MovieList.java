@@ -53,6 +53,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         scrollPane1.setViewportView(table);
         setupTableProperties();
 
+//        txtMovieTitle.addKeyListener(this);
         txtMovieTitle.addKeyListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
@@ -162,17 +163,20 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getSource() == txtMovieTitle) {
-            movieGenre.setTitle(txtMovieTitle.getText().trim());
-            populateTable();
 
-        }
+
+
 
 
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if (e.getSource() == txtMovieTitle) {
+            movieGenre.setTitle(txtMovieTitle.getText());
+            populateTable();
+
+        }
 
     }
 

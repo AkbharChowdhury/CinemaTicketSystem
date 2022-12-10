@@ -137,6 +137,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
         } catch (ParseException ex){
             Helper.showErrorMessage("the time cannot be formatted", "time parse error");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

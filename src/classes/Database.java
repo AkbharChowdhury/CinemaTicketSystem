@@ -319,33 +319,33 @@ public class Database {
 public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
     List<MovieGenres> list = new ArrayList<>();
     try (Connection con = getConnection()) {
-        String sql;
         ResultSet rs;
         // search by genre and movie title
         int genreID = movieGenres.getGenreID();
         String movieTitle = movieGenres.getTitle();
+        String sql = new MovieGenres().showMovieList(movieGenres);
 
         if (genreID == 0 && movieTitle.isEmpty()) {
-            sql = new MovieGenres().showMovieList(movieGenres);
             Statement stmtAllMovies = con.createStatement();
             rs = stmtAllMovies.executeQuery(sql);
 
         } else {
-            PreparedStatement stmt = con.prepareStatement(new MovieGenres().showMovieList(movieGenres));
-            int x = 0;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            int param = 0;
 
             if (genreID != 0) {
-                x++;
-                stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
-                x++;
-                stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ends with
+//                param++;
+//                stmt.setString(param, String.valueOf(genreID));
+//                stmt.setString(x, +'%' + String.valueOf(genreID)); // check if genre id starts with the id
+//                x++;
+//                stmt.setString(x, String.valueOf(genreID) + '%'); // check if genre id ends with
 
 
 
             }
             if (!movieTitle.isEmpty()) {
-                x++;
-                stmt.setString(x, '%' + movieTitle + '%');
+                param++;
+                stmt.setString(param, '%' + movieTitle + '%');
             }
             rs = stmt.executeQuery();
         }
@@ -529,6 +529,8 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
     }
 
 
+
+
     public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection()) {
@@ -588,7 +590,7 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         }
         return movies;
     }
-
+//
 //    public List<String> getMovieTitle() {
 //        List<String> movieTitleList = new ArrayList<>();
 //        try (Connection con = getConnection()) {
@@ -687,6 +689,31 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
             e.printStackTrace();
         }
         return 0;
+
+    }
+
+    public String getFirstname(int customerID) {
+
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", CustomerTable.COLUMN_FIRSTNAME, CustomerTable.TABLE_NAME, CustomerTable.COLUMN_ID);
+
+        try (Connection con = getConnection()) {
+            ResultSet rs;
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, customerID);
+
+            rs = stmt.executeQuery();
+
+            if (isResultSetEmpty(rs)) {
+                return null;
+            }
+
+            return rs.getString(CustomerTable.COLUMN_FIRSTNAME);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
 
     }
 

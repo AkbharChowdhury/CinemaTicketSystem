@@ -1,14 +1,18 @@
 package classes;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Font;
 import enums.FormDetails;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -190,8 +194,12 @@ public class Invoice {
                 """;
     }
 
-    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException {
-        var font = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
+    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException {
+        var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+//        var font = new PDType1Font(Standard14Fonts.FontName.SYMBOL);
+//        cs.setFont(PDType1Font.TIMES_ROMAN, 20);
+//            var font = new PDType1Font().getf
+
 
         //get the page
         PDPage page = invoiceDocument.getPage(0);
@@ -207,9 +215,9 @@ public class Invoice {
             //Writing the Invoice title
             cs.beginText();
             cs.setFont(font, 20);
+
             cs.newLineAtOffset(140, 750);
             cs.showText(FormDetails.getInvoiceTitle());
-//            cs.showText(invoice.get(i).getFirstname());
 
             cs.endText();
 
@@ -238,8 +246,11 @@ public class Invoice {
             cs.newLineAtOffset(60, 610);
 
             cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
+//            Database db = Database.getInstance();
+
+
             // firstname is causing error
-//            cs.showText(String.format("%s %s", invoice.get(i).firstname, invoice.get(i).getLastname()));
+//            cs.showText(String.format("%s %s", invoice.get(i).getFirstname(), invoice.get(i).getLastname()));
 
             cs.newLine();
             cs.showText("Purchase date: ");

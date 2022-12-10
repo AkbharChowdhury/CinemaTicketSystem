@@ -14,10 +14,11 @@ import java.util.Locale;
 public class Main {
     public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
         Database db = Database.getInstance();
+        System.out.println(db.getFirstname(2));
         String dateStr = "13 Nov 1999";
-
-
-        System.out.println(Helper.convertMediumDateToYYMMDD(dateStr));
+//
+//
+//        System.out.println(Helper.convertMediumDateToYYMMDD(dateStr));
 
         System.exit(0);
 
