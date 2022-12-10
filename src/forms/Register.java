@@ -32,13 +32,13 @@ public class Register
         db = Database.getInstance();
         TICKETS_LIST = db.getTicket();
         setLayout(new BorderLayout());
-        setSize(300, 250);
+        setSize(310, 500);
         setTitle(FormDetails.register());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel middle = new JPanel();
-        middle.setLayout(new GridLayout(6, 1, 5, 5));
+        middle.setLayout(new GridLayout(10, 1, 3, 3));
         middle.add(new JLabel("Firstname"));
         middle.add(txtFirstname);
         middle.add(new JLabel("Lastname"));
@@ -57,6 +57,7 @@ public class Register
         add("South", bottom);
         add("West", new JPanel());
         add("East", new JPanel());
+
         btnRegister.addActionListener(this);
 
         setVisible(true);
