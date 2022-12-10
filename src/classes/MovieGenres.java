@@ -150,7 +150,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
 
         if (genreID!=0){
             sql+= """
-                    	HAVING genre_id_list REGEXP '\\b1\\b'
+                    	HAVING ',' || genre_id_list || ',' LIKE ?
                     """;
 //                                	HAVING genre_id_list REGEXP '?'
         }
