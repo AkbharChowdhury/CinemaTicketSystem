@@ -29,13 +29,11 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         db = Database.getInstance();
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        // JFrame class
         setTitle(FormDetails.login());
         setLocation(new Point(500, 300));
         add(panel);
         setSize(new Dimension(400, 200));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Username label constructor
         JLabel label = new JLabel("Email");
         label.setBounds(100, 8, 70, 20);
         panel.add(label);
@@ -165,6 +163,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println(e.getKeyCode() == KeyEvent.VK_ENTER);
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             handleLogin();
         }

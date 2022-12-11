@@ -53,7 +53,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         scrollPane1.setViewportView(table);
         setupTableProperties();
 
-//        txtMovieTitle.addKeyListener(this);
         txtMovieTitle.addKeyListener(this);
         setResizable(false);
         setLayout(new BorderLayout());
