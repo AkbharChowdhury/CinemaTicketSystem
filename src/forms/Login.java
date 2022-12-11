@@ -153,7 +153,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     }
 
     private void handleLogin() {
-        String email = txtEmail.getText();
+        String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
         if (!Validation.validateLoginForm(email, password)) {
             return;
@@ -172,7 +172,10 @@ public class Login extends JFrame implements ActionListener, KeyListener {
                     Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
                 }
+                if (Form.getRedirectPage() == RedirectPage.SHOW_RECEIPT) {
+                    Helper.gotoForm(this, Pages.SHOW_RECEIPT);
 
+                }
 
             } catch (Exception ex) {
                 ex.printStackTrace();

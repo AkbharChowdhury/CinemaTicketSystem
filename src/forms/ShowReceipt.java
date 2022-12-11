@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
+
     private final Database db;
     private  DefaultListModel model = new DefaultListModel();
     private  JList list = new JList(model);
@@ -34,17 +35,18 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
 
-    private final JComboBox<String> comboBoxGenres = new JComboBox<>();
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-
-
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
             return;
         }
 
+        if (!db.customerInvoiceExists(LoginInfo.getCustomerID())){
+            Helper.gotoForm(this, Pages.LIST_MOVIES);
+            return;
 
+        }
 
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
@@ -61,7 +63,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
         setResizable(false);
         setLayout(new BorderLayout());
-        setSize(600, 400);
+        setSize(600, 300);
         setTitle(FormDetails.showReceipt());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -89,9 +91,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         btnShowReceipt.addActionListener(this);
         btnPrintReceipt.addActionListener(this);
 
-        comboBoxGenres.addActionListener(this);
         populateList();
-        list.setPreferredSize(new Dimension(400, 600));
+        list.setPreferredSize(new Dimension(550, 600));
         list.addListSelectionListener((ListSelectionEvent e) -> selectedListInvoiceItem = list.getSelectedIndex());
 
         setVisible(true);

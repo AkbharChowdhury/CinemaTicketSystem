@@ -94,11 +94,11 @@ public class Register
     }
 
     private void handleRegister() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String firstname = txtFirstname.getText();
-        String lastname = txtLastName.getText();
-        String email = txtEmail.getText();
+        String firstname = txtFirstname.getText().trim();
+        String lastname = txtLastName.getText().trim();
+        String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
-        Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
+        var customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
         if (Validation.validateRegisterForm(customer)) {
 
             // encrypt the password
@@ -114,7 +114,7 @@ public class Register
         }
     }
 
-    private void populateTicketComboBox() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private void populateTicketComboBox() {
         // add default value
         for (var ticket : TICKETS_LIST) {
             cbTicket.addItem(ticket.getType());
