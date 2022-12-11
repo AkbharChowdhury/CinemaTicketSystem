@@ -68,7 +68,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
         passwordKeyEnter();
         setVisible(true);
-        txtEmail.setText("john@gmail.com");
+        txtEmail.setText("NoahRiley@dayrep.com");
         txtPassword.setText("password");
      
 

@@ -252,7 +252,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(170, 610);
             cs.newLine();
-            cs.showText(" " + Helper.formatDate(invoice.get(i).getSalesDate()));
+            cs.showText(Helper.formatDate(invoice.get(i).getSalesDate()));
 
 
             cs.endText();

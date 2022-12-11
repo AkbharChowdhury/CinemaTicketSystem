@@ -29,7 +29,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
-    JFrame frame = new JFrame();
 
 
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
@@ -43,7 +42,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final String movieTitle = "";
     private DefaultTableModel model;
 
-    public MovieList() throws  SQLException, FileNotFoundException {
+    public MovieList() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             btnShowReceipt.setEnabled(false);
@@ -124,7 +123,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private void setUpMovieListInit() {
         movieGenre.setGenreID(0);
-        movieGenre.setTitle(movieTitle);
+        movieGenre.setTitle("");
         populateTable();
 
     }
@@ -168,11 +167,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getSource() == txtMovieTitle) {
-            movieGenre.setTitle(txtMovieTitle.getText());
-            populateTable();
 
-        }
+        movieGenre.setTitle(txtMovieTitle.getText());
+        populateTable();
 
     }
 
@@ -190,11 +187,11 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         if (e.getSource() == btnPurchaseTicket) {
 
-            if (LoginInfo.getCustomerID() == 0){
+            if (LoginInfo.getCustomerID() == 0) {
                 LoginInfo.setHasOpenFormOnStartUp(true);
             }
 
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
             }
@@ -217,7 +214,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     @Override
     public void clearTable(JTable table) {
-         ((DefaultTableModel) table.getModel()).setRowCount(0);
+        ((DefaultTableModel) table.getModel()).setRowCount(0);
     }
 
     @Override

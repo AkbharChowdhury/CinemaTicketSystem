@@ -3,6 +3,7 @@ package classes;
 import enums.Files;
 import org.sqlite.SQLiteConfig;
 import tables.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
@@ -257,57 +258,48 @@ public class Database {
         }
 
     }
-public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
-    List<MovieGenres> list = new ArrayList<>();
-    try (Connection con = getConnection()) {
-        ResultSet rs;
-        // search by genre and movie title
-        int genreID = movieGenres.getGenreID();
-        String movieTitle = movieGenres.getTitle();
-        String sql = new MovieGenres().showMovieList(movieGenres);
 
-        if (genreID == 0 && movieTitle.isEmpty()) {
-            Statement stmtAllMovies = con.createStatement();
-            rs = stmtAllMovies.executeQuery(sql);
+    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
+        List<MovieGenres> list = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            // search by genre and movie title
+            int genreID = movieGenres.getGenreID();
+            String movieTitle = movieGenres.getTitle();
+            String sql = new MovieGenres().showMovieList(movieGenres);
 
-        } else {
+
             PreparedStatement stmt = con.prepareStatement(sql);
-            int param = 0;
+            int param = 1;
+            stmt.setString(param, "%" + movieTitle + "%");
 
             if (genreID != 0) {
                 param++;
                 stmt.setString(param, '%' + String.valueOf(genreID) + '%');
             }
-            if (!movieTitle.isEmpty()) {
-                param++;
-                stmt.setString(param, '%' + movieTitle + '%');
-//                stmt.setString(param, '%' + movieTitle);
+
+            ResultSet rs = stmt.executeQuery();
+
+
+            if (isResultSetEmpty(rs)) {
+                return list;
+            }
+
+            // add movies to list
+            while (rs.next()) {
+                int movieID = rs.getInt(MovieTable.COLUMN_ID);
+                String title = rs.getString(MovieTable.COLUMN_TITLE);
+                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+                String rating = rs.getString(RatingTable.COLUMN_RATING);
+                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
 
             }
-            rs = stmt.executeQuery();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
-        if (isResultSetEmpty(rs)) {
-            return list;
-        }
-
-        // add movies to list
-        while (rs.next()) {
-            int movieID = rs.getInt(MovieTable.COLUMN_ID);
-            String title = rs.getString(MovieTable.COLUMN_TITLE);
-            int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
-            String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
-            String rating = rs.getString(RatingTable.COLUMN_RATING);
-            list.add(new MovieGenres(movieID, title, duration, genreList, rating));
-
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
 
 
     public List<ShowTimes> showMovieTimes(ShowTimes movieShowTimes) {
@@ -380,8 +372,6 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         }
         return genreList;
     }
-
-
 
 
     public boolean customerSalesExists(Sales sales) {
@@ -463,8 +453,6 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         return false;
 
     }
-
-
 
 
     public List<Invoice> getInvoice(int customerID) {
@@ -627,8 +615,6 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
     }
 
 
-
-
     public String getFirstname(int customerID) {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?", CustomerTable.COLUMN_FIRSTNAME, CustomerTable.TABLE_NAME, CustomerTable.COLUMN_ID);
@@ -751,7 +737,6 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         return false;
 
     }
-
 
 
     public boolean movieIDExists(int movieID) {
