@@ -165,10 +165,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void keyPressed(KeyEvent e) {
 
-
-
-
-
     }
 
     @Override

@@ -23,7 +23,6 @@ public class Register
     private final JPasswordField txtPassword = new JPasswordField();
     private final JComboBox<String> cbTicket = new JComboBox<>();
     private final JButton btnRegister = new JButton("Register");
-    private final JButton btnLogin = new JButton("Back to Login");
 
     private final List<Ticket> TICKETS_LIST;
 
@@ -56,6 +55,7 @@ public class Register
         add("Center", middle);
         JPanel bottom = new JPanel();
         bottom.add(btnRegister);
+        JButton btnLogin = new JButton("Back to Login");
         bottom.add(btnLogin);
         add("South", bottom);
         add("West", new JPanel());
@@ -83,6 +83,7 @@ public class Register
             }
             return;
         }
+        // login button clicked
         try{
             Helper.gotoForm(this, Pages.LOGIN);
         } catch (Exception ex){

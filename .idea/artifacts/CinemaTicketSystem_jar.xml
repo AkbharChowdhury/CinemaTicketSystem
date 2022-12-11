@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="CinemaTicketSystem:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CinemaTicketSystem_jar</output-path>
+    <root id="archive" name="CinemaTicketSystem.jar">
+      <element id="module-output" name="CinemaTicketSystem" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/bsh-2.0b4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/pdfbox-app-3.0.0-alpha3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/itextpdf-5.4.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -282,6 +282,8 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
             if (!movieTitle.isEmpty()) {
                 param++;
                 stmt.setString(param, '%' + movieTitle + '%');
+//                stmt.setString(param, '%' + movieTitle);
+
             }
             rs = stmt.executeQuery();
         }

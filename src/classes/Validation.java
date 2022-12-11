@@ -10,17 +10,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Validation {
+    private static final String NAME_ERROR = " must not contain numbers, spaces or special characters";
+    private static final String REQUIRED = " is required";
     public static boolean validateRegisterForm(Customer customer) throws SQLException, FileNotFoundException {
         Database db = Database.getInstance();
         List<String> errors = new ArrayList<>();
-        if (customer.getFirstname().isEmpty()){
-            errors.add(CustomerTable.COLUMN_FIRSTNAME + " is required");
+        String firstname = customer.getFirstname().trim();
+        String lastname = customer.getLastname().trim();
+
+        if (firstname.isEmpty()){
+            errors.add(CustomerTable.COLUMN_FIRSTNAME + REQUIRED);
+        } else if(!isValidName(firstname)){
+            errors.add(CustomerTable.COLUMN_FIRSTNAME + NAME_ERROR);
+
+
         }
-        if (customer.getLastname().isEmpty()){
-            errors.add(CustomerTable.COLUMN_LASTNAME + " is required");
+        if (lastname.isEmpty()){
+            errors.add(CustomerTable.COLUMN_LASTNAME + REQUIRED);
+        } else if(!isValidName(lastname)){
+            errors.add(CustomerTable.COLUMN_LASTNAME + NAME_ERROR);
+
+
         }
+
         if (customer.getEmail().isEmpty()){
-            errors.add(CustomerTable.COLUMN_EMAIL + " is required");
+            errors.add(CustomerTable.COLUMN_EMAIL + REQUIRED);
         } else if (!isValidEmail(customer.getEmail())){
             errors.add("Please enter a valid email");
 
@@ -28,7 +42,7 @@ public final class Validation {
             errors.add("This email already exists");
         }
         if (customer.getPassword().isEmpty()){
-            errors.add(CustomerTable.COLUMN_PASSWORD + " is required");
+            errors.add(CustomerTable.COLUMN_PASSWORD + REQUIRED);
 
         } else if (customer.getPassword().length()<8){
 
@@ -40,12 +54,11 @@ public final class Validation {
         }
 
         if (errors.size() > 0){
-            StringBuilder output = new StringBuilder("This form contains the following errors: \n");
+            var output = new StringBuilder("This form contains the following errors: \n");
             errors.forEach(error -> output.append(error).append("\n"));
             Helper.showErrorMessage(output.toString(),"Register error");
 
         }
-
 
         return errors.size() == 0;
 
@@ -58,7 +71,7 @@ public final class Validation {
         return matcher.matches();
     }
     public static boolean validateLoginForm(String email, String password){
-        if (email.isEmpty() || password.isEmpty()){
+        if (email.isEmpty() | password.isEmpty()){
             Helper.showErrorMessage("Email and password is required!", "login Error");
             return false;
         }
@@ -73,6 +86,9 @@ public final class Validation {
         return remainingTickets >=0;
 
 
+    }
+    private static boolean isValidName(String str){
+        return str.matches( "[A-Z][a-z]*" );
     }
 
 
