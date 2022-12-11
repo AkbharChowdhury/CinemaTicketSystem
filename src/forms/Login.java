@@ -65,7 +65,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
         setRegisteredCustomerDetails();
-        
+
         passwordKeyEnter();
         setVisible(true);
 //        txtEmail.setText("john@gmail.com");
