@@ -65,11 +65,37 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
         setRegisteredCustomerDetails();
+        
+        passwordKeyEnter();
         setVisible(true);
 //        txtEmail.setText("john@gmail.com");
 //        txtPassword.setText("password");
      
 
+    }
+
+    private void passwordKeyEnter() {
+        txtPassword.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    handleLogin();
+
+                }
+
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 
     private void setupHyperLink() {
@@ -163,10 +189,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyCode() == KeyEvent.VK_ENTER);
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            handleLogin();
-        }
+
 
     }
 
