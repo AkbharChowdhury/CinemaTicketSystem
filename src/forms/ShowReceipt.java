@@ -189,7 +189,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     }
 
     @Override
-    public void populateList() throws ParseException {
+    public void populateList() {
         for(var invoice : INVOICES) {
             double total = invoice.getPrice() * invoice.getTotalTicket();
             model.addElement(String.format("%s, %s, %s, %s",

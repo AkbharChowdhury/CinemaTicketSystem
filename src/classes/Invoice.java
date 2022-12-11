@@ -196,17 +196,12 @@ public class Invoice {
 
     public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException {
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-//        var font = new PDType1Font(Standard14Fonts.FontName.SYMBOL);
-//        cs.setFont(PDType1Font.TIMES_ROMAN, 20);
-//            var font = new PDType1Font().getf
 
 
         //get the page
         PDPage page = invoiceDocument.getPage(0);
         try {
             double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
-            //Prepare Content Stream
-
 
             //Prepare Content Stream
             PDPageContentStream cs = new PDPageContentStream(invoiceDocument, page);
@@ -245,10 +240,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
 
-
-
-
-            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) +" "+Helper.capitalise(invoice.get(i).getLastname()));
+            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) +" "+ Helper.capitalise(invoice.get(i).getLastname()));
 
             cs.newLine();
             cs.showText("Purchase date: ");
