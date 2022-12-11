@@ -228,7 +228,6 @@ public class Database {
             Class.forName(DATABASE_DRIVER);
             SQLiteConfig config = new SQLiteConfig();
             config.enforceForeignKeys(true); // enables foreign key constraint as sqlite disables them by default for compatibility
-
             connection = DriverManager.getConnection(CONN_STR, config.toProperties());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -689,13 +688,10 @@ public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         String sql = "SELECT * FROM Customers WHERE email = ? AND password = ?";
 
         try (Connection con = getConnection()) {
-            ResultSet rs2;
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, email);
             stmt.setString(2, password);
-
-
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 

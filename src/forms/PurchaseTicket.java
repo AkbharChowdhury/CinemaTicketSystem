@@ -241,10 +241,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
 
     private void handlePurchase() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        if (table.isSelectionEmpty()){
-//            Helper.showErrorMessage("You must select an item from the invoice list!","Receipt error");
-//            return false;
-//        }
+
 
         if (selectedShowTimeID == 0) {
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
