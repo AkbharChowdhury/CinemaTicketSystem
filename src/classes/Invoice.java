@@ -6,6 +6,7 @@ import enums.FormDetails;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -32,7 +33,6 @@ public class Invoice {
     private String movieTitle;
     private String type;
     private String rating;
-    public  String f;
 
     public Invoice() {
 
@@ -224,7 +224,8 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 18);
             cs.newLineAtOffset(270, 690);
-            cs.showText(invoice.get(i).movieTitle);
+            cs.showText(invoice.get(i).getMovieTitle());
+//            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()));
             cs.endText();
 
 
@@ -244,8 +245,12 @@ public class Invoice {
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
+//            cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
+//            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()));
 
-            cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
+
+
+            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) +" "+Helper.capitalise(invoice.get(i).getLastname()));
 //            Database db = Database.getInstance();
 
 

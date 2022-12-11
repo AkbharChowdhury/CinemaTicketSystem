@@ -125,7 +125,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             return false;
         }
 
-        for (int i = 0; i < INVOICES.size(); i++) {
+        for(int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);
                 return true;
@@ -192,7 +192,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     public void populateList() throws ParseException {
         for(var invoice : INVOICES) {
             double total = invoice.getPrice() * invoice.getTotalTicket();
-            System.out.println(invoice.getPrice());
             model.addElement(String.format("%s, %s, %s, %s",
                     invoice.getMovieTitle(),
                     Helper.formatDate(invoice.getShowDate()),
