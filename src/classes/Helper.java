@@ -41,13 +41,6 @@ public final class Helper {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-
-    //      JComboBox populateComboBox(Database db, JComboBox comboBox){
-//        for(var item: db.showMovieGenreList()){
-//            comboBox.addItem(item);
-//        }
-//        return comboBox;
-//    }
     public static void showErrorMessage(String message, String title) {
         JOptionPane.showMessageDialog(null, message,
                 title, JOptionPane.ERROR_MESSAGE);
@@ -66,9 +59,7 @@ public final class Helper {
         int hour = Integer.parseInt(timeSplit[0]);
         int minute = Integer.parseInt(timeSplit[1]);
         LocalTime colonTime = LocalTime.of(hour, minute);
-
-        DateTimeFormatter timeColonFormatter = DateTimeFormatter.ofPattern(timeColonPattern);
-        return timeColonFormatter.format(colonTime);
+        return DateTimeFormatter.ofPattern(timeColonPattern).format(colonTime);
 
     }
 

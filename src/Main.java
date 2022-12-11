@@ -1,28 +1,42 @@
 import classes.*;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
-        String s = Helper.formatTime("13:32");
-        System.out.println(s);
-        System.exit(0);
-        Database db = Database.getInstance();
-        var f = db.getCustomerTicketType(1);
-        System.out.println(f.getType());
-        System.exit(0);
-        System.out.println(db.getFirstname(2));
-        String dateStr = "13 Nov 1999";
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+//        Database db = Database.getInstance();
 //
+//        Method method = Database.class.getMethod("getMovieGenreList");
+//        var genres = method.invoke(db);
+//        var obj = Arrays.asList(genres).toString();
+//        var item = obj.substring( 1, obj.length() - 1 );
+//        var x = Arrays.asList(item);
+//        System.out.println(x.get(0));
+//        for (var genre : x){
+//            System.out.println(genre);
+//        }
+
+
+//        String loginToken = "[wdsd34svdf]";
+//        System.out.println( loginToken.substring( 1, loginToken.length() - 1 ) );
+//        System.out.println(x);
+
+
+
+
 //
 //        System.out.println(Helper.convertMediumDateToYYMMDD(dateStr));
 
