@@ -151,7 +151,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
                     String date = model.getValueAt(table.getSelectedRow(), 1).toString();
                     String time = model.getValueAt(table.getSelectedRow(), 2).toString();
                     selectedShowTimeID = Integer.parseInt(id);
-                    System.out.println(selectedShowTimeID);
 
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
 
@@ -257,11 +256,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         }
 
         var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
-        System.out.println(sales.getCustomerID());
-        System.out.println(sales.getSalesDate());
-        System.out.println(sales.getTotalTicketsSold());
-
-
         if(db.SalesExists(sales)){
             Helper.showErrorMessage("You have already booked this show time","booking error");
             return;
@@ -269,13 +263,12 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
         if (db.addSales(sales)) {
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-           if ( updateNumTicksSold(numTickets)){
+           if (updateNumTicksSold(numTickets)){
                Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-               new ShowReceipt();
-               dispose();
-           } else {
-               System.err.println("There was an error updating the number of tickets remaining");
+               return;
            }
+            System.err.println("There was an error updating the number of tickets remaining");
+
 
         }
     }
@@ -288,9 +281,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
             int numTicketsLeft = db.getNumTickets(validateShowTimes);
-            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase":"You cannot exceed above " + numTicketsLeft + " tickets";
+            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : "You cannot exceed above " + numTicketsLeft + " tickets";
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
-
             return false;
         }
         return true;
