@@ -223,15 +223,14 @@ public class Invoice {
 
             cs.beginText();
             cs.setFont(font, 18);
-            cs.newLineAtOffset(270, 690);
+            cs.newLineAtOffset(180, 690);
             cs.showText(invoice.get(i).getMovieTitle());
-//            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()));
             cs.endText();
 
 
             cs.beginText();
             cs.setFont(font, 16);
-            cs.newLineAtOffset(220, 650);
+            cs.newLineAtOffset(180, 650);
             cs.showText(MessageFormat.format("Show Date/time ({0}, {1})",
                     Helper.formatDate(invoice.get(i).getShowDate()),
                     Helper.formatTime(invoice.get(i).getShowTime())
@@ -245,17 +244,11 @@ public class Invoice {
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
-//            cs.showText(Helper.capitalise(invoice.get(i).getLastname()));
-//            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()));
+
 
 
 
             cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) +" "+Helper.capitalise(invoice.get(i).getLastname()));
-//            Database db = Database.getInstance();
-
-
-            // firstname is causing error
-//            cs.showText(String.format("%s %s", invoice.get(i).getFirstname(), invoice.get(i).getLastname()));
 
             cs.newLine();
             cs.showText("Purchase date: ");
