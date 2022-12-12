@@ -135,11 +135,9 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
                        JOIN Ratings r
                          ON m.rating_id = r.rating_id
                          WHERE title LIKE ?
-                         
-                         
-                GROUP  BY m.movie_id
-                
-                                
+                          
+                GROUP BY m.movie_id
+                                             
                 """;
 
 
@@ -163,7 +161,6 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
     @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
-//        columns.add("ID");
         columns.add("Movie");
         columns.add("Duration");
         columns.add("Rating");
