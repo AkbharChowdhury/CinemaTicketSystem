@@ -30,7 +30,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private final JTable table = new JTable();
 
-
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
