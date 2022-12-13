@@ -9,10 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 // it is working
 public class Login extends JFrame implements ActionListener, KeyListener {
+    JFrame frame = new JFrame();
     private final Database db;
     private JTextField txtEmail = new JTextField();
 
@@ -66,15 +66,41 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         btnRegister.addActionListener(this);
         setRegisteredCustomerDetails();
 
-        passwordKeyEnter();
+        JTextFieldEnterKey();
         setVisible(true);
+
+
         txtEmail.setText("john@gmail.com");
         txtPassword.setText("password");
      
 
     }
+    private void enterKey(KeyEvent e){
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            handleLogin();
 
-    private void passwordKeyEnter() {
+        }
+    }
+
+    private void JTextFieldEnterKey() {
+        txtEmail.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                enterKey(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
         txtPassword.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -83,12 +109,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    handleLogin();
-
-                }
-
-
+                enterKey(e);
             }
 
             @Override
@@ -111,7 +132,6 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
                 try {
                     Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
-                    currentPage.dispose();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -127,8 +147,6 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         if (LoginInfo.getEmail() != null) {
             txtEmail.setText(LoginInfo.getEmail());
             LoginInfo.setEmail("");
-
-
         }
     }
 
@@ -143,13 +161,18 @@ public class Login extends JFrame implements ActionListener, KeyListener {
             handleLogin();
             return;
         }
+        goToRegister();
+
+
+    }
+
+    private void goToRegister() {
         try {
             new Register();
             dispose();
-        } catch (Exception ex) {
+        } catch (Exception ex){
             ex.printStackTrace();
         }
-
     }
 
     private void handleLogin() {
@@ -170,10 +193,12 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
                 if (Form.getRedirectPage() == RedirectPage.PURCHASE_TICKET) {
                     Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+                    return;
 
                 }
                 if (Form.getRedirectPage() == RedirectPage.SHOW_RECEIPT) {
                     Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+                    return;
 
                 }
 

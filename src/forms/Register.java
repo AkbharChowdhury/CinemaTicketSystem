@@ -83,10 +83,10 @@ public class Register
             }
             return;
         }
-        // login button clicked
-        try{
+
+        try {
             Helper.gotoForm(this, Pages.LOGIN);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -98,7 +98,7 @@ public class Register
         String lastname = txtLastName.getText().trim();
         String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
-        var customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
+        Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
         if (Validation.validateRegisterForm(customer)) {
 
             // encrypt the password

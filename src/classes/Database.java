@@ -85,7 +85,6 @@ public class Database {
         Connection con = getConnection();
         Statement stmt = con.createStatement();
         stmt.execute(createTableSQL);
-        con.close();
 
     }
 
@@ -357,7 +356,6 @@ public class Database {
 
 
             if (isResultSetEmpty(rs)) {
-                con.close();
                 return genreList;
             }
             while (rs.next()) {
@@ -383,13 +381,12 @@ public class Database {
         );
 
         try (Connection con = getConnection()) {
-            ResultSet rs2;
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, sales.getShowTimeID());
             stmt.setInt(2, sales.getCustomerID());
             stmt.setString(3, sales.getSalesDate());
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
@@ -510,30 +507,6 @@ public class Database {
         }
         return movies;
     }
-//
-//    public List<String> getMovieTitle() {
-//        List<String> movieTitleList = new ArrayList<>();
-//        try (Connection con = getConnection()) {
-//
-//            String sql = new Movie().getMovieList();
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//
-//
-//            if (isResultSetEmpty(rs)) {
-//                con.close();
-//                return movieTitleList;
-//            }
-//            while (rs.next()) {
-//                movieTitleList.add(rs.getString("title"));
-//
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return movieTitleList;
-//    }
 
 
     public List<Ticket> getTicket() {
@@ -545,7 +518,6 @@ public class Database {
 
 
             if (isResultSetEmpty(rs)) {
-                con.close();
                 return ticketList;
             }
             while (rs.next()) {
@@ -583,7 +555,7 @@ public class Database {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "error";
+        return "error fetching movie name by movie id";
 
     }
 
@@ -609,32 +581,6 @@ public class Database {
             e.printStackTrace();
         }
         return 0;
-
-    }
-
-
-    public String getFirstname(int customerID) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", CustomerTable.COLUMN_FIRSTNAME, CustomerTable.TABLE_NAME, CustomerTable.COLUMN_ID);
-
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, customerID);
-
-            rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return null;
-            }
-
-            return rs.getString(CustomerTable.COLUMN_FIRSTNAME);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
 
     }
 
@@ -666,7 +612,7 @@ public class Database {
 
     public boolean isAuthorised(String email, String password) {
 
-        String sql = "SELECT * FROM Customers WHERE email = ? AND password = ?";
+        String sql = "SELECT email, password FROM Customers WHERE email = ? AND password = ?";
 
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -792,22 +738,15 @@ public class Database {
         try (Connection con = getConnection()) {
 
             String sql = new Customer().getCustomerTicketType();
-            ResultSet rs;
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, customerID);
 
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             int ticketId = rs.getInt(TicketsTable.COLUMN_ID);
             String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
             double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
             return new Ticket(ticketId, ticketType, price);
 
-
-//            while (rs.next()) {
-//                String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
-//                double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
-//                return new Ticket(ticketType, price);
-//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -825,7 +764,6 @@ public class Database {
             ResultSet r = stmt.executeQuery();
 
             if (isResultSetEmpty(r)) {
-                con.close();
                 return 0;
             }
             return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
