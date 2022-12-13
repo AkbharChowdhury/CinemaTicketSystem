@@ -469,10 +469,8 @@ public class Database {
                     invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
                     invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
                     invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
-                    invoice.setType(rs.getString(TicketsTable.COLUMN_TYPE));
                     invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
                     invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
-                    invoice.setPrice(rs.getDouble(TicketsTable.COLUMN_PRICE));
                     invoices.add(invoice);
 
 
@@ -790,7 +788,6 @@ public class Database {
 
 
     public Ticket getCustomerTicketType(int customerID) {
-        Ticket ticket = null;
 
         try (Connection con = getConnection()) {
 
@@ -800,18 +797,23 @@ public class Database {
             stmt.setInt(1, customerID);
 
             rs = stmt.executeQuery();
+            int ticketId = rs.getInt(TicketsTable.COLUMN_ID);
+            String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
+            double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
+            return new Ticket(ticketId, ticketType, price);
 
 
-            while (rs.next()) {
-                String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
-                double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
-                ticket = new Ticket(ticketType, price);
-            }
+//            while (rs.next()) {
+//                String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
+//                double price = rs.getDouble(TicketsTable.COLUMN_PRICE);
+//                return new Ticket(ticketType, price);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ticket;
+
+        return null;
     }
 
     public int getNumTickets(ShowTimes movieShowTimes) {

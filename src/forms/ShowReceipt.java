@@ -19,7 +19,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
 
@@ -32,7 +36,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
-
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
 
 
@@ -51,14 +54,17 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         // get selected list id
-        list.addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting()) {
-                var item =  ((JList) e.getSource())
-                        .getSelectedValue();
-            }
-
-        });
+//        list.addListSelectionListener(e -> {
+//            if (e.getValueIsAdjusting()) {
+//                ((JList) e.getSource()).getSelectedValue();
+//                System.out.println(  "s"+((JList) e.getSource()).getSelectedValue());
+//            }
+//
+//        });
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
+
+
+
         JScrollPane scrollPane = new JScrollPane(list);
 
         setResizable(false);
@@ -140,7 +146,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         try{
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
-            System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
+
+//            System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
 
             Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
@@ -148,6 +155,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         } catch (ParseException ex){
             Helper.showErrorMessage("the time cannot be formatted", "time parse error");
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -191,8 +200,9 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     @Override
     public void populateList() {
+        final  double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
         for(var invoice : INVOICES) {
-            double total = invoice.getPrice() * invoice.getTotalTicket();
+            double total = PRICE * invoice.getTotalTicket();
             model.addElement(String.format("%s, %s, %s, %s",
                     invoice.getMovieTitle(),
                     Helper.formatDate(invoice.getShowDate()),

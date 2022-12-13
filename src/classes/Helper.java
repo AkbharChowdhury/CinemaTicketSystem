@@ -31,6 +31,9 @@ public final class Helper {
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
         return FileHandler.readSingleColumn(getCSVPath() + filename);
     }
+    public static  boolean disableReceipt(Database db){
+        return LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
+    }
 
     public static String calcDuration(int duration) {
         int hours = duration / 60;

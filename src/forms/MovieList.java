@@ -43,7 +43,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     public MovieList() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
-        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
+        if (Helper.disableReceipt(db)) {
             btnShowReceipt.setEnabled(false);
         }
 

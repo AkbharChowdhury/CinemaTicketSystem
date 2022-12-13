@@ -108,8 +108,7 @@ public class Customer extends Ticket implements Queries {
 
     public String getCustomerTicketType(){
         return """
-                SELECT  c.customer_id, t.type, t.price
-                                
+                SELECT  c.customer_id, t.type, t.price, t.ticket_id                         
                 FROM Customers c JOIN Tickets t ON t.ticket_id = c.ticket_id
                 WHERE customer_id = ?
                 """;

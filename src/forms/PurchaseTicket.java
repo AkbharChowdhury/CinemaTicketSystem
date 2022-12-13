@@ -66,7 +66,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
 
 
-        if (LoginInfo.getCustomerID() == 0 |!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
+        if (Helper.disableReceipt(db)) {
             btnShowReceipt.setEnabled(false);
         }
         movieShowTimes.setDate("");

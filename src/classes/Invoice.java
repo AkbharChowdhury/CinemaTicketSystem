@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -24,14 +25,12 @@ public class Invoice {
     private PDDocument invoiceDocument;
     private int n;
     private int totalTicket;
-    private double price;
     private String salesDate;
     private String showDate;
     private String showTime;
     private String firstname;
     private String lastname;
     private String movieTitle;
-    private String type;
     private String rating;
 
     public Invoice() {
@@ -48,41 +47,6 @@ public class Invoice {
 
     }
 
-    public static String getSelectedInvoiceDetails(List<Invoice> invoice, int i) throws ParseException {
-        double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
-
-        return MessageFormat.format("""
-                        -------------------------- Movie Details --------------------
-                        Movie: {0} 
-                        Rating: {1}
-                        show date and time ({2}, {3})
-                        -------------------------- Ticket Details --------------------
-                        {4} {5} (x{6}}
-                        Total {7} 
-                        -------------------------- Customer Details --------------------
-                        {8} {9}
-                        Purchase date: {10}                                                                                                                                                 
-                        """,
-
-                // movie details
-                invoice.get(i).getMovieTitle(),
-                invoice.get(i).getRating(),
-                Helper.formatDate(invoice.get(i).getShowDate()),
-                Helper.formatTime(invoice.get(i).getShowTime()),
-
-                // ticket details
-                invoice.get(i).getType(),
-                Helper.formatMoney(invoice.get(i).getPrice()),
-                invoice.get(i).getTotalTicket(),
-                Helper.formatMoney(total),
-
-                // customer details
-                invoice.get(i).getFirstname(),
-                invoice.get(i).getLastname(),
-                Helper.formatDate(invoice.get(i).getSalesDate()));
-
-    }
-
     public int getTotalTicket() {
         return totalTicket;
     }
@@ -91,13 +55,7 @@ public class Invoice {
         this.totalTicket = totalTicket;
     }
 
-    public double getPrice() {
-        return price;
-    }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public String getSalesDate() {
         return salesDate;
@@ -147,13 +105,6 @@ public class Invoice {
         this.movieTitle = movieTitle;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getRating() {
         return rating;
@@ -165,43 +116,43 @@ public class Invoice {
 
     public String getInvoiceDetails() {
         return """
-                 
                 SELECT
-                    s.*,
-                    sh.show_date,
-                    sh.show_time,
-                    c.firstname,
-                    c.lastname,
-                    m.title,
-                    t.type,
-                    t.price,
-                    r.rating
-                FROM
-                    Sales s
-                JOIN ShowTimes sh ON
-                    sh.show_time_id = s.show_time_id
-                JOIN Movies m ON
-                    m.movie_id = sh.movie_id
-                JOIN Ratings r ON
-                    r.rating_id = m.rating_id
-                JOIN Customers c ON
-                    c.customer_id = s.customer_id
-                JOIN Tickets t ON
-                    t.ticket_id = c.ticket_id
-                WHERE
-                    s.customer_id = ?
+                                    s.*,
+                                    sh.show_date,
+                                    sh.show_time,
+                                    c.firstname,
+                                    c.lastname,
+                                    m.title,
+                                    r.rating
+                                FROM
+                                    Sales s
+                                JOIN ShowTimes sh ON
+                                    sh.show_time_id = s.show_time_id
+                                JOIN Movies m ON
+                                    m.movie_id = sh.movie_id
+                                JOIN Ratings r ON
+                                    r.rating_id = m.rating_id
+                                JOIN Customers c ON
+                                    c.customer_id = s.customer_id
+                             
+                                WHERE
+                                    s.customer_id = ?  
                                                            
                 """;
     }
 
-    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException {
+    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, FileNotFoundException {
+        Database db = Database.getInstance();
+        Ticket ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
 
 
         //get the page
         PDPage page = invoiceDocument.getPage(0);
         try {
-            double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
+//            double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
+            double total = ticketDetails.getPrice() * invoice.get(i).getTotalTicket();
+
 
             //Prepare Content Stream
             PDPageContentStream cs = new PDPageContentStream(invoiceDocument, page);
@@ -222,14 +173,19 @@ public class Invoice {
             cs.showText(invoice.get(i).getMovieTitle());
             cs.endText();
 
+            cs.beginText();
+            cs.setFont(font, 16);
+            cs.newLineAtOffset(180, 660);
+            cs.showText(String.format("Rating (%s)",(invoice.get(i).getRating())));
+            cs.endText();
+
 
             cs.beginText();
             cs.setFont(font, 16);
-            cs.newLineAtOffset(180, 650);
+            cs.newLineAtOffset(180, 630);
             cs.showText(MessageFormat.format("Show Date/time ({0}, {1})",
                     Helper.formatDate(invoice.get(i).getShowDate()),
                     Helper.formatTime(invoice.get(i).getShowTime())
-
 
             ));
             cs.endText();
@@ -286,7 +242,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(80, 520);
 
-            cs.showText(invoice.get(i).getType());
+            cs.showText(ticketDetails.getType());
             cs.newLine();
             cs.endText();
 
@@ -294,7 +250,7 @@ public class Invoice {
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(200, 520);
-            cs.showText(Helper.formatMoney(invoice.get(i).getPrice()));
+            cs.showText(Helper.formatMoney(ticketDetails.getPrice()));
             cs.newLine();
             cs.endText();
 
