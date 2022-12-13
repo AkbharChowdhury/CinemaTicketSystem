@@ -139,17 +139,22 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
     public String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
+
         String sql = """
-                SELECT
-                    m.title,
-                    s.*
-                FROM
-                    ShowTimes s
-                JOIN Movies m ON
-                    m.movie_id = s.movie_id
-                WHERE
-                    m.movie_id = ? AND num_tickets_left > 0    
-                    AND show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day')                                                     
+                               SELECT
+                                    m.title,
+                                    s.*
+                                FROM
+                                    ShowTimes s
+                                JOIN Movies m ON
+                                    m.movie_id = s.movie_id
+                                WHERE
+                                    m.movie_id = ? AND num_tickets_left > 0   
+                                    AND show_date >= DATE('NOW')
+                                    AND DATE('now', 'start of month', '+1 month' , '-1 day')
+                					GROUP BY show_time_id
+                					HAVING show_time >= TIME('NOW')
+                					OR show_date > DATE('NOW')
                 """;
 
         if (!movieShowTimes.getDate().isEmpty()) {
