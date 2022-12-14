@@ -176,9 +176,10 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     }
 
     private void handleLogin() {
+
         String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
-        
+
         if (!Validation.validateLoginForm(email, password)) {
             return;
 
