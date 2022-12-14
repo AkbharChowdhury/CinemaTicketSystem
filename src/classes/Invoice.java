@@ -47,6 +47,17 @@ public class Invoice {
 
     }
 
+    private static String escapeMetaCharacters(String inputString) {
+        final String[] metaCharacters = {"\\", "^", "$", "{", "}", "[", "]", "(", ")", ".", "*", "+", "?", "|", "<", ">", "-", "&", "%", "'"};
+
+        for (String metaCharacter : metaCharacters) {
+            if (inputString.contains(metaCharacter)) {
+                inputString = inputString.replace(metaCharacter, "\\" + metaCharacter);
+            }
+        }
+        return inputString;
+    }
+
     public int getTotalTicket() {
         return totalTicket;
     }
@@ -54,8 +65,6 @@ public class Invoice {
     public void setTotalTicket(int totalTicket) {
         this.totalTicket = totalTicket;
     }
-
-
 
     public String getSalesDate() {
         return salesDate;
@@ -105,7 +114,6 @@ public class Invoice {
         this.movieTitle = movieTitle;
     }
 
-
     public String getRating() {
         return rating;
     }
@@ -141,16 +149,6 @@ public class Invoice {
                                                            
                 """;
     }
-    private static String escapeMetaCharacters(String inputString){
-        final String[] metaCharacters = {"\\","^","$","{","}","[","]","(",")",".","*","+","?","|","<",">","-","&","%","'"};
-
-        for (String metaCharacter : metaCharacters) {
-            if (inputString.contains(metaCharacter)) {
-                inputString = inputString.replace(metaCharacter, "\\" + metaCharacter);
-            }
-        }
-        return inputString;
-    }
 
     public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, FileNotFoundException {
         Database db = Database.getInstance();
@@ -161,7 +159,6 @@ public class Invoice {
         //get the page
         PDPage page = invoiceDocument.getPage(0);
         try {
-//            double total = invoice.get(i).getPrice() * invoice.get(i).getTotalTicket();
             double total = ticketDetails.getPrice() * invoice.get(i).getTotalTicket();
 
 
@@ -187,7 +184,7 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 16);
             cs.newLineAtOffset(180, 660);
-            cs.showText(String.format("Rating (%s)",(invoice.get(i).getRating())));
+            cs.showText(String.format("Rating (%s)", (invoice.get(i).getRating())));
             cs.endText();
 
 
@@ -207,7 +204,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
 
-            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) +" "+ Helper.capitalise(invoice.get(i).getLastname()));
+            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) + " " + Helper.capitalise(invoice.get(i).getLastname()));
 
             cs.newLine();
             cs.showText("Purchase date: ");
