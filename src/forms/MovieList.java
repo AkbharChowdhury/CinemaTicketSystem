@@ -13,10 +13,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -100,8 +97,10 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
         cbGenres.addActionListener(this);
-
+        Helper.setFocus(txtMovieTitle);
         setVisible(true);
+
+
     }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {

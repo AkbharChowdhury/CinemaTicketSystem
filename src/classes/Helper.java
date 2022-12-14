@@ -35,6 +35,12 @@ public final class Helper {
         return LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
     }
 
+    // autofocus text field when form load
+    public static void setFocus(JTextField field){
+        SwingUtilities.invokeLater(field::requestFocus);
+    }
+
+
     public static String calcDuration(int duration) {
         int hours = duration / 60;
         int minutes = duration % 60;

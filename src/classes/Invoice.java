@@ -141,6 +141,16 @@ public class Invoice {
                                                            
                 """;
     }
+    private static String escapeMetaCharacters(String inputString){
+        final String[] metaCharacters = {"\\","^","$","{","}","[","]","(",")",".","*","+","?","|","<",">","-","&","%","'"};
+
+        for (String metaCharacter : metaCharacters) {
+            if (inputString.contains(metaCharacter)) {
+                inputString = inputString.replace(metaCharacter, "\\" + metaCharacter);
+            }
+        }
+        return inputString;
+    }
 
     public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, FileNotFoundException {
         Database db = Database.getInstance();
@@ -164,7 +174,7 @@ public class Invoice {
             cs.setFont(font, 20);
 
             cs.newLineAtOffset(140, 750);
-            cs.showText(FormDetails.getInvoiceTitle());
+            cs.showText(String.format("%s", FormDetails.getInvoiceTitle()));
 
             cs.endText();
 
