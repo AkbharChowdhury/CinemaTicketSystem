@@ -17,6 +17,7 @@ public final class LoginInfo {
 
 
 
+
     public static String getEmail(){
         return email;
     }

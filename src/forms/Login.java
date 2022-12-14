@@ -72,7 +72,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
 //        txtEmail.setText("john@gmail.com");
 //        txtPassword.setText("password");
-     
+
 
     }
     private void enterKey(KeyEvent e){
@@ -178,8 +178,10 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     private void handleLogin() {
         String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
+        
         if (!Validation.validateLoginForm(email, password)) {
             return;
+
         }
 
         if (db.isAuthorised(email, Encryption.encode(password))) {
@@ -207,7 +209,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
             }
             return;
         }
-        Helper.showErrorMessage("invalid username/password combination", "Login error");
+        Helper.showErrorMessage("invalid email/password combination", "Login error");
     }
 
     @Override

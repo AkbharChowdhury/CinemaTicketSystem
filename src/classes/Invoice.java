@@ -137,6 +137,7 @@ public class Invoice {
                              
                                 WHERE
                                     s.customer_id = ?  
+                                    ORDER BY strftime('%s', sales_date) DESC
                                                            
                 """;
     }
