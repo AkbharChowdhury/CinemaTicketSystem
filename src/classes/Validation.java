@@ -29,6 +29,7 @@ public final class Validation {
             errors.add(CustomerTable.COLUMN_LASTNAME + REQUIRED);
         } else if (!isValidName(lastname)) {
             errors.add(CustomerTable.COLUMN_LASTNAME + NAME_ERROR);
+
         }
 
         if (customer.getEmail().isEmpty()) {
@@ -48,6 +49,7 @@ public final class Validation {
             errors.add(CustomerTable.COLUMN_PASSWORD + " must be 8 characters long");
 
         }
+
         if (customer.getTicketID() == 0) {
             errors.add("Please select a ticket type");
         }
@@ -89,7 +91,7 @@ public final class Validation {
     }
 
     private static boolean isValidName(String str) {
-        return str.matches("[A-Z][a-z]*");
+        return str.matches("^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$");
     }
 
 
