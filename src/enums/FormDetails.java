@@ -24,6 +24,10 @@ public enum FormDetails {
         return "Customer registration";
 
     }
+    public static String lblRegister() {
+        return "Register";
+
+    }
 
     public static String login() {
         return APP_NAME + "Login";

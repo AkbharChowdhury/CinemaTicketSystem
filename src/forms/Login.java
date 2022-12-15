@@ -18,7 +18,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
     private static JButton btnLogin = new JButton("Login");
 
-    JButton btnRegister = new JButton("Register");
+    JButton btnRegister = new JButton(FormDetails.lblRegister());
     JLabel hyperlink = new JLabel(FormDetails.hyperlink());
 
     private static JPasswordField txtPassword;

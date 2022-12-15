@@ -22,7 +22,7 @@ public class Register
     private final JTextField txtEmail = new JTextField();
     private final JPasswordField txtPassword = new JPasswordField();
     private final JComboBox<String> cbTicket = new JComboBox<>();
-    private final JButton btnRegister = new JButton("Register");
+    private final JButton btnRegister = new JButton(FormDetails.lblRegister());
 
     private final List<Ticket> TICKETS_LIST;
 
