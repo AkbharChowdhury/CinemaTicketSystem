@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
-
     private final Database db;
     private  DefaultListModel model = new DefaultListModel();
     private  JList list = new JList(model);
@@ -40,6 +39,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+       LoginInfo.setCustomerID(1);
         db = Database.getInstance();
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
             return;

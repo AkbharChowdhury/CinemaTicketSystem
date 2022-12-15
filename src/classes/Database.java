@@ -306,7 +306,6 @@ public class Database {
         List<ShowTimes> list = new ArrayList<>();
 
         try (Connection con = getConnection()) {
-            ResultSet rs;
             String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
             PreparedStatement stmt = con.prepareStatement(sql);
             int param = 1;
@@ -319,7 +318,7 @@ public class Database {
             }
 
 
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             if (isResultSetEmpty(rs)) {
                 return list;
