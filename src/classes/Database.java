@@ -263,7 +263,6 @@ public class Database {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             // search by genre and movie title
-            int genreID = movieGenres.getGenreID();
             String movieTitle = movieGenres.getTitle();
             String sql = new MovieGenres().showMovieList(movieGenres);
             String genre = movieGenres.getGenre();
