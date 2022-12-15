@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 
 public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
     private final Database db;
-    private  DefaultListModel model = new DefaultListModel();
-    private  JList list = new JList(model);
+    private DefaultListModel model = new DefaultListModel();
+    private JList list = new JList(model);
     int selectedListInvoiceItem;
-    private  List<Invoice> INVOICES;
+    private List<Invoice> INVOICES;
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     private final JButton btnShowTimes = new JButton(Buttons.showTimes());
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
@@ -40,21 +40,19 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
+        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
             return;
         }
 
-        if (!db.customerInvoiceExists(LoginInfo.getCustomerID())){
+        if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
             return;
 
         }
 
-
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
 
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
-
 
 
         JScrollPane scrollPane = new JScrollPane(list);
@@ -105,7 +103,9 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
-            processSelectedListItem(selectedListInvoiceItem);
+            if(!processSelectedListItem(selectedListInvoiceItem)){
+                System.err.println("unable to print the selected invoice");
+            }
         }
 
         try {
@@ -119,12 +119,12 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     private boolean processSelectedListItem(int salesID) {
 
 
-        if (list.isSelectionEmpty()){
-            Helper.showErrorMessage("You must select an item from the invoice list!","Receipt error");
+        if (list.isSelectionEmpty()) {
+            Helper.showErrorMessage("You must select an item from the invoice list!", "Receipt error");
             return false;
         }
 
-        for(int i = 0; i < INVOICES.size(); i++) {
+        for (int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);
                 return true;
@@ -134,15 +134,15 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     }
 
-    public void printInvoice(int i){
-        try{
+    public void printInvoice(int i) {
+        try {
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
 
             Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
 
-        } catch (ParseException ex){
+        } catch (ParseException ex) {
             Helper.showErrorMessage("the time cannot be formatted", "time parse error");
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -164,11 +164,11 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
         if (e.getSource() == btnPurchaseTicket) {
 
-            if (LoginInfo.getCustomerID() == 0){
+            if (LoginInfo.getCustomerID() == 0) {
                 LoginInfo.setHasOpenFormOnStartUp(true);
             }
 
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.PURCHASE_TICKET);
 
             }
@@ -190,8 +190,8 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     @Override
     public void populateList() {
-        final  double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
-        for(var invoice : INVOICES) {
+        final double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
+        for (var invoice : INVOICES) {
             double total = PRICE * invoice.getTotalTicket();
             model.addElement(String.format("%s, %s, %s, %s",
                     invoice.getMovieTitle(),

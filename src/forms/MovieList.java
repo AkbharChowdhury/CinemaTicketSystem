@@ -32,7 +32,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
 
-
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
     private final String movieTitle = "";
@@ -97,10 +96,19 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         btnPurchaseTicket.addActionListener(this);
         btnShowReceipt.addActionListener(this);
         cbGenres.addActionListener(this);
-        Helper.setFocus(txtMovieTitle);
+        autofocus();
         setVisible(true);
 
 
+
+    }
+
+    private void autofocus() {
+        addWindowListener(new WindowAdapter(){
+            public void windowOpened( WindowEvent e){
+                txtMovieTitle.requestFocus();
+            }
+        });
     }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
@@ -121,7 +129,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private void setUpMovieListInit() {
         movieGenre.setGenre(FormDetails.defaultGenre());
-
         movieGenre.setTitle("");
         populateTable();
 
@@ -153,7 +160,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
         }
     }
-    
+
 
     @Override
     public void keyTyped(KeyEvent e) {

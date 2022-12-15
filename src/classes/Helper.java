@@ -7,6 +7,8 @@ import forms.ShowTimesForm;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -33,11 +35,6 @@ public final class Helper {
     }
     public static  boolean disableReceipt(Database db){
         return LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
-    }
-
-    // autofocus text field when form load
-    public static void setFocus(JTextField field){
-        SwingUtilities.invokeLater(field::requestFocus);
     }
 
 

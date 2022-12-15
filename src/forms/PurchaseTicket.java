@@ -13,6 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +38,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JButton btnConfirm = new JButton("Confirm Order");
-    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
+    final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
+    private final JSpinner spNumTickets = new JSpinner(spinnerModel);
+
 
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
@@ -56,20 +59,20 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private int selectedShowTimeID;
 
 
-
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
         db = Database.getInstance();
 
-        if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+        if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
         }
-
 
 
         if (Helper.disableReceipt(db)) {
             btnShowReceipt.setEnabled(false);
         }
+
+        disableSpinnerInput();
+
         movieShowTimes.setDate("");
         ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
@@ -182,6 +185,12 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         setVisible(true);
     }
 
+    private void disableSpinnerInput() {
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spNumTickets.getEditor();
+        editor.getTextField().setEnabled(true);
+        editor.getTextField().setEditable(false);
+    }
+
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new PurchaseTicket();
@@ -233,6 +242,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
         populateTable();
     }
+
     private boolean updateNumTicksSold(int numTickets) {
         var updater = new ShowTimes();
         updater.setShowTimeID(selectedShowTimeID);
@@ -258,17 +268,17 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         }
 
         var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
-        if(db.SalesExists(sales)){
-            Helper.showErrorMessage("You have already booked this show time","booking error");
+        if (db.SalesExists(sales)) {
+            Helper.showErrorMessage("You have already booked this show time", "booking error");
             return;
         }
 
         if (db.addSales(sales)) {
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-           if (updateNumTicksSold(numTickets)){
-               Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-               return;
-           }
+            if (updateNumTicksSold(numTickets)) {
+                Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+                return;
+            }
             System.err.println("There was an error updating the number of tickets remaining");
 
 
@@ -317,7 +327,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }
-
 
 
     }
