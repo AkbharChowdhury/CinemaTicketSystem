@@ -12,12 +12,15 @@ import java.util.regex.Pattern;
 public final class Validation {
     private static final String NAME_ERROR = " must not contain numbers, spaces or special characters";
     private static final String REQUIRED = " is required";
+    private static final String TICKET_REQUIRED = "Please select a ticket type";
 
     public static boolean validateRegisterForm(Customer customer) throws SQLException, FileNotFoundException {
         Database db = Database.getInstance();
         List<String> errors = new ArrayList<>();
         String firstname = customer.getFirstname().trim();
         String lastname = customer.getLastname().trim();
+        String password = customer.getPassword();
+        boolean isTicketRequired = customer.getTicketID() == 0;
 
         if (firstname.isEmpty()) {
             errors.add(CustomerTable.COLUMN_FIRSTNAME + REQUIRED);
@@ -41,17 +44,17 @@ public final class Validation {
             errors.add("This email already exists");
         }
 
-        if (customer.getPassword().isEmpty()) {
+        if (password.isEmpty()) {
             errors.add(CustomerTable.COLUMN_PASSWORD + REQUIRED);
 
-        } else if (customer.getPassword().length() < 8) {
+        } else if (password.length() < 8) {
 
             errors.add(CustomerTable.COLUMN_PASSWORD + " must be 8 characters long");
 
         }
 
-        if (customer.getTicketID() == 0) {
-            errors.add("Please select a ticket type");
+        if (isTicketRequired) {
+            errors.add(TICKET_REQUIRED);
         }
 
         if (errors.size() > 0) {

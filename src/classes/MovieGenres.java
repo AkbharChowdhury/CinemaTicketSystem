@@ -154,7 +154,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
                 SELECT DISTINCT(g.genre), g.genre_id
                 FROM MovieGenres mg
                 JOIN Genres g ON mg.genre_id = g.genre_id
-                ORDER BY g.genre                             
+                ORDER BY g.genre                              
                 """;
     }
 
