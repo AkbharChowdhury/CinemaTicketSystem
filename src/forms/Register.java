@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Register
         extends JFrame implements ActionListener {
-    private final JTextField txtFirstname = new JTextField("");
+    private final JTextField txtFirstname = new JTextField();
     private final JTextField txtLastName = new JTextField();
     private final JTextField txtEmail = new JTextField();
     private final JPasswordField txtPassword = new JPasswordField();

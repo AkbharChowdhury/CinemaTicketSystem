@@ -39,7 +39,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-       LoginInfo.setCustomerID(1);
         db = Database.getInstance();
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)){
             return;
@@ -53,14 +52,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        // get selected list id
-//        list.addListSelectionListener(e -> {
-//            if (e.getValueIsAdjusting()) {
-//                ((JList) e.getSource()).getSelectedValue();
-//                System.out.println(  "s"+((JList) e.getSource()).getSelectedValue());
-//            }
-//
-//        });
+
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
 
 
@@ -146,8 +138,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         try{
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
-
-//            System.out.println(Invoice.getSelectedInvoiceDetails(INVOICES, i));
 
             Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 

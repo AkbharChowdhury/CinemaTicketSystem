@@ -58,6 +58,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
         db = Database.getInstance();
 
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
@@ -94,6 +95,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
