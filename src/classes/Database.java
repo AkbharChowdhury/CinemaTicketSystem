@@ -1,6 +1,7 @@
 package classes;
 
 import enums.Files;
+import enums.FormDetails;
 import org.sqlite.SQLiteConfig;
 import tables.*;
 
@@ -265,15 +266,16 @@ public class Database {
             int genreID = movieGenres.getGenreID();
             String movieTitle = movieGenres.getTitle();
             String sql = new MovieGenres().showMovieList(movieGenres);
+            String genre = movieGenres.getGenre();
 
 
             PreparedStatement stmt = con.prepareStatement(sql);
             int param = 1;
             stmt.setString(param, "%" + movieTitle + "%");
 
-            if (genreID != 0) {
+            if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
                 param++;
-                stmt.setString(param, '%' + String.valueOf(genreID) + '%');
+                stmt.setString(param, '%' + genre + '%');
             }
 
             ResultSet rs = stmt.executeQuery();

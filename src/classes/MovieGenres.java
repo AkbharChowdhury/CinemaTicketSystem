@@ -1,5 +1,6 @@
 package classes;
 
+import enums.FormDetails;
 import interfaces.Queries;
 import interfaces.TableProperties;
 import tables.GenreTable;
@@ -13,6 +14,15 @@ import java.util.List;
 public class MovieGenres extends Movie implements Queries, TableProperties {
     private int genreID;
     private String rating;
+    private String genre;
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
     public MovieGenres() {
 
@@ -118,6 +128,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
 
     public String showMovieList(MovieGenres movieGenres) {
         int genreID = movieGenres.getGenreID();
+        String genre = movieGenres.getGenre();
 
         String sql = """
                 SELECT m.title,
@@ -141,8 +152,8 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
                 """;
 
 
-        if (genreID!=0){
-            sql+= " HAVING ',' || genre_id_list || ',' LIKE ?";
+        if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())){
+            sql+= " HAVING genre_list LIKE ?";
         }
 
         return sql;

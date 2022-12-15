@@ -121,6 +121,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private void setUpMovieListInit() {
         movieGenre.setGenreID(0);
+        movieGenre.setGenre(FormDetails.defaultGenre());
+
         movieGenre.setTitle("");
         populateTable();
 
@@ -146,11 +148,37 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         }
 
         if (e.getSource() == cbGenres) {
+            String genre = cbGenres.getSelectedItem().toString();
+            movieGenre.setGenre(genre);
             movieGenre.setGenreID(db.getGenreID(cbGenres.getSelectedItem().toString()));
             populateTable();
 
         }
     }
+    /*
+    *
+    *   SELECT m.title,
+                       m.duration,
+                       r.rating,
+                       Group_concat(g.genre, '/') genre_list,
+                       Group_concat(g.genre_id)   genre_id_list,
+                       mg.movie_id,
+                       mg.genre_id
+                FROM   MovieGenres mg
+                       JOIN Movies m
+                         ON mg.movie_id = m.movie_id
+                       JOIN genres g
+                         ON mg.genre_id = g.genre_id
+                       JOIN Ratings r
+                         ON m.rating_id = r.rating_id
+                         WHERE title LIKE '%%'
+
+                GROUP BY m.movie_id
+				HAVING genre_list LIKE 	'%Comedy%'
+    *
+    *
+    *
+    * */
 
 
     @Override
