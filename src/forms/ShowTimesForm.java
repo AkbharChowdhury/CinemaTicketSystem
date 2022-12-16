@@ -160,23 +160,27 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
+            return;
+
         }
+
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
+            return;
+
         }
 
         if (e.getSource() == btnPurchaseTicket) {
 
-            if (LoginInfo.getCustomerID() == 0){
+            if (LoginInfo.getCustomerID() == 0) {
                 LoginInfo.setHasOpenFormOnStartUp(true);
             }
 
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)){
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-
+                return;
             }
 
         }
@@ -184,9 +188,11 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         if (e.getSource() == btnShowReceipt) {
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+
         }
 
     }
+
 
     @Override
     public void clearTable(JTable table) {

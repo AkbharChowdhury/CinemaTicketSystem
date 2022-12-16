@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties, TableGUI {
@@ -34,7 +35,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
-    private final String movieTitle = "";
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
@@ -100,22 +100,20 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         setVisible(true);
 
 
-
     }
 
-    private void autofocus() {
-        addWindowListener(new WindowAdapter(){
-            public void windowOpened( WindowEvent e){
-                txtMovieTitle.requestFocus();
-            }
-        });
-    }
-
-    public static void main(String[] args) throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         new MovieList();
 
     }
 
+    private void autofocus() {
+        addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e) {
+                txtMovieTitle.requestFocus();
+            }
+        });
+    }
 
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
@@ -148,16 +146,15 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     public void actionPerformed(ActionEvent e) {
 
         try {
+
             navigationMenu(e);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         if (e.getSource() == cbGenres) {
-            String genre = cbGenres.getSelectedItem().toString();
-            movieGenre.setGenre(genre);
+            movieGenre.setGenre(Objects.requireNonNull(cbGenres.getSelectedItem()).toString());
             populateTable();
-
         }
     }
 
@@ -184,12 +181,16 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
+            return;
+
         }
+
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
+            return;
+
         }
 
         if (e.getSource() == btnPurchaseTicket) {
@@ -200,7 +201,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
             if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-
+                return;
             }
 
         }
@@ -208,6 +209,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         if (e.getSource() == btnShowReceipt) {
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+
         }
 
     }
@@ -242,8 +244,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
             model.setValueAt(movie.getGenres(), i, 3);
             i++;
         }
-
-
     }
 }
 

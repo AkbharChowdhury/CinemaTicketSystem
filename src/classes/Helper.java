@@ -116,6 +116,13 @@ public final class Helper {
     }
 
 
+    public static void goTo(JFrame currentPage, Pages page){
+        try {
+            Helper.gotoForm(currentPage, page);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
@@ -165,7 +172,6 @@ public final class Helper {
                 Form.setRedirectPage(page);
 
 
-
                 if (!LoginInfo.hasOpenFormOnStartUp()) {
                     try {
 
@@ -175,8 +181,7 @@ public final class Helper {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                } else{
-                    // go to login
+                } else {
                     Helper.gotoForm(frame, Pages.LOGIN);
 
                 }

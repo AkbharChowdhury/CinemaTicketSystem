@@ -139,14 +139,11 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
 
-            Helper.message("your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
-
+            Helper.message("Your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
         } catch (ParseException ex) {
-            Helper.showErrorMessage("the time cannot be formatted", "time parse error");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
+            Helper.showErrorMessage("The time cannot be formatted", "Time parse error");
+        } catch (SQLException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -154,12 +151,16 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
+            return;
+
         }
+
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
+            return;
+
         }
 
         if (e.getSource() == btnPurchaseTicket) {
@@ -170,7 +171,7 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
             if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
                 Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-
+                return;
             }
 
         }
@@ -178,9 +179,11 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         if (e.getSource() == btnShowReceipt) {
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+
         }
 
     }
+
 
     @Override
     public void clearList(JList table) {

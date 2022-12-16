@@ -13,14 +13,13 @@ import java.sql.SQLException;
 
 public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
-    private JTextField txtEmail = new JTextField();
+    private final JTextField txtEmail = new JTextField();
 
-    private static JButton btnLogin = new JButton(FormDetails.lblLogin());
+    private final JButton btnLogin = new JButton(FormDetails.lblLogin());
 
-    JButton btnRegister = new JButton(FormDetails.lblRegister());
-    JLabel hyperlink = new JLabel(FormDetails.hyperlink());
+    private final JLabel hyperlink = new JLabel(FormDetails.hyperlink());
 
-    private static JPasswordField txtPassword;
+    private final JPasswordField txtPassword;
 
     public Login() throws SQLException, FileNotFoundException {
         setupHyperLink();
@@ -53,6 +52,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
 
         btnLogin.setBounds(100, 110, 90, 25);
+        JButton btnRegister = new JButton(FormDetails.lblRegister());
         btnRegister.setBounds(200, 110, 90, 25);
         hyperlink.setBounds(100, 130, 180, 30);
 
@@ -69,10 +69,13 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
 
 
-
-
     }
-    private void enterKey(KeyEvent e){
+
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
+        new Login();
+    }
+
+    private void enterKey(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             handleLogin();
 
@@ -147,30 +150,18 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
-        new Login();
-    }
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLogin) {
             handleLogin();
             return;
         }
-        goToRegister();
 
+        Helper.goTo(this, Pages.REGISTER);
 
     }
 
-    private void goToRegister() {
-        try {
-            new Register();
-            dispose();
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
+
 
     private void handleLogin() {
 

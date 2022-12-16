@@ -29,7 +29,7 @@ import java.time.LocalDate;
 
 public class PurchaseTicket extends JFrame implements ActionListener, FormAction, TableGUI, ChangeListener {
     final String TOTAL_MSG = "Total to pay: ";
-
+    final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
     private final Database db;
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
@@ -38,20 +38,15 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
     private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JButton btnConfirm = new JButton("Confirm Order");
-    final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
     private final JSpinner spNumTickets = new JSpinner(spinnerModel);
 
 
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
     private final JLabel lblMovieDetails = new JLabel();
-
-
-    private Ticket ticketDetails;
-
     private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
-
+    private Ticket ticketDetails;
     private DefaultTableModel model;
 
     private boolean hasSelectedMovie = false;
@@ -152,13 +147,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
 
             private void handleTableClickEvent() {
                 try {
-                    String id = model.getValueAt(table.getSelectedRow(), 0).toString();
+                    selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
                     String date = model.getValueAt(table.getSelectedRow(), 1).toString();
                     String time = model.getValueAt(table.getSelectedRow(), 2).toString();
-                    selectedShowTimeID = Integer.parseInt(id);
-
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-
                     lblMovieDetails.setText(String.format("%s-%s: %s", db.getMovieName(movieID), date, time));
 
                 } catch (Exception ex) {
@@ -185,16 +177,15 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
         setVisible(true);
     }
 
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        new PurchaseTicket();
+
+    }
+
     private void disableSpinnerInput() {
         JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spNumTickets.getEditor();
         editor.getTextField().setEnabled(true);
         editor.getTextField().setEditable(false);
-    }
-
-
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        new PurchaseTicket();
-
     }
 
     private void showTicketPricesLabel() {
@@ -202,8 +193,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
                 ticketDetails.getType(),
                 Helper.formatMoney(ticketDetails.getPrice())
         );
-        lblTicket.setText(output);
 
+        lblTicket.setText(output);
 
     }
 
@@ -303,33 +294,39 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     @Override
     public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
         if (e.getSource() == btnListMovies) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
+            return;
 
         }
+
         if (e.getSource() == btnShowTimes) {
             Helper.gotoForm(this, Pages.SHOW_TIMES);
+            return;
+
         }
 
         if (e.getSource() == btnPurchaseTicket) {
-            if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
+
+            if (LoginInfo.getCustomerID() == 0) {
                 LoginInfo.setHasOpenFormOnStartUp(true);
-                Helper.gotoForm(this, Pages.LOGIN);
-                return;
             }
 
-            Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
+                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
+                return;
+            }
 
         }
 
         if (e.getSource() == btnShowReceipt) {
             LoginInfo.setHasOpenFormOnStartUp(true);
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+
         }
 
-
     }
+
 
     @Override
     public void clearTable(JTable table) {
@@ -379,7 +376,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, FormAction
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == spNumTickets) {
             updateTotalLabel();
-
         }
 
     }

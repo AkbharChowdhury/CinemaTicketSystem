@@ -1,5 +1,5 @@
 # Cinema Ticket System
-<h3>A GUI application for a cinema ticket machine system built using Intelli JIdea.</h3>
+<h3>forms.MainNav GUI application for a cinema ticket machine system built using Intelli JIdea.</h3>
 <hr>
 <h4>Features</h4> 
 <ul>

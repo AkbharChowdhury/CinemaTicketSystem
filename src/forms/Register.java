@@ -11,12 +11,10 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
 
-public class Register
-        extends JFrame implements ActionListener {
+public class Register extends JFrame implements ActionListener {
     private final JTextField txtFirstname = new JTextField();
     private final JTextField txtLastName = new JTextField();
     private final JTextField txtEmail = new JTextField();
@@ -25,7 +23,6 @@ public class Register
     private final JButton btnRegister = new JButton(FormDetails.lblRegister());
 
     private final List<Ticket> TICKETS_LIST;
-
     private final Database db;
 
 
@@ -84,14 +81,11 @@ public class Register
             return;
         }
 
-        try {
-            Helper.gotoForm(this, Pages.LOGIN);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Helper.goTo(this, Pages.LOGIN);
 
 
     }
+
 
     private void handleRegister() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String firstname = txtFirstname.getText().trim();

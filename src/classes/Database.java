@@ -720,7 +720,7 @@ public class Database {
             stmt.setString(1, email);
 
             rs3 = stmt.executeQuery();
-
+// Asshole
 
             return rs3.getInt(CustomerTable.COLUMN_ID);
 
