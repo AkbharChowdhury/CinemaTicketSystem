@@ -10,13 +10,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-// it is working
+
 public class Login extends JFrame implements ActionListener, KeyListener {
-    JFrame frame = new JFrame();
     private final Database db;
     private JTextField txtEmail = new JTextField();
 
-    private static JButton btnLogin = new JButton("Login");
+    private static JButton btnLogin = new JButton(FormDetails.lblLogin());
 
     JButton btnRegister = new JButton(FormDetails.lblRegister());
     JLabel hyperlink = new JLabel(FormDetails.hyperlink());
@@ -69,8 +68,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         JTextFieldEnterKey();
         setVisible(true);
 
-//        txtEmail.setText("john@gmail.com");
-//        txtPassword.setText("password");
+
 
 
     }

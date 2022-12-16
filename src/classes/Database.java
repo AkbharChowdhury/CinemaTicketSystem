@@ -264,7 +264,7 @@ public class Database {
         try (Connection con = getConnection()) {
             // search by genre and movie title
             String movieTitle = movieGenres.getTitle();
-            String sql = new MovieGenres().showMovieList(movieGenres);
+            String sql = movieGenres.showMovieList(movieGenres);
             String genre = movieGenres.getGenre();
 
 

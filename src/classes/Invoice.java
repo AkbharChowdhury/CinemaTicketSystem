@@ -1,17 +1,12 @@
 package classes;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Font;
+
 import enums.FormDetails;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-
-import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;

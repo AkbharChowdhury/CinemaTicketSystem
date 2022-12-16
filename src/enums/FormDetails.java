@@ -33,6 +33,11 @@ public enum FormDetails {
         return APP_NAME + "Login";
 
     }
+
+    public static String lblLogin() {
+        return "Login";
+
+    }
     public static String hyperlink(){
         return "Return to movie list";
     }
