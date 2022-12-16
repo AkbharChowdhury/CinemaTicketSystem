@@ -178,7 +178,6 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 18);
             cs.newLineAtOffset(180, 690);
-            System.out.println(invoice.get(i).getMovieTitle());
             cs.showText(invoice.get(i).getMovieTitle());
             cs.endText();
 
