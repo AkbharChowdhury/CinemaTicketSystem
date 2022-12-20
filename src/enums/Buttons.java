@@ -16,10 +16,7 @@ public enum Buttons {
         return "List Movies";
 
     }
-    public static String cancel() {
-        return "Cancel";
 
-    }
     public static String printReceipt() {
         return "Print Receipt";
 
@@ -34,6 +31,18 @@ public enum Buttons {
     }
     public static String showReceipt() {
         return "Show Receipt";
+
+    }
+    public static String login() {
+        return "Login";
+
+    }
+    public static String register() {
+        return "Register";
+
+    }
+    public static String confirmOrder() {
+        return "Confirm Order";
 
     }
 

@@ -6,9 +6,9 @@ import forms.*;
 import forms.ShowTimesForm;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -111,7 +111,7 @@ public final class Helper {
     public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
         Date date = formatter.parse(dateStr);
-        DateFormat  formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
         return formatter2.format(date);
     }
 
@@ -170,8 +170,6 @@ public final class Helper {
             if (dialogButton == JOptionPane.YES_OPTION) {
 
                 Form.setRedirectPage(page);
-
-
                 if (!LoginInfo.hasOpenFormOnStartUp()) {
                     try {
 
@@ -188,6 +186,7 @@ public final class Helper {
 
 
             } else {
+
                 if (!LoginInfo.hasOpenFormOnStartUp()) {
                     System.err.println("You must be logged in to view invoices or purchase tickets!");
                     System.exit(0);

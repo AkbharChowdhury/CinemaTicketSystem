@@ -6,7 +6,6 @@ import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
-import interfaces.FormAction;
 import interfaces.ListGUI;
 
 import javax.swing.*;
@@ -17,25 +16,17 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ShowReceipt extends JFrame implements ActionListener, FormAction, ListGUI {
+public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
     private final Database db;
-    private DefaultListModel model = new DefaultListModel();
-    private JList list = new JList(model);
-    int selectedListInvoiceItem;
-    private List<Invoice> INVOICES;
-    private final JButton btnListMovies = new JButton(Buttons.listMovies());
-    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
-    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
-    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
+    Navigation nav = new Navigation();
+    int selectedListInvoiceItem;
+    private final DefaultListModel model = new DefaultListModel();
+    private final JList list = new JList(model);
+    private List<Invoice> INVOICES;
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -65,10 +56,10 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
 
-        top.add(btnListMovies);
-        top.add(btnShowTimes);
-        top.add(btnPurchaseTicket);
-        top.add(btnShowReceipt);
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
 
 
         JPanel middle = new JPanel();
@@ -81,10 +72,12 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         add("Center", middle);
         add("South", south);
 
-        btnListMovies.addActionListener(this);
-        btnShowTimes.addActionListener(this);
-        btnPurchaseTicket.addActionListener(this);
-        btnShowReceipt.addActionListener(this);
+
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
+
         btnPrintReceipt.addActionListener(this);
 
         populateList();
@@ -100,19 +93,20 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
 
     }
 
+    private void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)) {
+            dispose();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
-            if(!processSelectedListItem(selectedListInvoiceItem)){
+            if (!processSelectedListItem(selectedListInvoiceItem)) {
                 System.err.println("unable to print the selected invoice");
             }
         }
 
-        try {
-            navigationMenu(e);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
     }
 
@@ -146,42 +140,6 @@ public class ShowReceipt extends JFrame implements ActionListener, FormAction, L
         } catch (SQLException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
-        if (e.getSource() == btnListMovies) {
-            Helper.gotoForm(this, Pages.LIST_MOVIES);
-            return;
-
-        }
-
-        if (e.getSource() == btnShowTimes) {
-            Helper.gotoForm(this, Pages.SHOW_TIMES);
-            return;
-
-        }
-
-        if (e.getSource() == btnPurchaseTicket) {
-
-            if (LoginInfo.getCustomerID() == 0) {
-                LoginInfo.setHasOpenFormOnStartUp(true);
-            }
-
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-                return;
-            }
-
-        }
-
-        if (e.getSource() == btnShowReceipt) {
-            LoginInfo.setHasOpenFormOnStartUp(true);
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
-        }
-
     }
 
 

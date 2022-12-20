@@ -1,11 +1,7 @@
 package forms;
 
 import classes.*;
-import enums.Buttons;
 import enums.FormDetails;
-import enums.Pages;
-import enums.RedirectPage;
-import interfaces.FormAction;
 import interfaces.TableGUI;
 import interfaces.TableProperties;
 
@@ -15,23 +11,18 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, FormAction, TableProperties, TableGUI {
+public class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
+    Navigation nav = new Navigation();
 
-    private final JButton btnListMovies = new JButton(Buttons.listMovies());
-    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
-    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
-    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
 
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
@@ -40,7 +31,7 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     public MovieList() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         if (Helper.disableReceipt(db)) {
-            btnShowReceipt.setEnabled(false);
+            nav.btnShowReceipt.setEnabled(false);
         }
 
         JScrollPane scrollPane1 = new JScrollPane();
@@ -57,10 +48,10 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         JPanel top = new JPanel();
         setUpMovieListInit();
 
-        top.add(btnListMovies);
-        top.add(btnShowTimes);
-        top.add(btnPurchaseTicket);
-        top.add(btnShowReceipt);
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
 
         populateGenreComboBox();
 
@@ -91,15 +82,23 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
         add("Center", middle);
         add("South", south);
 
-        btnListMovies.addActionListener(this);
-        btnShowTimes.addActionListener(this);
-        btnPurchaseTicket.addActionListener(this);
-        btnShowReceipt.addActionListener(this);
+       nav.btnListMovies.addActionListener(this::navClick);
+       nav.btnShowTimes.addActionListener(this::navClick);
+       nav.btnPurchase.addActionListener(this::navClick);
+       nav.btnShowReceipt.addActionListener(this::navClick);
+
+
         cbGenres.addActionListener(this);
         autofocus();
         setVisible(true);
 
 
+    }
+
+    private void navClick(ActionEvent e) {
+       if (nav.handleNavClick(e)){
+           dispose();
+       }
     }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException {
@@ -145,13 +144,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        try {
-
-            navigationMenu(e);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         if (e.getSource() == cbGenres) {
             movieGenre.setGenre(Objects.requireNonNull(cbGenres.getSelectedItem()).toString());
             populateTable();
@@ -177,42 +169,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Fo
 
     }
 
-
-    @Override
-    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
-        if (e.getSource() == btnListMovies) {
-            Helper.gotoForm(this, Pages.LIST_MOVIES);
-            return;
-
-        }
-
-        if (e.getSource() == btnShowTimes) {
-            Helper.gotoForm(this, Pages.SHOW_TIMES);
-            return;
-
-        }
-
-        if (e.getSource() == btnPurchaseTicket) {
-
-            if (LoginInfo.getCustomerID() == 0) {
-                LoginInfo.setHasOpenFormOnStartUp(true);
-            }
-
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-                return;
-            }
-
-        }
-
-        if (e.getSource() == btnShowReceipt) {
-            LoginInfo.setHasOpenFormOnStartUp(true);
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
-        }
-
-    }
 
 
     @Override

@@ -1,11 +1,7 @@
 package forms;
 
 import classes.*;
-import enums.Buttons;
 import enums.FormDetails;
-import enums.Pages;
-import enums.RedirectPage;
-import interfaces.FormAction;
 import interfaces.TableGUI;
 
 import javax.swing.*;
@@ -22,14 +18,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 
-public class ShowTimesForm extends JFrame implements ActionListener, FormAction, TableGUI {
+public class ShowTimesForm extends JFrame implements ActionListener, TableGUI {
+    Navigation nav = new Navigation();
+
     private final Database db;
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
-    private final JButton btnListMovies = new JButton(Buttons.listMovies());
-    private final JButton btnShowTimes = new JButton(Buttons.showTimes());
-    private final JButton btnPurchaseTicket = new JButton(Buttons.purchaseTicket());
-    private final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
     private final JComboBox<String> cbMovies = new JComboBox<>();
     private final JComboBox<String> cbDate = new JComboBox<>();
 
@@ -40,7 +34,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
     public ShowTimesForm() throws SQLException, FileNotFoundException {
         db = Database.getInstance();
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
-            btnShowReceipt.setEnabled(false);
+            nav.btnShowReceipt.setEnabled(false);
         }
         movieShowTimes.setDate("");
 
@@ -56,10 +50,10 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
 
-        top.add(btnListMovies);
-        top.add(btnShowTimes);
-        top.add(btnPurchaseTicket);
-        top.add(btnShowReceipt);
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
 
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -87,15 +81,19 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         add("North", top);
         add("Center", middle);
         add("South", south);
-
-        btnListMovies.addActionListener(this);
-        btnShowTimes.addActionListener(this);
-        btnPurchaseTicket.addActionListener(this);
-        btnShowReceipt.addActionListener(this);
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
         cbMovies.addActionListener(this);
         cbDate.addActionListener(this);
 
         setVisible(true);
+    }
+    private void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)){
+            dispose();
+        }
     }
 
 
@@ -107,11 +105,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
 
     @Override
     public void actionPerformed(ActionEvent e){
-        try {
-            navigationMenu(e);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
 
         if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
             showFilteredDateResults();
@@ -157,41 +151,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, FormAction,
         populateTable();
     }
 
-    @Override
-    public void navigationMenu(ActionEvent e) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        if (e.getSource() == btnListMovies) {
-            Helper.gotoForm(this, Pages.LIST_MOVIES);
-            return;
-
-        }
-
-        if (e.getSource() == btnShowTimes) {
-            Helper.gotoForm(this, Pages.SHOW_TIMES);
-            return;
-
-        }
-
-        if (e.getSource() == btnPurchaseTicket) {
-
-            if (LoginInfo.getCustomerID() == 0) {
-                LoginInfo.setHasOpenFormOnStartUp(true);
-            }
-
-            if (Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
-                Helper.gotoForm(this, Pages.PURCHASE_TICKET);
-                return;
-            }
-
-        }
-
-        if (e.getSource() == btnShowReceipt) {
-            LoginInfo.setHasOpenFormOnStartUp(true);
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-
-        }
-
-    }
 
 
     @Override

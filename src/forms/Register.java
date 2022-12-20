@@ -2,6 +2,7 @@ package forms;
 
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 
@@ -20,7 +21,7 @@ public class Register extends JFrame implements ActionListener {
     private final JTextField txtEmail = new JTextField();
     private final JPasswordField txtPassword = new JPasswordField();
     private final JComboBox<String> cbTicket = new JComboBox<>();
-    private final JButton btnRegister = new JButton(FormDetails.lblRegister());
+    private final JButton btnRegister = new JButton(Buttons.register());
 
     private final List<Ticket> TICKETS_LIST;
     private final Database db;

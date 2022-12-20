@@ -1,6 +1,7 @@
 package forms;
 
 import classes.*;
+import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
@@ -15,7 +16,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
     private final JTextField txtEmail = new JTextField();
 
-    private final JButton btnLogin = new JButton(FormDetails.lblLogin());
+    private final JButton btnLogin = new JButton(Buttons.login());
 
     private final JLabel hyperlink = new JLabel(FormDetails.hyperlink());
 
@@ -52,7 +53,7 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
 
         btnLogin.setBounds(100, 110, 90, 25);
-        JButton btnRegister = new JButton(FormDetails.lblRegister());
+        JButton btnRegister = new JButton(Buttons.register());
         btnRegister.setBounds(200, 110, 90, 25);
         hyperlink.setBounds(100, 130, 180, 30);
 
@@ -67,6 +68,8 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 
         JTextFieldEnterKey();
         setVisible(true);
+        txtEmail.setText("john@gmail.com");
+        txtPassword.setText("password");
 
 
     }
