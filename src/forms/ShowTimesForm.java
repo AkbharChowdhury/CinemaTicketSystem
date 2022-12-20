@@ -2,6 +2,7 @@ package forms;
 
 import classes.*;
 import enums.FormDetails;
+import interfaces.MenuNavigation;
 import interfaces.TableGUI;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 
-public class ShowTimesForm extends JFrame implements ActionListener, TableGUI {
+public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
     Navigation nav = new Navigation();
 
     private final Database db;
@@ -50,10 +51,9 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI {
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
 
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
+        navigation(top);
+
+
 
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -81,20 +81,13 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI {
         add("North", top);
         add("Center", middle);
         add("South", south);
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+
         cbMovies.addActionListener(this);
         cbDate.addActionListener(this);
 
         setVisible(true);
     }
-    private void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)){
-            dispose();
-        }
-    }
+
 
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
@@ -211,5 +204,25 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI {
             cbDate.addItem(Helper.formatDate(date));
         }
 
+    }
+
+    @Override
+    public void navigation(JPanel top) {
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
+
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
+    }
+
+    @Override
+    public void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)) {
+            dispose();
+        }
     }
 }

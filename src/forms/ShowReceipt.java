@@ -7,6 +7,7 @@ import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
 import interfaces.ListGUI;
+import interfaces.MenuNavigation;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
-public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
+public class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
     private final Database db;
     private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
     Navigation nav = new Navigation();
@@ -53,12 +54,7 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
-
+        navigation(top);
 
         JPanel middle = new JPanel();
         middle.add(new JScrollPane(list));
@@ -69,12 +65,6 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
         add("North", top);
         add("Center", middle);
         add("South", south);
-
-
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
 
         btnPrintReceipt.addActionListener(this);
 
@@ -91,11 +81,7 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
 
     }
 
-    private void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -162,6 +148,25 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
     }
 
 
+    @Override
+    public void navigation(JPanel top) {
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
+
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
+    }
+
+    @Override
+    public void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)) {
+            dispose();
+        }
+    }
 }
 
 

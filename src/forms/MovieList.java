@@ -2,6 +2,7 @@ package forms;
 
 import classes.*;
 import enums.FormDetails;
+import interfaces.MenuNavigation;
 import interfaces.TableGUI;
 import interfaces.TableProperties;
 
@@ -16,16 +17,14 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI {
+public class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
-    Navigation nav = new Navigation();
-
-
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
+    Navigation nav = new Navigation();
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
@@ -47,11 +46,8 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
         setUpMovieListInit();
+        navigation(top);
 
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
 
         populateGenreComboBox();
 
@@ -82,11 +78,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
         add("Center", middle);
         add("South", south);
 
-       nav.btnListMovies.addActionListener(this::navClick);
-       nav.btnShowTimes.addActionListener(this::navClick);
-       nav.btnPurchase.addActionListener(this::navClick);
-       nav.btnShowReceipt.addActionListener(this::navClick);
-
 
         cbGenres.addActionListener(this);
         autofocus();
@@ -95,11 +86,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
 
     }
 
-    private void navClick(ActionEvent e) {
-       if (nav.handleNavClick(e)){
-           dispose();
-       }
-    }
 
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         new MovieList();
@@ -170,7 +156,6 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
     }
 
 
-
     @Override
     public List<String> tableColumns() {
         return null;
@@ -199,6 +184,26 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
             model.setValueAt(movie.getRating(), i, 2);
             model.setValueAt(movie.getGenres(), i, 3);
             i++;
+        }
+    }
+
+    @Override
+    public void navigation(JPanel top) {
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
+
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
+    }
+
+    @Override
+    public void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)) {
+            dispose();
         }
     }
 }

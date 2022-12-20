@@ -5,6 +5,7 @@ import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
+import interfaces.MenuNavigation;
 import interfaces.TableGUI;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 
 
-public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener {
+public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
     Navigation nav = new Navigation();
 
     final String TOTAL_MSG = "Total to pay: ";
@@ -82,11 +83,8 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
+        navigation(top);
 
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
 
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -174,11 +172,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
 
         setVisible(true);
     }
-    private void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)){
-            dispose();
-        }
-    }
+
 
     public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new PurchaseTicket();
@@ -348,5 +342,24 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
     }
 
 
+    @Override
+    public void navigation(JPanel top) {
+        top.add(nav.btnListMovies);
+        top.add(nav.btnShowTimes);
+        top.add(nav.btnPurchase);
+        top.add(nav.btnShowReceipt);
+
+        nav.btnListMovies.addActionListener(this::navClick);
+        nav.btnShowTimes.addActionListener(this::navClick);
+        nav.btnPurchase.addActionListener(this::navClick);
+        nav.btnShowReceipt.addActionListener(this::navClick);
+    }
+
+    @Override
+    public void navClick(ActionEvent e) {
+        if (nav.handleNavClick(e)) {
+            dispose();
+        }
+    }
 }
 
