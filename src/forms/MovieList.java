@@ -57,9 +57,9 @@ public class MovieList extends JFrame implements ActionListener, KeyListener, Ta
 
         populateTable();
         table.getColumnModel().getColumn(0).setPreferredWidth(200);
-        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(1).setPreferredWidth(40);
 
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
+        table.getColumnModel().getColumn(3).setPreferredWidth(140);
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);

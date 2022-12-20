@@ -38,7 +38,6 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
             return;
-
         }
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
@@ -46,7 +45,6 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
 
 
-        JScrollPane scrollPane = new JScrollPane(list);
 
         setResizable(false);
         setLayout(new BorderLayout());
@@ -63,7 +61,7 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
 
 
         JPanel middle = new JPanel();
-        middle.add(scrollPane);
+        middle.add(new JScrollPane(list));
 
         JPanel south = new JPanel();
         south.add(btnPrintReceipt);
@@ -132,7 +130,6 @@ public class ShowReceipt extends JFrame implements ActionListener, ListGUI {
         try {
             Invoice invoiceDetails = new Invoice(true);
             invoiceDetails.generatePDFInvoice(INVOICES, i);
-
             Helper.message("Your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
         } catch (ParseException ex) {
