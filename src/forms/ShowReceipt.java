@@ -20,14 +20,14 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
-public class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
-    private final Database db;
-    private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
+public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
+    Database db;
+    JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
     Navigation nav = new Navigation();
     int selectedListInvoiceItem;
-    private final DefaultListModel model = new DefaultListModel();
-    private final JList list = new JList(model);
-    private List<Invoice> INVOICES;
+    DefaultListModel model = new DefaultListModel();
+    JList list = new JList(model);
+    List<Invoice> INVOICES;
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
-    private final Database db;
-    private final MovieGenres movieGenre = new MovieGenres();
+public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
+    Database db;
+    MovieGenres movieGenre = new MovieGenres();
 
-    private final JTable table = new JTable();
+    JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
     Navigation nav = new Navigation();

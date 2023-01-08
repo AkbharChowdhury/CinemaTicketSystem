@@ -12,14 +12,11 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
-public class Login extends JFrame implements ActionListener, KeyListener {
+public final class Login extends JFrame implements ActionListener, KeyListener {
     private final Database db;
     private final JTextField txtEmail = new JTextField();
-
     private final JButton btnLogin = new JButton(Buttons.login());
-
     private final JLabel hyperlink = new JLabel(FormDetails.hyperlink());
-
     private final JPasswordField txtPassword;
 
     public Login() throws SQLException, FileNotFoundException {
@@ -31,20 +28,21 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         setTitle(FormDetails.login());
         setLocation(new Point(500, 300));
         add(panel);
-        setSize(new Dimension(400, 200));
+        setSize(400,200);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel label = new JLabel("Email");
-        label.setBounds(100, 8, 70, 20);
-        panel.add(label);
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setBounds(100, 8, 70, 20);
+        panel.add(lblEmail);
 
 
         txtEmail.setBounds(100, 27, 193, 28);
         panel.add(txtEmail);
 
 
-        JLabel password1 = new JLabel("Password");
-        password1.setBounds(100, 55, 70, 20);
-        panel.add(password1);
+        JLabel lblPassword = new JLabel("Password");
+        lblPassword.setBounds(100, 55, 70, 20);
+        panel.add(lblPassword);
 
 
         txtPassword = new JPasswordField();

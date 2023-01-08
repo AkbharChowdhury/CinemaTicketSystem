@@ -16,15 +16,15 @@ import java.text.ParseException;
 import java.util.List;
 
 public class Register extends JFrame implements ActionListener {
-    private final JTextField txtFirstname = new JTextField();
-    private final JTextField txtLastName = new JTextField();
-    private final JTextField txtEmail = new JTextField();
-    private final JPasswordField txtPassword = new JPasswordField();
-    private final JComboBox<String> cbTicket = new JComboBox<>();
-    private final JButton btnRegister = new JButton(Buttons.register());
+    JTextField txtFirstname = new JTextField();
+    JTextField txtLastName = new JTextField();
+    JTextField txtEmail = new JTextField();
+    JPasswordField txtPassword = new JPasswordField();
+    JComboBox<String> cbTicket = new JComboBox<>();
+    JButton btnRegister = new JButton(Buttons.register());
 
-    private final List<Ticket> TICKETS_LIST;
-    private final Database db;
+    List<Ticket> TICKETS_LIST;
+    Database db;
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

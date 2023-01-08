@@ -19,21 +19,20 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 
-public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
+public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
     Navigation nav = new Navigation();
 
-    private final Database db;
-    private final ShowTimes movieShowTimes = new ShowTimes();
-    private final JTable table = new JTable();
-    private final JComboBox<String> cbMovies = new JComboBox<>();
-    private final JComboBox<String> cbDate = new JComboBox<>();
-
-    private DefaultTableModel model;
-    private boolean hasSelectedMovie = false;
+    Database db = Database.getInstance();
+    ShowTimes movieShowTimes = new ShowTimes();
+    JTable table = new JTable();
+    JComboBox<String> cbMovies = new JComboBox<>();
+    JComboBox<String> cbDate = new JComboBox<>();
+    DefaultTableModel model;
+    boolean hasSelectedMovie = false;
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
-        db = Database.getInstance();
+//        db = Database.getInstance();
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             nav.btnShowReceipt.setEnabled(false);
         }
@@ -52,7 +51,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
         JPanel top = new JPanel();
 
         navigation(top);
-
 
 
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
@@ -89,7 +87,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
     }
 
 
-
     public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
         new ShowTimesForm();
 
@@ -97,7 +94,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
 
 
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
 
 
         if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
@@ -113,7 +110,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
     }
 
     private void handleMovieCB() {
-        if(!hasSelectedMovie){
+        if (!hasSelectedMovie) {
             cbMovies.removeItemAt(0);
             hasSelectedMovie = true;
 
@@ -145,8 +142,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
     }
 
 
-
-
     @Override
     public void clearTable(JTable table) {
         ((DefaultTableModel) table.getModel()).setRowCount(0);
@@ -164,7 +159,7 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
         try {
             clearTable(table);
             int i = 0;
-            for(var showTime : db.showMovieTimes(movieShowTimes)) {
+            for (var showTime : db.showMovieTimes(movieShowTimes)) {
                 model.addRow(new Object[0]);
                 model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);

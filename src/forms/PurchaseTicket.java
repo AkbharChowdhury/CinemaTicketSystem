@@ -27,34 +27,30 @@ import java.text.ParseException;
 import java.time.LocalDate;
 
 
-public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
+public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
     Navigation nav = new Navigation();
+    String TOTAL_MSG = "Total to pay: ";
+    SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
+    Database db = Database.getInstance();
+    ShowTimes movieShowTimes = new ShowTimes();
+    JTable table = new JTable();
 
-    final String TOTAL_MSG = "Total to pay: ";
-    final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
-    private final Database db;
-    private final ShowTimes movieShowTimes = new ShowTimes();
-    private final JTable table = new JTable();
-
-    private final JButton btnConfirm = new JButton(Buttons.confirmOrder());
-    private final JSpinner spNumTickets = new JSpinner(spinnerModel);
+    JButton btnConfirm = new JButton(Buttons.confirmOrder());
+    JSpinner spNumTickets = new JSpinner(spinnerModel);
 
 
-    private final JComboBox<String> cbMovies = new JComboBox<>();
+    JComboBox<String> cbMovies = new JComboBox<>();
 
-    private final JLabel lblMovieDetails = new JLabel();
-    private final JLabel lblTicket = new JLabel();
-    private final JLabel lblTotal = new JLabel();
-    private Ticket ticketDetails;
-    private DefaultTableModel model;
-
-    private boolean hasSelectedMovie = false;
-
-    private int selectedShowTimeID;
+    JLabel lblMovieDetails = new JLabel();
+    JLabel lblTicket = new JLabel();
+    JLabel lblTotal = new JLabel();
+    Ticket ticketDetails;
+    DefaultTableModel model;
+    boolean hasSelectedMovie = false;
+    int selectedShowTimeID;
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        db = Database.getInstance();
 
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
