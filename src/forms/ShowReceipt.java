@@ -96,7 +96,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     private boolean processSelectedListItem(int salesID) {
 
-
         if (list.isSelectionEmpty()) {
             Helper.showErrorMessage("You must select an item from the invoice list!", "Receipt error");
             return false;

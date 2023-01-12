@@ -119,7 +119,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     private void populateGenreComboBox() {
         cbGenres.addItem(FormDetails.defaultGenre());
-
         for (var genre : db.getMovieGenreList()) {
             cbGenres.addItem(genre);
         }
