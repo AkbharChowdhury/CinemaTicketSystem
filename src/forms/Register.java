@@ -110,7 +110,6 @@ public class Register extends JFrame implements ActionListener {
     }
 
     private void populateTicketComboBox() {
-        // add default value
         for (var ticket : TICKETS_LIST) {
             cbTicket.addItem(ticket.getType());
         }
