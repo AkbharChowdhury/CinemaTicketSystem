@@ -23,13 +23,11 @@ public class Register extends JFrame implements ActionListener {
     JComboBox<String> cbTicket = new JComboBox<>();
     JButton btnRegister = new JButton(Buttons.register());
 
-    List<Ticket> TICKETS_LIST;
     Database db;
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-        TICKETS_LIST = db.getTicket();
         setLayout(new BorderLayout());
         setSize(310, 500);
         setTitle(FormDetails.register());
@@ -110,7 +108,8 @@ public class Register extends JFrame implements ActionListener {
     }
 
     private void populateTicketComboBox() {
-        for (var ticket : TICKETS_LIST) {
+        List<Ticket> ticketList = db.getTicket();
+        for (var ticket : ticketList) {
             cbTicket.addItem(ticket.getType());
         }
 

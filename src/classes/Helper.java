@@ -70,8 +70,7 @@ public final class Helper {
     }
 
     public static String formatMoney(double amount) {
-        NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.UK);
-        return currency.format(amount);
+        return NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
     }
 
     public static void validateNumber(KeyEvent e, JTextField textField) {
@@ -85,14 +84,7 @@ public final class Helper {
         textField.setEditable(isNumber);
     }
 
-    public static boolean validateMovieID(Database db, int movieID) {
-        if (!db.movieIDExists(movieID)) {
-            showErrorMessage("This movie ID does not exists. Please enter an existing movie ID", "Movie ID error");
-            return false;
-        }
-        return true;
 
-    }
 
     public static double calcPrice(int numTickets, double price) {
         return numTickets * price;
@@ -110,9 +102,7 @@ public final class Helper {
 
     public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-        Date date = formatter.parse(dateStr);
-        DateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter2.format(date);
+        return new SimpleDateFormat("yyyy-MM-dd").format(formatter.parse(dateStr));
     }
 
 

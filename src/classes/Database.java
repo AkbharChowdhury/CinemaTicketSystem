@@ -682,33 +682,6 @@ public class Database {
 
     }
 
-
-    public boolean movieIDExists(int movieID) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                MovieTable.COLUMN_ID,
-                MovieTable.TABLE_NAME,
-                MovieTable.COLUMN_ID
-        );
-
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, movieID);
-
-            rs2 = stmt.executeQuery();
-
-            return !isResultSetEmpty(rs2);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
-
     public int getCustomerID(String email) {
         String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
 

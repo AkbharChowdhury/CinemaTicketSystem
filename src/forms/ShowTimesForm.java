@@ -190,7 +190,6 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
-
         for (var show : showTimesList) {
             linkedHashSet.add(show.getDate());
         }

@@ -192,9 +192,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
     private void updateTotalLabel() {
-        double ticketPrice = ticketDetails.getPrice();
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
+        lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketDetails.getPrice())));
     }
 
 
@@ -206,9 +205,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             handleMovieCB();
             return;
         }
-        try{
+        try {
             handlePurchase();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -284,7 +283,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
 
-
     @Override
     public void clearTable(JTable table) {
         ((DefaultTableModel) table.getModel()).setRowCount(0);
@@ -317,15 +315,12 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         }
 
-
     }
 
     private void populateMovieComboBox() {
-
         for (var movie : db.getAllMovieShowTimes()) {
             cbMovies.addItem(movie.getTitle());
         }
-
     }
 
 
