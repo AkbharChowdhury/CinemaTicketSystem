@@ -353,16 +353,12 @@ public class Database {
             String sql = new MovieGenres().getMovieGenreList();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
-
             if (isResultSetEmpty(rs)) {
                 return genreList;
             }
             while (rs.next()) {
 
-
                 genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
-
             }
 
         } catch (Exception e) {
@@ -372,31 +368,7 @@ public class Database {
     }
 
 
-    public boolean customerSalesExists(Sales sales) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                SalesTable.COLUMN_CUSTOMER_ID,
-                SalesTable.TABLE_NAME,
-                SalesTable.COLUMN_CUSTOMER_ID
-        );
-
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, sales.getShowTimeID());
-            stmt.setInt(2, sales.getCustomerID());
-            stmt.setString(3, sales.getSalesDate());
-
-            ResultSet rs2 = stmt.executeQuery();
-
-            return !isResultSetEmpty(rs2);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
 
 
     public boolean SalesExists(Sales sales) {
@@ -409,7 +381,6 @@ public class Database {
             stmt.setInt(1, sales.getShowTimeID());
             stmt.setInt(2, sales.getCustomerID());
             stmt.setString(3, sales.getSalesDate());
-
 
             rs2 = stmt.executeQuery();
 

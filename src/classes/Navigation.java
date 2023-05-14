@@ -10,17 +10,26 @@ import java.awt.event.ActionListener;
 
 
 public class Navigation extends JFrame implements ActionListener {
-    public final JButton btnListMovies = new JButton(Buttons.listMovies());
+    private final JButton btnListMovies = new JButton(Buttons.listMovies());
     public final JButton btnShowTimes = new JButton(Buttons.showTimes());
     public final JButton btnPurchase = new JButton(Buttons.purchaseTicket());
     public final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+
+    public  JButton[] navButtons(){
+
+        return new JButton[]{
+                btnListMovies,
+                btnShowTimes,
+                btnPurchase,
+                btnShowReceipt
+        };
+    }
 
     public Navigation() {
         btnListMovies.addActionListener(this);
         btnShowTimes.addActionListener(this);
         btnPurchase.addActionListener(this);
         btnShowReceipt.addActionListener(this);
-
     }
 
 

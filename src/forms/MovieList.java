@@ -18,13 +18,13 @@ import java.util.Objects;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
-    Database db;
-    MovieGenres movieGenre = new MovieGenres();
+    private Database db;
+    private MovieGenres movieGenre = new MovieGenres();
 
-    JTable table = new JTable();
+    private JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
-    Navigation nav = new Navigation();
+    private Navigation nav = new Navigation();
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
@@ -188,15 +188,15 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void navigation(JPanel top) {
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
 
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+
+        for (var button : nav.navButtons()){
+            top.add(button);
+        }
+        for (var button : nav.navButtons()){
+            button.addActionListener(this::navClick);
+        }
+
     }
 
     @Override

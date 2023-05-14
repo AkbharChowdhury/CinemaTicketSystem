@@ -202,15 +202,14 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     @Override
     public void navigation(JPanel top) {
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
+        for (var button : nav.navButtons()) {
+            top.add(button);
+        }
 
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+        for (var button : nav.navButtons()) {
+            button.addActionListener(this::navClick);
+        }
+
     }
 
     @Override

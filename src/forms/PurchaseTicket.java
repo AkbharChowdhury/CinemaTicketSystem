@@ -114,10 +114,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         add("Center", middle);
         add("South", south);
 
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+//        nav.btnListMovies.addActionListener(this::navClick);
+//        nav.btnShowTimes.addActionListener(this::navClick);
+//        nav.btnPurchase.addActionListener(this::navClick);
+//        nav.btnShowReceipt.addActionListener(this::navClick);
         cbMovies.addActionListener(this);
 
         btnConfirm.addActionListener(this);
@@ -335,15 +335,15 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void navigation(JPanel top) {
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
 
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+        for (var button : nav.navButtons()){
+            top.add(button);
+        }
+
+        for (var button : nav.navButtons()){
+            button.addActionListener(this::navClick);
+        }
+
     }
 
     @Override
