@@ -28,7 +28,8 @@ public final class Helper {
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
         return FileHandler.readSingleColumn(getCSVPath() + filename);
     }
-    public static  boolean disableReceipt(Database db){
+
+    public static boolean disableReceipt(Database db) {
         return LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
     }
 
@@ -38,7 +39,8 @@ public final class Helper {
         int minutes = duration % 60;
         return String.format("%d:%02d", hours, minutes);
     }
-    public static String capitalise(String str){
+
+    public static String capitalise(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
@@ -50,7 +52,6 @@ public final class Helper {
     public static void message(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
-
 
 
     public static String formatTime(String time) {
@@ -89,7 +90,7 @@ public final class Helper {
     }
 
 
-    public static void goTo(JFrame currentPage, Pages page){
+    public static void goTo(JFrame currentPage, Pages page) {
         try {
             Helper.gotoForm(currentPage, page);
         } catch (Exception ex) {
@@ -140,13 +141,13 @@ public final class Helper {
 
         if (LoginInfo.getCustomerID() == 0) {
             int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
-            if (dialogButton != JOptionPane.YES_OPTION && !LoginInfo.hasOpenFormOnStartUp()){
-                    System.err.println("You must be logged in to view invoices or purchase tickets!");
-                    System.exit(0);
+            if (dialogButton != JOptionPane.YES_OPTION && !LoginInfo.hasOpenFormOnStartUp()) {
+                System.err.println("You must be logged in to view invoices or purchase tickets!");
+                System.exit(0);
             }
 
             Form.setRedirectPage(page);
-            if (LoginInfo.hasOpenFormOnStartUp()){
+            if (LoginInfo.hasOpenFormOnStartUp()) {
                 Helper.gotoForm(frame, Pages.LOGIN);
                 return false;
             }
