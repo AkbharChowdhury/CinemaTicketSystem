@@ -135,46 +135,6 @@ public final class Helper {
 
     }
 
-//    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//
-//        if (LoginInfo.getCustomerID() == 0) {
-//            int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
-//
-//            if (dialogButton == JOptionPane.YES_OPTION) {
-//
-//                Form.setRedirectPage(page);
-//                if (!LoginInfo.hasOpenFormOnStartUp()) {
-//                    try {
-//
-//                        new Login();
-//                        frame.dispose();
-//
-//                    } catch (Exception ex) {
-//                        System.out.println(ex.getMessage());
-//                    }
-//                } else {
-//                    Helper.gotoForm(frame, Pages.LOGIN);
-//
-//                }
-//
-//
-//            } else {
-//
-//                if (!LoginInfo.hasOpenFormOnStartUp()) {
-//                    System.err.println("You must be logged in to view invoices or purchase tickets!");
-//                    System.exit(0);
-//
-//                }
-//
-//            }
-//
-//
-//        }
-//
-//        return LoginInfo.getCustomerID() != 0;
-//
-//    }
-
 
     public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
