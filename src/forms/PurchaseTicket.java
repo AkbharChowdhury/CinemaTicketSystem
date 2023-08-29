@@ -166,8 +166,13 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        new PurchaseTicket();
+    public static void main(String[] args) {
+        try {
+            new PurchaseTicket();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }
 
     }
 

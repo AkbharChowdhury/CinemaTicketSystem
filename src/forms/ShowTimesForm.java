@@ -33,7 +33,6 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
-//        db = Database.getInstance();
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             nav.btnShowReceipt.setEnabled(false);
         }
@@ -88,7 +87,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         new ShowTimesForm();
 
     }
@@ -96,25 +95,14 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-
-        if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
-            showFilteredDateResults();
-
-        }
-
-        if (e.getSource() == cbMovies) {
-            handleMovieCB();
-        }
-
-
+        if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) showFilteredDateResults();
+        if (e.getSource() == cbMovies) handleMovieCB();
     }
 
     private void handleMovieCB() {
         if (!hasSelectedMovie) {
             cbMovies.removeItemAt(0);
             hasSelectedMovie = true;
-
         }
 
         movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));

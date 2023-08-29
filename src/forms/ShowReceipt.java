@@ -75,9 +75,13 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         setVisible(true);
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) {
+        try {
+            new ShowReceipt();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        new ShowReceipt();
 
     }
 
@@ -100,7 +104,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
             return false;
         }
 
-        int salesID  = list.getSelectedIndex();
+        int salesID = list.getSelectedIndex();
         for (int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);
@@ -130,7 +134,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         ((DefaultListModel) list.getModel()).removeAllElements();
 
     }
-
 
 
     @Override
