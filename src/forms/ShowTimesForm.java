@@ -159,7 +159,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());;
 
         }
 

@@ -80,7 +80,7 @@ public class Register extends JFrame implements ActionListener {
             try {
                 handleRegister();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.out.println(ex.getMessage());;
             }
             return;
         }

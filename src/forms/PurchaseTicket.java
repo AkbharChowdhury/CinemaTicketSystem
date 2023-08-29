@@ -142,7 +142,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     lblMovieDetails.setText(String.format("%s-%s: %s", db.getMovieName(movieID), date, time));
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.out.println(ex.getMessage());;
                 }
             }
 
@@ -329,7 +329,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == spNumTickets) updateTotalLabel();
-
 
     }
 

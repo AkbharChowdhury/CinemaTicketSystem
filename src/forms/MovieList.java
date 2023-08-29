@@ -95,6 +95,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
     private void autofocus() {
+
         addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e) {
                 txtMovieTitle.requestFocus();
@@ -104,10 +105,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
-        for (String column : new MovieGenres().tableColumns()) {
-            model.addColumn(column);
-
-        }
+        new MovieGenres().tableColumns().forEach(column -> model.addColumn(column));
 
     }
 
@@ -177,7 +175,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public void populateTable() {
         clearTable(table);
         var movieList = db.showMovieList(movieGenre);
-        final int movieSize =  movieList.size();
+        final int movieSize = movieList.size();
         for (int i = 0; i < movieSize; i++) {
             MovieGenres movie = movieList.get(i);
             model.addRow(new Object[0]);
@@ -186,7 +184,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
             model.setValueAt(movie.getRating(), i, 2);
             model.setValueAt(movie.getGenres(), i, 3);
         }
-
 
 
     }
