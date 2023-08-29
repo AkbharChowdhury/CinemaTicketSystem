@@ -85,7 +85,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
-            if (!processSelectedListItem(selectedListInvoiceItem)) {
+            if (!processSelectedListItem()) {
                 System.err.println("unable to print the selected invoice");
             }
         }
@@ -93,13 +93,14 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     }
 
-    private boolean processSelectedListItem(int salesID) {
+    private boolean processSelectedListItem() {
 
         if (list.isSelectionEmpty()) {
             Helper.showErrorMessage("You must select an item from the invoice list!", "Receipt error");
             return false;
         }
 
+        int salesID  = list.getSelectedIndex();
         for (int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);

@@ -114,10 +114,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         add("Center", middle);
         add("South", south);
 
-//        nav.btnListMovies.addActionListener(this::navClick);
-//        nav.btnShowTimes.addActionListener(this::navClick);
-//        nav.btnPurchase.addActionListener(this::navClick);
-//        nav.btnShowReceipt.addActionListener(this::navClick);
         cbMovies.addActionListener(this);
 
         btnConfirm.addActionListener(this);
@@ -299,16 +295,18 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     public void populateTable() {
         try {
             clearTable(table);
-            int i = 0;
-            for (var showTime : db.showMovieTimes(movieShowTimes)) {
+            var list = db.showMovieTimes(movieShowTimes);
+            final int size = list.size();
+            for (int i = 0; i < size; i++) {
+                ShowTimes showTime = list.get(i);
                 model.addRow(new Object[0]);
                 model.setValueAt(showTime.getShowTimeID(), i, 0);
                 model.setValueAt(Helper.formatDate(showTime.getDate()), i, 1);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 2);
                 model.setValueAt(showTime.getNumTicketsLeft(), i, 3);
-                i++;
 
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,17 +316,15 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
     private void populateMovieComboBox() {
-        for (var movie : db.getAllMovieShowTimes()) {
-            cbMovies.addItem(movie.getTitle());
-        }
+        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
+
     }
 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == spNumTickets) {
-            updateTotalLabel();
-        }
+        if (e.getSource() == spNumTickets) updateTotalLabel();
+
 
     }
 
