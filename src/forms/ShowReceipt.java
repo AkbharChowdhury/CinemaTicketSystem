@@ -26,8 +26,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
     Navigation nav = new Navigation();
     int selectedListInvoiceItem;
-    DefaultListModel model = new DefaultListModel();
-    JList list = new JList(model);
+    DefaultListModel<String> model = new DefaultListModel<>();
+    JList<String> list = new JList<>(model);
     List<Invoice> INVOICES;
 
 
