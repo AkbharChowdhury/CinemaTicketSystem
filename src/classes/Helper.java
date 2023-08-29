@@ -3,16 +3,12 @@ package classes;
 import enums.Pages;
 import enums.RedirectPage;
 import forms.*;
-import forms.ShowTimesForm;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,18 +68,6 @@ public final class Helper {
         return NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
     }
 
-    public static void validateNumber(KeyEvent e, JTextField textField) {
-        char c = e.getKeyChar();
-        if (Character.isLetter(c)) {
-            // disable input if the value is not a number
-            textField.setEditable(false);
-        }
-
-        boolean isNumber = !Character.isLetter(c) && e.getKeyChar() != 0;
-        textField.setEditable(isNumber);
-    }
-
-
 
     public static double calcPrice(int numTickets, double price) {
         return numTickets * price;
@@ -110,7 +93,7 @@ public final class Helper {
         try {
             Helper.gotoForm(currentPage, page);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -152,38 +135,63 @@ public final class Helper {
 
     }
 
+//    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+//
+//        if (LoginInfo.getCustomerID() == 0) {
+//            int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
+//
+//            if (dialogButton == JOptionPane.YES_OPTION) {
+//
+//                Form.setRedirectPage(page);
+//                if (!LoginInfo.hasOpenFormOnStartUp()) {
+//                    try {
+//
+//                        new Login();
+//                        frame.dispose();
+//
+//                    } catch (Exception ex) {
+//                        System.out.println(ex.getMessage());
+//                    }
+//                } else {
+//                    Helper.gotoForm(frame, Pages.LOGIN);
+//
+//                }
+//
+//
+//            } else {
+//
+//                if (!LoginInfo.hasOpenFormOnStartUp()) {
+//                    System.err.println("You must be logged in to view invoices or purchase tickets!");
+//                    System.exit(0);
+//
+//                }
+//
+//            }
+//
+//
+//        }
+//
+//        return LoginInfo.getCustomerID() != 0;
+//
+//    }
+
+
     public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         if (LoginInfo.getCustomerID() == 0) {
             int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
-
-            if (dialogButton == JOptionPane.YES_OPTION) {
-
-                Form.setRedirectPage(page);
-                if (!LoginInfo.hasOpenFormOnStartUp()) {
-                    try {
-
-                        new Login();
-                        frame.dispose();
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    Helper.gotoForm(frame, Pages.LOGIN);
-
-                }
-
-
-            } else {
-
-                if (!LoginInfo.hasOpenFormOnStartUp()) {
+            if (dialogButton != JOptionPane.YES_OPTION && !LoginInfo.hasOpenFormOnStartUp()){
                     System.err.println("You must be logged in to view invoices or purchase tickets!");
                     System.exit(0);
-
-                }
-
             }
+
+            Form.setRedirectPage(page);
+            if (LoginInfo.hasOpenFormOnStartUp()){
+                Helper.gotoForm(frame, Pages.LOGIN);
+                return false;
+            }
+            new Login();
+            frame.dispose();
 
 
         }
