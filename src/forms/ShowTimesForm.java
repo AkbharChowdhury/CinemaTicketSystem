@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -158,13 +159,14 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     public void populateTable() {
         try {
             clearTable(table);
-            int i = 0;
-            for (var showTime : db.showMovieTimes(movieShowTimes)) {
+            var showTimes = db.showMovieTimes(movieShowTimes);
+            final int size = showTimes.size();
+            for (int i = 0; i < size; i++) {
+                ShowTimes showTime = showTimes.get(i);
                 model.addRow(new Object[0]);
                 model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
                 model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
                 model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
-                i++;
 
             }
 
@@ -177,11 +179,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
     private void populateMovieComboBox() {
-
-        for (var movie : db.getAllMovieShowTimes()) {
-            cbMovies.addItem(movie.getTitle());
-        }
-
+        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
     }
 
     void populateShowDateComboBox() {
@@ -190,26 +188,17 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
-        for (var show : showTimesList) {
-            linkedHashSet.add(show.getDate());
-        }
+        showTimesList.forEach(show -> linkedHashSet.add(show.getDate()));
         cbDate.addItem(FormDetails.defaultShowDate());
-        for (var date : linkedHashSet) {
-            cbDate.addItem(Helper.formatDate(date));
-        }
+        linkedHashSet.forEach(date -> cbDate.addItem(Helper.formatDate(date)));
+
 
     }
 
     @Override
     public void navigation(JPanel top) {
-        for (var button : nav.navButtons()) {
-            top.add(button);
-        }
-
-        for (var button : nav.navButtons()) {
-            button.addActionListener(this::navClick);
-        }
-
+        Arrays.stream(nav.navButtons()).forEach(top::add);
+        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
     @Override

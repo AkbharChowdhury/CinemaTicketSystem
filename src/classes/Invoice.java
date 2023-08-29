@@ -31,6 +31,14 @@ public class Invoice {
     public Invoice() {
 
     }
+    public static String getDetails(Invoice invoice, double price){
+        return String.format("%s, %s, %s, %s",
+                invoice.getMovieTitle(),
+                Helper.formatDate(invoice.getShowDate()),
+                Helper.formatTime(invoice.getShowTime()),
+                Helper.formatMoney(price * invoice.getTotalTicket())
+        );
+    }
 
     public Invoice(boolean pdf) {
         //Create Document

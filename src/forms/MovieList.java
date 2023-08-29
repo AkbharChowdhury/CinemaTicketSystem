@@ -13,8 +13,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
@@ -175,28 +177,24 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public void populateTable() {
         clearTable(table);
         var movieList = db.showMovieList(movieGenre);
-        int i = 0;
-        for (var movie : movieList) {
+        final int movieSize =  movieList.size();
+        for (int i = 0; i < movieSize; i++) {
+            MovieGenres movie = movieList.get(i);
             model.addRow(new Object[0]);
             model.setValueAt(movie.getTitle(), i, 0);
             model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 1);
             model.setValueAt(movie.getRating(), i, 2);
             model.setValueAt(movie.getGenres(), i, 3);
-            i++;
         }
+
+
+
     }
 
     @Override
     public void navigation(JPanel top) {
-
-
-        for (var button : nav.navButtons()){
-            top.add(button);
-        }
-        for (var button : nav.navButtons()){
-            button.addActionListener(this::navClick);
-        }
-
+        Arrays.stream(nav.navButtons()).forEach(top::add);
+        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
     @Override

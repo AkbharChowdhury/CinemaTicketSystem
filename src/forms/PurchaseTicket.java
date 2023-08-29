@@ -13,7 +13,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +24,7 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 
 public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
@@ -335,15 +335,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void navigation(JPanel top) {
-
-        for (var button : nav.navButtons()){
-            top.add(button);
-        }
-
-        for (var button : nav.navButtons()){
-            button.addActionListener(this::navClick);
-        }
-
+        Arrays.stream(nav.navButtons()).forEach(top::add);
+        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
     @Override

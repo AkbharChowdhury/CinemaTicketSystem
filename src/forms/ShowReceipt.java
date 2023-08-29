@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
@@ -44,7 +45,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
 
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
-
 
 
         setResizable(false);
@@ -82,7 +82,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     }
 
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
@@ -113,8 +112,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     public void printInvoice(int i) {
         try {
-            Invoice invoiceDetails = new Invoice(true);
-            invoiceDetails.generatePDFInvoice(INVOICES, i);
+            Invoice invoice = new Invoice(true);
+            invoice.generatePDFInvoice(INVOICES, i);
             Helper.message("Your invoice has been saved as " + Invoice.INVOICE_FILE_NAME);
 
         } catch (ParseException ex) {
@@ -131,33 +130,19 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     }
 
+
+
     @Override
     public void populateList() {
         final double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
-        for (var invoice : INVOICES) {
-            double total = PRICE * invoice.getTotalTicket();
-            model.addElement(String.format("%s, %s, %s, %s",
-                    invoice.getMovieTitle(),
-                    Helper.formatDate(invoice.getShowDate()),
-                    Helper.formatTime(invoice.getShowTime()),
-                    Helper.formatMoney(total)
-            ));
-
-        }
+        INVOICES.forEach(invoice -> model.addElement(Invoice.getDetails(invoice, PRICE)));
     }
 
 
     @Override
     public void navigation(JPanel top) {
-
-        for (var button : nav.navButtons()){
-            top.add(button);
-        }
-
-        for (var button : nav.navButtons()){
-            button.addActionListener(this::navClick);
-        }
-
+        Arrays.stream(nav.navButtons()).forEach(top::add);
+        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
     @Override
