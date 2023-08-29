@@ -5,7 +5,6 @@ import enums.RedirectPage;
 import forms.*;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -92,7 +91,7 @@ public final class Helper {
 
     public static void goTo(JFrame currentPage, Pages page) {
         try {
-            Helper.gotoForm(currentPage, page);
+            gotoForm(currentPage, page);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
