@@ -95,9 +95,10 @@ public class Database {
         try (Connection con = getConnection()) {
 
             for (String item : list) {
+                var c = new Counter();
                 PreparedStatement stmt = con.prepareStatement(insertSQL);
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, item);
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), item);
                 stmt.executeUpdate();
             }
 
@@ -115,11 +116,12 @@ public class Database {
 
         try (Connection con = getConnection()) {
             for (var movie : movieList) {
+                var c = new Counter();
                 PreparedStatement stmt = con.prepareStatement(new Movie().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, movie.getTitle());
-                stmt.setInt(3, movie.getDuration());
-                stmt.setInt(4, movie.getRatingID());
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), movie.getTitle());
+                stmt.setInt(c.getCounter(), movie.getDuration());
+                stmt.setInt(c.getCounter(), movie.getRatingID());
 
                 stmt.executeUpdate();
             }
@@ -137,12 +139,14 @@ public class Database {
 
         try (Connection con = getConnection()) {
             for (var showtime : showTimeList) {
+                var c = new Counter();
+
                 PreparedStatement stmt = con.prepareStatement(new ShowTimes().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setInt(2, showtime.getMovieID());
-                stmt.setString(3, showtime.getDate());
-                stmt.setString(4, showtime.getTime());
-                stmt.setInt(5, showtime.getNumTicketsLeft());
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setInt(c.getCounter(), showtime.getMovieID());
+                stmt.setString(c.getCounter(), showtime.getDate());
+                stmt.setString(c.getCounter(), showtime.getTime());
+                stmt.setInt(c.getCounter(), showtime.getNumTicketsLeft());
 
                 stmt.executeUpdate();
             }
@@ -160,15 +164,17 @@ public class Database {
 
         try (Connection con = getConnection()) {
             for (var customer : customerList) {
+                var c = new Counter();
                 PreparedStatement stmt = con.prepareStatement(new Customer().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, customer.getFirstname());
-                stmt.setString(3, customer.getLastname());
-                stmt.setString(4, customer.getEmail());
-                stmt.setString(5, customer.getPassword());
-                stmt.setInt(6, customer.getTicketID());
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), customer.getFirstname());
+                stmt.setString(c.getCounter(), customer.getLastname());
+                stmt.setString(c.getCounter(), customer.getEmail());
+                stmt.setString(c.getCounter(), customer.getPassword());
+                stmt.setInt(c.getCounter(), customer.getTicketID());
 
                 stmt.executeUpdate();
+
             }
 
         } catch (Exception ex) {
@@ -182,12 +188,14 @@ public class Database {
 
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(new Customer().insert());
-            stmt.setNull(1, java.sql.Types.NULL);
-            stmt.setString(2, customer.getFirstname());
-            stmt.setString(3, customer.getLastname());
-            stmt.setString(4, customer.getEmail());
-            stmt.setString(5, customer.getPassword());
-            stmt.setInt(6, customer.getTicketID());
+            var c = new Counter();
+
+            stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+            stmt.setString(c.getCounter(), customer.getFirstname());
+            stmt.setString(c.getCounter(), customer.getLastname());
+            stmt.setString(c.getCounter(), customer.getEmail());
+            stmt.setString(c.getCounter(), customer.getPassword());
+            stmt.setInt(c.getCounter(), customer.getTicketID());
             return stmt.executeUpdate() == 1;
 
         } catch (Exception ex) {
@@ -205,10 +213,13 @@ public class Database {
 
 
         try (Connection con = getConnection()) {
+
             for (var item : movieGenres) {
+                var c = new Counter();
+
                 PreparedStatement stmt = con.prepareStatement(new MovieGenres().insert());
-                stmt.setInt(1, item.getMovieID());
-                stmt.setInt(2, item.getGenreID());
+                stmt.setInt(c.getCounter(), item.getMovieID());
+                stmt.setInt(c.getCounter(), item.getGenreID());
                 stmt.executeUpdate();
             }
 
@@ -245,10 +256,12 @@ public class Database {
         try (Connection con = getConnection()) {
 
             for (var ticket : ticketList) {
+                var c = new Counter();
+
                 PreparedStatement stmt = con.prepareStatement(new Ticket().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, ticket.getType());
-                stmt.setDouble(3, ticket.getPrice());
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), ticket.getType());
+                stmt.setDouble(c.getCounter(), ticket.getPrice());
 
                 stmt.executeUpdate();
             }
@@ -266,15 +279,12 @@ public class Database {
             String movieTitle = movieGenres.getTitle();
             String sql = movieGenres.showMovieList(movieGenres);
             String genre = movieGenres.getGenre();
-
-
+            var c = new Counter();
             PreparedStatement stmt = con.prepareStatement(sql);
-            int param = 1;
-            stmt.setString(param, "%" + movieTitle + "%");
+            stmt.setString(c.getCounter(), "%" + movieTitle + "%");
 
             if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
-                param++;
-                stmt.setString(param, '%' + genre + '%');
+                stmt.setString(c.getCounter(), '%' + genre + '%');
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -376,11 +386,12 @@ public class Database {
         String sql = new Sales().salesExists();
 
         try (Connection con = getConnection()) {
+            var c = new Counter();
             ResultSet rs2;
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, sales.getShowTimeID());
-            stmt.setInt(2, sales.getCustomerID());
-            stmt.setString(3, sales.getSalesDate());
+            stmt.setInt(c.getCounter(), sales.getShowTimeID());
+            stmt.setInt(c.getCounter(), sales.getCustomerID());
+            stmt.setString(c.getCounter(), sales.getSalesDate());
 
             rs2 = stmt.executeQuery();
 
@@ -587,8 +598,9 @@ public class Database {
 
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+            var c = new Counter();
+            stmt.setString(c.getCounter(), email);
+            stmt.setString(c.getCounter(), password);
             ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
