@@ -50,7 +50,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
         }
@@ -136,8 +135,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             private void handleTableClickEvent() {
                 try {
                     selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
-                    String date = model.getValueAt(table.getSelectedRow(), 1).toString();
-                    String time = model.getValueAt(table.getSelectedRow(), 2).toString();
+                    var c = new Counter();
+                    String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
+                    String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
                     lblMovieDetails.setText(String.format("%s-%s: %s", db.getMovieName(movieID), date, time));
                 } catch (Exception ex) {

@@ -54,6 +54,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         populateGenreComboBox();
 
         populateTable();
+
         table.getColumnModel().getColumn(0).setPreferredWidth(200);
         table.getColumnModel().getColumn(1).setPreferredWidth(40);
 

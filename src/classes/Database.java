@@ -189,7 +189,6 @@ public class Database {
         try (Connection con = getConnection()) {
             PreparedStatement stmt = con.prepareStatement(new Customer().insert());
             var c = new Counter();
-
             stmt.setNull(c.getCounter(), java.sql.Types.NULL);
             stmt.setString(c.getCounter(), customer.getFirstname());
             stmt.setString(c.getCounter(), customer.getLastname());
@@ -320,7 +319,6 @@ public class Database {
             String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
             PreparedStatement stmt = con.prepareStatement(sql);
             var c = new Counter();
-//            int param = 1;
 
             // selected movie id
             stmt.setInt(c.getCounter(), movieShowTimes.getMovieID());
@@ -406,20 +404,13 @@ public class Database {
     public boolean addSales(Sales sales) {
 
         try (Connection con = getConnection()) {
-            int param = 1;
+            var c = new Counter();
 
             PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
-
-            stmt1.setInt(param, sales.getShowTimeID());
-            param++;
-
-            stmt1.setInt(param, sales.getCustomerID());
-            param++;
-
-            stmt1.setString(param, sales.getSalesDate());
-            param++;
-
-            stmt1.setInt(param, sales.getTotalTicketsSold());
+            stmt1.setInt(c.getCounter(), sales.getShowTimeID());
+            stmt1.setInt(c.getCounter(), sales.getCustomerID());
+            stmt1.setString(c.getCounter(), sales.getSalesDate());
+            stmt1.setInt(c.getCounter(), sales.getTotalTicketsSold());
 
             return stmt1.executeUpdate() == 1;
 
