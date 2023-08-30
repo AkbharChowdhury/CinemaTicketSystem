@@ -127,7 +127,6 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
 
 
     public String showMovieList(MovieGenres movieGenres) {
-        int genreID = movieGenres.getGenreID();
         String genre = movieGenres.getGenre();
 
         String sql = """

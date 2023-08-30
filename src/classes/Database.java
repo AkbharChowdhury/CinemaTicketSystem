@@ -105,11 +105,11 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            errorMessage(ex);
+            getErrorMessage(ex);
         }
 
     }
-    private void errorMessage(Exception ex){
+    private void getErrorMessage(Exception ex){
         System.err.println(ex.getMessage());
 
 
@@ -133,7 +133,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            errorMessage(ex);
+            getErrorMessage(ex);
         }
 
     }
@@ -158,7 +158,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            errorMessage(ex);
+            getErrorMessage(ex);
         }
 
     }
@@ -184,7 +184,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            errorMessage(ex);
+            getErrorMessage(ex);
         }
 
     }
@@ -204,7 +204,7 @@ public class Database {
             return stmt.executeUpdate() == 1;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
         return false;
 
@@ -229,7 +229,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
@@ -272,7 +272,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
@@ -282,10 +282,9 @@ public class Database {
         try (Connection con = getConnection()) {
             // search by genre and movie title
             String movieTitle = movieGenres.getTitle();
-            String sql = movieGenres.showMovieList(movieGenres);
             String genre = movieGenres.getGenre();
             var c = new Counter();
-            PreparedStatement stmt = con.prepareStatement(sql);
+            PreparedStatement stmt = con.prepareStatement(movieGenres.showMovieList(movieGenres));
             stmt.setString(c.getCounter(), "%" + movieTitle + "%");
 
             if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
@@ -311,7 +310,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return list;
     }
@@ -353,7 +352,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return list;
     }
@@ -363,10 +362,8 @@ public class Database {
     public List<String> getMovieGenreList() {
         List<String> genreList = new ArrayList<>();
         try (Connection con = getConnection()) {
-
-            String sql = new MovieGenres().getMovieGenreList();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
             if (isResultSetEmpty(rs)) {
                 return genreList;
             }
@@ -376,7 +373,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return genreList;
     }
@@ -400,7 +397,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return false;
 
@@ -420,8 +417,8 @@ public class Database {
 
             return stmt1.executeUpdate() == 1;
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            getErrorMessage(e);
         }
         return false;
 
@@ -451,12 +448,12 @@ public class Database {
                 return invoices;
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                getErrorMessage(ex);
             }
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return null;
 
@@ -479,7 +476,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return movies;
     }
@@ -505,7 +502,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return ticketList;
     }
@@ -529,7 +526,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return "error fetching movie name by movie id";
 
@@ -554,7 +551,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
 
@@ -580,7 +577,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
 
