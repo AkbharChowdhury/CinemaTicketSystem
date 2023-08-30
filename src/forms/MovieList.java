@@ -13,8 +13,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
@@ -48,8 +49,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         setUpMovieListInit();
         navigation(top);
 
-        genreCB();
-
+        cbGenres.addItem(FormDetails.defaultGenre());
+        db.getMovieGenreList().forEach(cbGenres::addItem);
 
         populateTable();
 
@@ -87,12 +88,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     }
 
-    private void genreCB() {
-        cbGenres.addItem(FormDetails.defaultGenre());
-        db.getMovieGenreList().forEach(cbGenres::addItem);
-
-    }
-
 
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         new MovieList();
@@ -122,9 +117,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     }
 
-    private void populateGenreComboBox() {
 
-    }
 
 
     @Override
@@ -178,12 +171,13 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         var movieList = db.showMovieList(movieGenre);
         final int movieSize = movieList.size();
         for (int i = 0; i < movieSize; i++) {
+            var c = new Counter(true);
             MovieGenres movie = movieList.get(i);
             model.addRow(new Object[0]);
-            model.setValueAt(movie.getTitle(), i, 0);
-            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, 1);
-            model.setValueAt(movie.getRating(), i, 2);
-            model.setValueAt(movie.getGenres(), i, 3);
+            model.setValueAt(movie.getTitle(), i, c.getCounter());
+            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, c.getCounter());
+            model.setValueAt(movie.getRating(), i, c.getCounter());
+            model.setValueAt(movie.getGenres(), i, c.getCounter());
         }
 
 

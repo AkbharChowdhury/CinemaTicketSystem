@@ -11,7 +11,6 @@ public class Counter {
 
     }
     public Counter(boolean isZero) {
-        if (isZero) counter--;
-
+        counter--;
     }
 }

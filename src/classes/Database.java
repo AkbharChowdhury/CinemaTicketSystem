@@ -8,8 +8,8 @@ import tables.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Database {
@@ -361,39 +361,23 @@ public class Database {
 
     // for movie search
     public List<String> getMovieGenreList() {
-        List<String> genreList = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
-            if (isResultSetEmpty(rs)) return genreList;
-
-            while (rs.next()) genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
-
-
-        } catch (Exception e) {
-            getErrorMessage(e);
-        }
-        return genreList.stream().sorted().toList();
-    }
-
-    public List<Genre> getMovieGenreList1() {
-        List<Genre> genreList = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
+            if (isResultSetEmpty(rs)) return list;
 
             while (rs.next()) {
-
-                genreList.add(
-                        new Genre(rs.getInt(GenreTable.COLUMN_ID), rs.getString(GenreTable.COLUMN_GENRE))
-                );
+                list.add(rs.getString(GenreTable.COLUMN_GENRE));
             }
 
         } catch (Exception e) {
             getErrorMessage(e);
         }
-        return genreList;
+        
+        return list.stream().sorted().toList();
     }
+
 
 
     public boolean SalesExists(Sales sales) {

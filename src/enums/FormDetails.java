@@ -7,25 +7,18 @@ public enum FormDetails {
     public final String DESCRIPTION;
 
 
-
     FormDetails(String title) {
         this.DESCRIPTION = title;
 
-    }
-    public static String invoiceTitle(){
-        return APP_NAME + " Invoice";
     }
 
     public static String movieList() {
         return APP_NAME + "List Movies";
 
     }
+
     public static String register() {
         return "Customer registration";
-
-    }
-    public static String lblRegister() {
-        return "Register";
 
     }
 
@@ -34,11 +27,7 @@ public enum FormDetails {
 
     }
 
-    public static String lblLogin() {
-        return "Login";
-
-    }
-    public static String hyperlink(){
+    public static String hyperlink() {
         return "Return to movie list";
     }
 
@@ -56,8 +45,9 @@ public enum FormDetails {
         return APP_NAME + "Show Receipt";
 
     }
-    public static String getInvoiceTitle(){
-        return  "Cinema Ticket System Customer Invoice";
+
+    public static String getInvoiceTitle() {
+        return "Cinema Ticket System Customer Invoice";
     }
 
     public static String defaultGenre() {
@@ -69,13 +59,11 @@ public enum FormDetails {
         return "Select Movie";
 
     }
+
     public static String defaultShowDate() {
         return "Show All Dates";
 
     }
-
-
-
 
 
 }
