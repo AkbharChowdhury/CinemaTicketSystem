@@ -15,8 +15,6 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
@@ -50,7 +48,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         setUpMovieListInit();
         navigation(top);
 
-        genreBox();
+        genreCB();
 
 
         populateTable();
@@ -89,19 +87,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     }
 
-    private void genreBox() {
+    private void genreCB() {
         cbGenres.addItem(FormDetails.defaultGenre());
-        List<String> list = db.getMovieGenreList();
-//        list.sort(String.CASE_INSENSITIVE_ORDER);
-
-        list.sort(String::compareToIgnoreCase);
-        list.forEach(cbGenres::addItem);
-
-
-//        list.sort(Comparator.comparing());
-//        Collections.sort(list);
-//        List<String> sorted = list.stream().sorted().collect(Collectors.toList());
-
+        db.getMovieGenreList().forEach(cbGenres::addItem);
 
     }
 

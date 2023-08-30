@@ -93,7 +93,7 @@ public class Database {
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
         try (Connection con = getConnection()) {
-            list.forEach(item->{
+            list.forEach(item -> {
 
             });
             for (String item : list) {
@@ -109,7 +109,8 @@ public class Database {
         }
 
     }
-    private void getErrorMessage(Exception ex){
+
+    private void getErrorMessage(Exception ex) {
         System.err.println(ex.getMessage());
 
 
@@ -364,12 +365,28 @@ public class Database {
         try (Connection con = getConnection()) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
-            if (isResultSetEmpty(rs)) {
-                return genreList;
-            }
+            if (isResultSetEmpty(rs)) return genreList;
+
+            while (rs.next()) genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
+
+
+        } catch (Exception e) {
+            getErrorMessage(e);
+        }
+        return genreList.stream().sorted().toList();
+    }
+
+    public List<Genre> getMovieGenreList1() {
+        List<Genre> genreList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
+
             while (rs.next()) {
 
-                genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
+                genreList.add(
+                        new Genre(rs.getInt(GenreTable.COLUMN_ID), rs.getString(GenreTable.COLUMN_GENRE))
+                );
             }
 
         } catch (Exception e) {
