@@ -93,7 +93,9 @@ public class Database {
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
         try (Connection con = getConnection()) {
+            list.forEach(item->{
 
+            });
             for (String item : list) {
                 var c = new Counter();
                 PreparedStatement stmt = con.prepareStatement(insertSQL);
@@ -103,8 +105,13 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorMessage(ex);
         }
+
+    }
+    private void errorMessage(Exception ex){
+        System.err.println(ex.getMessage());
+
 
     }
 
@@ -122,12 +129,11 @@ public class Database {
                 stmt.setString(c.getCounter(), movie.getTitle());
                 stmt.setInt(c.getCounter(), movie.getDuration());
                 stmt.setInt(c.getCounter(), movie.getRatingID());
-
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorMessage(ex);
         }
 
     }
@@ -152,7 +158,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorMessage(ex);
         }
 
     }
@@ -178,7 +184,7 @@ public class Database {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorMessage(ex);
         }
 
     }
