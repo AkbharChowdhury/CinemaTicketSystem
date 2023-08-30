@@ -319,13 +319,13 @@ public class Database {
         try (Connection con = getConnection()) {
             String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
             PreparedStatement stmt = con.prepareStatement(sql);
-            int param = 1;
+            var c = new Counter();
+//            int param = 1;
 
             // selected movie id
-            stmt.setInt(param, movieShowTimes.getMovieID());
+            stmt.setInt(c.getCounter(), movieShowTimes.getMovieID());
             if (!showDate.isEmpty()) {
-                param++;
-                stmt.setString(param, showDate);
+                stmt.setString(c.getCounter(), showDate);
             }
 
 
@@ -376,9 +376,6 @@ public class Database {
         }
         return genreList;
     }
-
-
-
 
 
     public boolean SalesExists(Sales sales) {
@@ -738,11 +735,9 @@ public class Database {
              PreparedStatement pstmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
-
-
-            // set the corresponding param
-            pstmt.setInt(1, remainingTickets);
-            pstmt.setInt(2, movieShowTimes.getShowTimeID());
+            var c = new Counter();
+            pstmt.setInt(c.getCounter(), remainingTickets);
+            pstmt.setInt(c.getCounter(), movieShowTimes.getShowTimeID());
             // update
             int result = pstmt.executeUpdate();
             return result != 0;

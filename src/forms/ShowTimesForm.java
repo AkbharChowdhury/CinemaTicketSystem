@@ -12,12 +12,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.List;
+
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -30,12 +31,14 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     JComboBox<String> cbDate = new JComboBox<>();
     DefaultTableModel model;
     boolean hasSelectedMovie = false;
+    List<Movie> movieList;
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             nav.btnShowReceipt.setEnabled(false);
         }
+        movieList = db.getAllMovieShowTimes();
         movieShowTimes.setDate("");
 
         JScrollPane scrollPane = new JScrollPane();
@@ -105,7 +108,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             hasSelectedMovie = true;
         }
 
-        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+        movieShowTimes.setMovieID(movieList.get(cbMovies.getSelectedIndex()).getMovieID());
         populateShowDateComboBox();
         populateTable();
     }
@@ -150,11 +153,12 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             var showTimes = db.showMovieTimes(movieShowTimes);
             final int size = showTimes.size();
             for (int i = 0; i < size; i++) {
+                var c = new Counter(true);
                 ShowTimes showTime = showTimes.get(i);
                 model.addRow(new Object[0]);
-                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
-                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
-                model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
+                model.setValueAt(Helper.formatDate(showTime.getDate()), i, c.getCounter());
+                model.setValueAt(Helper.formatTime(showTime.getTime()), i, c.getCounter());
+                model.setValueAt(showTime.getNumTicketsLeft(), i, c.getCounter());
 
             }
 
@@ -167,7 +171,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
     private void populateMovieComboBox() {
-        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
+        movieList.forEach(movie -> cbMovies.addItem(movie.getTitle()));
     }
 
     void populateShowDateComboBox() {
