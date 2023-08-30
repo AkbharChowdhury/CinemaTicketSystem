@@ -248,7 +248,7 @@ public class Database {
             config.enforceForeignKeys(true); // enables foreign key constraint as sqlite disables them by default for compatibility
             connection = DriverManager.getConnection(CONN_STR, config.toProperties());
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            getErrorMessage(e);
             return null;
 
         }
@@ -615,7 +615,8 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
+
         }
         return false;
 
@@ -641,7 +642,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return false;
 
@@ -667,7 +668,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return false;
 
@@ -690,7 +691,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
 
@@ -713,7 +714,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
 
         return null;
@@ -733,7 +734,7 @@ public class Database {
             return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
     }
@@ -753,7 +754,7 @@ public class Database {
             int result = pstmt.executeUpdate();
             return result != 0;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            getErrorMessage(e);
         }
         return false;
     }
