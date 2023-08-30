@@ -6,13 +6,14 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Validation {
     private static final String NAME_ERROR = " must not contain numbers, spaces or special characters";
     private static final String REQUIRED = " is required";
     private static final String TICKET_REQUIRED = "Please select a ticket type";
+    private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
 
     public static boolean validateRegisterForm(Customer customer) throws SQLException, FileNotFoundException {
         Database db = Database.getInstance();
@@ -57,22 +58,19 @@ public final class Validation {
             errors.add(TICKET_REQUIRED);
         }
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             var output = new StringBuilder("This form contains the following errors: \n");
             errors.forEach(error -> output.append(error).append("\n"));
             Helper.showErrorMessage(output.toString(), "Register error");
 
         }
 
-        return errors.size() == 0;
+        return errors.isEmpty();
 
     }
 
     private static boolean isValidEmail(String email) {
-        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return Pattern.compile(EMAIL_REGEX).matcher(email).matches();
     }
 
     public static boolean validateLoginForm(String email, String password) {

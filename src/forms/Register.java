@@ -22,12 +22,14 @@ public class Register extends JFrame implements ActionListener {
     JPasswordField txtPassword = new JPasswordField();
     JComboBox<String> cbTicket = new JComboBox<>();
     JButton btnRegister = new JButton(Buttons.register());
+    List<Ticket> ticketList;
 
     Database db;
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
+        ticketList = db.getTicket();
         setLayout(new BorderLayout());
         setSize(310, 500);
         setTitle(FormDetails.register());
@@ -46,7 +48,7 @@ public class Register extends JFrame implements ActionListener {
         middle.add(txtPassword);
         middle.add(new JLabel("Ticket Type:"));
         cbTicket.addItem("Select Ticket Type");
-        populateTicketComboBox();
+        ticketList.forEach(ticket -> cbTicket.addItem(ticket.getType()));
         middle.add(cbTicket);
         add("Center", middle);
         JPanel bottom = new JPanel();
@@ -80,7 +82,8 @@ public class Register extends JFrame implements ActionListener {
             try {
                 handleRegister();
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());;
+                System.out.println(ex.getMessage());
+                ;
             }
             return;
         }
@@ -96,29 +99,19 @@ public class Register extends JFrame implements ActionListener {
         String lastname = txtLastName.getText().trim();
         String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
-        Customer customer = new Customer(firstname, lastname, email, password, cbTicket.getSelectedIndex());
-        if (Validation.validateRegisterForm(customer)) {
+        int ticketID = cbTicket.getSelectedIndex();
 
-            // encrypt the password
-            customer.setPassword(Encryption.encode(password));
-            // add customer
-            if (db.addCustomer(customer)) {
-                LoginInfo.setEmail(email);
-                Helper.message("Your account has been created, you can now login");
-            }
-            Helper.gotoForm(this, Pages.LOGIN);
-
-
+        Customer customer = new Customer(firstname, lastname, email, password, ticketID);
+        if (!Validation.validateRegisterForm(customer)) return;
+        customer.setTicketID(ticketID - 1);
+        customer.setPassword(Encryption.encode(password));
+        if (db.addCustomer(customer)) {
+            LoginInfo.setEmail(email);
+            Helper.message("Your account has been created, you can now login");
         }
-    }
+        Helper.gotoForm(this, Pages.LOGIN);
 
-    private void populateTicketComboBox() {
-        List<Ticket> ticketList = db.getTicket();
-        for (var ticket : ticketList) {
-            cbTicket.addItem(ticket.getType());
-        }
 
     }
-
 
 }
