@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
-public class Register extends JFrame implements ActionListener {
+public final class Register extends JFrame implements ActionListener {
     JTextField txtFirstname = new JTextField();
     JTextField txtLastName = new JTextField();
     JTextField txtEmail = new JTextField();
@@ -70,7 +70,7 @@ public class Register extends JFrame implements ActionListener {
         try {
             new Register();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
     }
