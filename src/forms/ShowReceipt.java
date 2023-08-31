@@ -131,8 +131,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     @Override
-    public void clearList(JList table) {
-        ((DefaultListModel) list.getModel()).removeAllElements();
+    public void clearList(JList<String> table) {
+        ((DefaultListModel<String>) list.getModel()).removeAllElements();
 
     }
 

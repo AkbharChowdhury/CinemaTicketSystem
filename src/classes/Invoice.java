@@ -32,7 +32,8 @@ public class Invoice {
     public Invoice() {
 
     }
-    public static String getDetails(Invoice invoice, double price){
+
+    public static String getDetails(Invoice invoice, double price) {
         return String.format("%s, %s, %s, %s",
                 invoice.getMovieTitle(),
                 Helper.formatDate(invoice.getShowDate()),
@@ -126,7 +127,7 @@ public class Invoice {
         this.rating = rating;
     }
 
-    public  static String getInvoiceDetails() {
+    public static String getInvoiceDetails() {
         return """
                 SELECT
                     s.*,
@@ -159,7 +160,6 @@ public class Invoice {
         Database db = Database.getInstance();
         Ticket ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-
 
         //get the page
         PDPage page = invoiceDocument.getPage(0);
@@ -209,7 +209,7 @@ public class Invoice {
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
-            cs.showText(WordUtils.capitalizeFully(String.format("%s %s",invoice.get(i).getFirstname(),invoice.get(i).getLastname())));
+            cs.showText(WordUtils.capitalizeFully(String.format("%s %s", invoice.get(i).getFirstname(), invoice.get(i).getLastname())));
 
             cs.newLine();
             cs.showText("Purchase date: ");
@@ -304,7 +304,7 @@ public class Invoice {
             invoiceDocument.save(Invoice.INVOICE_FILE_NAME);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());;
         }
     }
 
