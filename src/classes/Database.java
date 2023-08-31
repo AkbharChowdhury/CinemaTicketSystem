@@ -8,8 +8,8 @@ import tables.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Database {
@@ -92,13 +92,10 @@ public class Database {
     // used for the lookup tables e.g. Movies, Genres, Ratings, and Tickets tables
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
-        try (Connection con = getConnection()) {
-            list.forEach(item -> {
-
-            });
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(insertSQL)) {
             for (String item : list) {
                 var c = new Counter();
-                PreparedStatement stmt = con.prepareStatement(insertSQL);
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), item);
                 stmt.executeUpdate();
@@ -122,10 +119,10 @@ public class Database {
         List<Movie> movieList = FileHandler.getMovieData(movieFile);
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Movie().insert())) {
             for (var movie : movieList) {
                 var c = new Counter();
-                PreparedStatement stmt = con.prepareStatement(new Movie().insert());
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), movie.getTitle());
                 stmt.setInt(c.getCounter(), movie.getDuration());
@@ -144,11 +141,10 @@ public class Database {
         var showTimeList = FileHandler.getShowTimeData();
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new ShowTimes().insert())) {
             for (var showtime : showTimeList) {
                 var c = new Counter();
-
-                PreparedStatement stmt = con.prepareStatement(new ShowTimes().insert());
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setInt(c.getCounter(), showtime.getMovieID());
                 stmt.setString(c.getCounter(), showtime.getDate());
@@ -169,10 +165,10 @@ public class Database {
         var customerList = FileHandler.getCustomerData();
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Customer().insert())) {
             for (var customer : customerList) {
                 var c = new Counter();
-                PreparedStatement stmt = con.prepareStatement(new Customer().insert());
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), customer.getFirstname());
                 stmt.setString(c.getCounter(), customer.getLastname());
@@ -193,8 +189,8 @@ public class Database {
 
     public boolean addCustomer(Customer customer) {
 
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(new Customer().insert());
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Customer().insert())) {
             var c = new Counter();
             stmt.setNull(c.getCounter(), java.sql.Types.NULL);
             stmt.setString(c.getCounter(), customer.getFirstname());
@@ -218,12 +214,11 @@ public class Database {
         List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new MovieGenres().insert())) {
 
             for (var item : movieGenres) {
                 var c = new Counter();
-
-                PreparedStatement stmt = con.prepareStatement(new MovieGenres().insert());
                 stmt.setInt(c.getCounter(), item.getMovieID());
                 stmt.setInt(c.getCounter(), item.getGenreID());
                 stmt.executeUpdate();
@@ -259,12 +254,12 @@ public class Database {
     private void insertTickets() throws FileNotFoundException {
         List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Ticket().insert())) {
 
             for (var ticket : ticketList) {
                 var c = new Counter();
 
-                PreparedStatement stmt = con.prepareStatement(new Ticket().insert());
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), ticket.getType());
                 stmt.setDouble(c.getCounter(), ticket.getPrice());
@@ -280,12 +275,12 @@ public class Database {
 
     public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         List<MovieGenres> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(movieGenres.showMovieList(movieGenres))) {
             // search by genre and movie title
             String movieTitle = movieGenres.getTitle();
             String genre = movieGenres.getGenre();
             var c = new Counter();
-            PreparedStatement stmt = con.prepareStatement(movieGenres.showMovieList(movieGenres));
             stmt.setString(c.getCounter(), "%" + movieTitle + "%");
 
             if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
@@ -321,9 +316,8 @@ public class Database {
         String showDate = movieShowTimes.getDate();
         List<ShowTimes> list = new ArrayList<>();
 
-        try (Connection con = getConnection()) {
-            String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new ShowTimes().getSelectedMovieShowTimes(movieShowTimes))) {
             var c = new Counter();
 
             // selected movie id
@@ -362,8 +356,8 @@ public class Database {
     // for movie search
     public List<String> getMovieGenreList() {
         List<String> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            Statement stmt = con.createStatement();
+        try (Connection con = getConnection();
+             var stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
             if (isResultSetEmpty(rs)) return list;
 
@@ -374,25 +368,24 @@ public class Database {
         } catch (Exception e) {
             getErrorMessage(e);
         }
-        
+
         return list.stream().sorted().toList();
     }
-
 
 
     public boolean SalesExists(Sales sales) {
 
         String sql = new Sales().salesExists();
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
             var c = new Counter();
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
+
             stmt.setInt(c.getCounter(), sales.getShowTimeID());
             stmt.setInt(c.getCounter(), sales.getCustomerID());
             stmt.setString(c.getCounter(), sales.getSalesDate());
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
@@ -407,16 +400,17 @@ public class Database {
 
     public boolean addSales(Sales sales) {
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Sales().insert())
+        ) {
             var c = new Counter();
 
-            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
-            stmt1.setInt(c.getCounter(), sales.getShowTimeID());
-            stmt1.setInt(c.getCounter(), sales.getCustomerID());
-            stmt1.setString(c.getCounter(), sales.getSalesDate());
-            stmt1.setInt(c.getCounter(), sales.getTotalTicketsSold());
+            stmt.setInt(c.getCounter(), sales.getShowTimeID());
+            stmt.setInt(c.getCounter(), sales.getCustomerID());
+            stmt.setString(c.getCounter(), sales.getSalesDate());
+            stmt.setInt(c.getCounter(), sales.getTotalTicketsSold());
 
-            return stmt1.executeUpdate() == 1;
+            return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
             getErrorMessage(e);
@@ -428,34 +422,30 @@ public class Database {
 
     public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            try (PreparedStatement stmt = con.prepareStatement(new Invoice().getInvoiceDetails())) {
-                stmt.setInt(1, customerID);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    Invoice invoice = new Invoice();
-                    invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
-                    invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
-                    invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
-                    invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
-                    invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
-                    invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
-                    invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
-                    invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
-                    invoices.add(invoice);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Invoice().getInvoiceDetails())) {
+            stmt.setInt(1, customerID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
+                invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
+                invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
+                invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+                invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
+                invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
+                invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
+                invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
+                invoices.add(invoice);
 
 
-                }
-                return invoices;
-
-            } catch (Exception ex) {
-                getErrorMessage(ex);
             }
+            return invoices;
 
-
-        } catch (Exception e) {
-            getErrorMessage(e);
+        } catch (Exception ex) {
+            getErrorMessage(ex);
         }
+
         return null;
 
     }
@@ -464,10 +454,11 @@ public class Database {
     public List<Movie> getAllMovieShowTimes() {
         List<Movie> movies = new ArrayList<>();
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.createStatement()) {
 
             String sql = new ShowTimes().getAllMovieShowTimes();
-            Statement stmt = con.createStatement();
+
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -483,17 +474,13 @@ public class Database {
     }
 
 
-    public List<Ticket> getTicket() {
+    public List<Ticket> getTickets() {
         List<Ticket> ticketList = new ArrayList<>();
-        try (Connection con = getConnection()) {
-
-            Statement stmt = con.createStatement();
+        try (Connection con = getConnection(); Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery(new Ticket().getTickets());
 
+            if (isResultSetEmpty(rs)) return ticketList;
 
-            if (isResultSetEmpty(rs)) {
-                return ticketList;
-            }
             while (rs.next()) {
                 int ticketID = rs.getInt(TicketsTable.COLUMN_ID);
                 String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
@@ -512,12 +499,10 @@ public class Database {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME, MovieTable.COLUMN_ID);
 
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, movieID);
-
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             if (isResultSetEmpty(rs)) {
                 return "Error: there are no movies that exists with the specified id!";
@@ -537,12 +522,10 @@ public class Database {
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE);
 
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
             stmt.setString(1, title);
-
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             if (isResultSetEmpty(rs)) {
                 return 0;
@@ -559,37 +542,13 @@ public class Database {
     }
 
 
-    public int getGenreID(String genre) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", GenreTable.COLUMN_ID, GenreTable.TABLE_NAME, GenreTable.COLUMN_GENRE);
-
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, genre);
-
-            rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return 0;
-            }
-
-            return rs.getInt(GenreTable.COLUMN_ID);
-
-
-        } catch (Exception e) {
-            getErrorMessage(e);
-        }
-        return 0;
-
-    }
-
     public boolean isAuthorised(String email, String password) {
 
         String sql = "SELECT email, password FROM Customers WHERE email = ? AND password = ?";
 
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
+
             var c = new Counter();
             stmt.setString(c.getCounter(), email);
             stmt.setString(c.getCounter(), password);
@@ -615,12 +574,12 @@ public class Database {
                 CustomerTable.COLUMN_EMAIL
         );
 
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, email);
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
@@ -641,12 +600,11 @@ public class Database {
                 SalesTable.COLUMN_CUSTOMER_ID
         );
 
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, customerID);
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
@@ -654,6 +612,7 @@ public class Database {
         } catch (Exception e) {
             getErrorMessage(e);
         }
+
         return false;
 
     }
@@ -662,13 +621,11 @@ public class Database {
         String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(sql)) {
 
-            ResultSet rs3;
-            PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, email);
-
-            rs3 = stmt.executeQuery();
+            ResultSet rs3 = stmt.executeQuery();
 
 
             return rs3.getInt(CustomerTable.COLUMN_ID);
@@ -684,12 +641,10 @@ public class Database {
 
     public Ticket getCustomerTicketType(int customerID) {
 
-        try (Connection con = getConnection()) {
-
-            String sql = new Customer().getCustomerTicketType();
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Customer().getCustomerTicketType())
+        ) {
             stmt.setInt(1, customerID);
-
             ResultSet rs = stmt.executeQuery();
             int ticketId = rs.getInt(TicketsTable.COLUMN_ID);
             String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
@@ -705,10 +660,8 @@ public class Database {
     }
 
     public int getNumTickets(ShowTimes movieShowTimes) {
-        try (Connection con = getConnection()) {
-
-            String sql = new ShowTimes().getSelectedShowDetails();
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new ShowTimes().getSelectedShowDetails())) {
             stmt.setInt(1, movieShowTimes.getShowTimeID());
             ResultSet r = stmt.executeQuery();
 
@@ -726,16 +679,15 @@ public class Database {
 
     public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
-
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
+             var stmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
             var c = new Counter();
-            pstmt.setInt(c.getCounter(), remainingTickets);
-            pstmt.setInt(c.getCounter(), movieShowTimes.getShowTimeID());
+            stmt.setInt(c.getCounter(), remainingTickets);
+            stmt.setInt(c.getCounter(), movieShowTimes.getShowTimeID());
             // update
-            int result = pstmt.executeUpdate();
+            int result = stmt.executeUpdate();
             return result != 0;
         } catch (SQLException e) {
             getErrorMessage(e);

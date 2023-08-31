@@ -134,7 +134,7 @@ public class ShowTimes implements Queries, TableProperties {
                         ShowTimes s
                     JOIN Movies m ON
                         m.movie_id = s.movie_id
-                    WHERE show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day') AND num_tickets_left >0      
+                    WHERE show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day') AND num_tickets_left >0  
                     ORDER BY m.title
                 """;
     }

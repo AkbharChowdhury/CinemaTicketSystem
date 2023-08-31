@@ -6,9 +6,10 @@ import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 
-import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class Register extends JFrame implements ActionListener {
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-        ticketList = db.getTicket();
+        ticketList = db.getTickets();
         setLayout(new BorderLayout());
         setSize(310, 500);
         setTitle(FormDetails.register());
@@ -103,7 +104,7 @@ public class Register extends JFrame implements ActionListener {
 
         Customer customer = new Customer(firstname, lastname, email, password, ticketID);
         if (!Validation.validateRegisterForm(customer)) return;
-        customer.setTicketID(ticketID - 1);
+        customer.setTicketID(ticketList.get(ticketID - 1).getTicketID());
         customer.setPassword(Encryption.encode(password));
         if (db.addCustomer(customer)) {
             LoginInfo.setEmail(email);
