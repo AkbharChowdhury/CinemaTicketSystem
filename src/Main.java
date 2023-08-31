@@ -1,12 +1,8 @@
-import classes.Counter;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class Main {
     public static void main(String[] args) {
-        var counter = new Counter();
-        int count = counter.getCounter();
-        System.out.println(count);
-        System.out.println(counter.getCounter());
-
+        System.out.println(WordUtils.capitalizeFully("hello world"));;
 
     }
 }

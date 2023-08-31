@@ -2,6 +2,7 @@ package classes;
 
 
 import enums.FormDetails;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -208,8 +209,7 @@ public class Invoice {
             cs.setFont(font, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
-
-            cs.showText(Helper.capitalise(invoice.get(i).getFirstname()) + " " + Helper.capitalise(invoice.get(i).getLastname()));
+            cs.showText(WordUtils.capitalizeFully(String.format("%s %s",invoice.get(i).getFirstname(),invoice.get(i).getLastname())));
 
             cs.newLine();
             cs.showText("Purchase date: ");
