@@ -7,7 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -55,7 +55,7 @@ public class Invoice {
 
         for (String metaCharacter : metaCharacters) {
             if (inputString.contains(metaCharacter)) {
-                inputString = inputString.replace(metaCharacter, "\\" + metaCharacter);
+                return inputString.replace(metaCharacter, "\\" + metaCharacter);
             }
         }
         return inputString;
@@ -125,35 +125,36 @@ public class Invoice {
         this.rating = rating;
     }
 
-    public String getInvoiceDetails() {
+    public  static String getInvoiceDetails() {
         return """
                 SELECT
-                                    s.*,
-                                    sh.show_date,
-                                    sh.show_time,
-                                    c.firstname,
-                                    c.lastname,
-                                    m.title,
-                                    r.rating
-                                FROM
-                                    Sales s
-                                JOIN ShowTimes sh ON
-                                    sh.show_time_id = s.show_time_id
-                                JOIN Movies m ON
-                                    m.movie_id = sh.movie_id
-                                JOIN Ratings r ON
-                                    r.rating_id = m.rating_id
-                                JOIN Customers c ON
-                                    c.customer_id = s.customer_id
-                             
-                                WHERE
-                                    s.customer_id = ?  
-                                    ORDER BY strftime('%s', sales_date) DESC
-                                                           
+                    s.*,
+                    sh.show_date,
+                    sh.show_time,
+                    c.firstname,
+                    c.lastname,
+                    m.title,
+                    r.rating
+                FROM
+                    Sales s
+                JOIN ShowTimes sh ON
+                    sh.show_time_id = s.show_time_id
+                JOIN Movies m ON
+                    m.movie_id = sh.movie_id
+                JOIN Ratings r ON
+                    r.rating_id = m.rating_id
+                JOIN Customers c ON
+                    c.customer_id = s.customer_id
+                WHERE
+                    s.customer_id = ?
+                ORDER BY
+                    strftime('%s', sales_date)
+                DESC
+                   
                 """;
     }
 
-    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, FileNotFoundException {
+    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, IOException {
         Database db = Database.getInstance();
         Ticket ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
@@ -161,12 +162,12 @@ public class Invoice {
 
         //get the page
         PDPage page = invoiceDocument.getPage(0);
-        try {
+
+        try (var cs = new PDPageContentStream(invoiceDocument, page)) {
             double total = ticketDetails.getPrice() * invoice.get(i).getTotalTicket();
 
 
             //Prepare Content Stream
-            PDPageContentStream cs = new PDPageContentStream(invoiceDocument, page);
 
             //Writing Single Line text
             //Writing the Invoice title
@@ -181,7 +182,8 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 18);
             cs.newLineAtOffset(180, 690);
-            cs.showText(invoice.get(i).getMovieTitle());
+            cs.showText(escapeMetaCharacters(invoice.get(i).getMovieTitle()));
+
             cs.endText();
 
             cs.beginText();

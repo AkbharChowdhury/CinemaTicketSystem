@@ -125,22 +125,26 @@ public class ShowTimes implements Queries, TableProperties {
     }
 
 
-    public String getAllMovieShowTimes() {
+    public static String getAllMovieShowTimes() {
         return """
-                    SELECT DISTINCT
-                        (s.movie_id),
-                        m.title
-                    FROM
-                        ShowTimes s
-                    JOIN Movies m ON
-                        m.movie_id = s.movie_id
-                    WHERE show_date >= DATE('NOW') AND DATE('now', 'start of month', '+1 month' , '-1 day') AND num_tickets_left >0  
-                    ORDER BY m.title
+                SELECT DISTINCT
+                    (s.movie_id),
+                    m.title
+                FROM
+                    ShowTimes s
+                JOIN Movies m ON
+                    m.movie_id = s.movie_id
+                WHERE
+                    show_date >= DATE('NOW') AND DATE('now','start of month', '+1 month', '-1 day')\s
+                    AND num_tickets_left > 0
+                    AND show_time >= TIME('NOW')
+                ORDER BY
+                    m.title
                 """;
     }
 
 
-    public String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
+    public  static String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
 
         String sql = """
                                SELECT
@@ -160,8 +164,6 @@ public class ShowTimes implements Queries, TableProperties {
                                     sql += " AND show_date LIKE ?";
                                 }
 
-
-
                                 sql+="""
                 					GROUP BY show_time_id
                 					HAVING show_time >= TIME('NOW')
@@ -176,13 +178,13 @@ public class ShowTimes implements Queries, TableProperties {
 
     }
 
-    public String getSelectedShowDetails() {
+    public static String getSelectedShowDetails() {
         return "SELECT " + ShowTimesTable.COLUMN_NUM_TICKETS_LEFT + " FROM " + ShowTimesTable.TABLE_NAME + " WHERE  " + ShowTimesTable.COLUMN_ID + "=?";
 
     }
 
 
-    public String updateNumTickets() {
+    public  static String updateNumTickets() {
         return String.format("UPDATE %s SET %s = ? WHERE %s = ?",
                 ShowTimesTable.TABLE_NAME,
                 ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,

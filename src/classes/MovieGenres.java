@@ -6,7 +6,6 @@ import interfaces.TableProperties;
 import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
-import tables.RatingTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +125,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
 
 
 
-    public String showMovieList(MovieGenres movieGenres) {
+    public static  String showMovieList(MovieGenres movieGenres) {
         String genre = movieGenres.getGenre();
 
         String sql = """
@@ -159,7 +158,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
 
     }
 
-    public String getMovieGenreList(){
+    public  static String getMovieGenreList(){
         return """
                 SELECT DISTINCT(g.genre), g.genre_id
                 FROM MovieGenres mg

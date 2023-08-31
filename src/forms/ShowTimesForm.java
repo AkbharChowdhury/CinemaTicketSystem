@@ -16,9 +16,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.List;
-
+import java.util.Set;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -63,7 +62,8 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         cbMovies.addItem(FormDetails.defaultMovie());
-        populateMovieComboBox();
+        movieList.forEach(movie -> cbMovies.addItem(movie.getTitle()));
+
         middle.add(cbMovies);
 
         middle.add(new Label("Filter Date:"));
@@ -163,16 +163,14 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
+            ;
 
         }
 
 
     }
 
-    private void populateMovieComboBox() {
-        movieList.forEach(movie -> cbMovies.addItem(movie.getTitle()));
-    }
 
     void populateShowDateComboBox() {
         cbDate.removeAllItems();

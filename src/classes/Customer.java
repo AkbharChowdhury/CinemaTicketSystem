@@ -2,8 +2,6 @@ package classes;
 
 import interfaces.Queries;
 import tables.CustomerTable;
-import tables.MovieTable;
-import tables.RatingTable;
 import tables.TicketsTable;
 
 public class Customer extends Ticket implements Queries {
@@ -106,7 +104,7 @@ public class Customer extends Ticket implements Queries {
         );
     }
 
-    public String getCustomerTicketType(){
+    public  static String getCustomerTicketType(){
         return """
                 SELECT  c.customer_id, t.type, t.price, t.ticket_id                         
                 FROM Customers c JOIN Tickets t ON t.ticket_id = c.ticket_id

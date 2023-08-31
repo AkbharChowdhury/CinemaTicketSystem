@@ -276,7 +276,7 @@ public class Database {
     public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(movieGenres.showMovieList(movieGenres))) {
+             var stmt = con.prepareStatement(MovieGenres.showMovieList(movieGenres))) {
             // search by genre and movie title
             String movieTitle = movieGenres.getTitle();
             String genre = movieGenres.getGenre();
@@ -317,7 +317,7 @@ public class Database {
         List<ShowTimes> list = new ArrayList<>();
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(new ShowTimes().getSelectedMovieShowTimes(movieShowTimes))) {
+             var stmt = con.prepareStatement(ShowTimes.getSelectedMovieShowTimes(movieShowTimes))) {
             var c = new Counter();
 
             // selected movie id
@@ -358,7 +358,7 @@ public class Database {
         List<String> list = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(new MovieGenres().getMovieGenreList());
+            ResultSet rs = stmt.executeQuery(MovieGenres.getMovieGenreList());
             if (isResultSetEmpty(rs)) return list;
 
             while (rs.next()) {
@@ -423,7 +423,7 @@ public class Database {
     public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(new Invoice().getInvoiceDetails())) {
+             var stmt = con.prepareStatement(Invoice.getInvoiceDetails())) {
             stmt.setInt(1, customerID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -446,7 +446,7 @@ public class Database {
             getErrorMessage(ex);
         }
 
-        return null;
+        return invoices;
 
     }
 
@@ -456,10 +456,7 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.createStatement()) {
-
-            String sql = new ShowTimes().getAllMovieShowTimes();
-
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(ShowTimes.getAllMovieShowTimes());
 
             while (rs.next()) {
 
@@ -520,10 +517,9 @@ public class Database {
 
     public int getMovieID(String title) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE);
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement(String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE))) {
             stmt.setString(1, title);
             ResultSet rs = stmt.executeQuery();
 
@@ -642,7 +638,7 @@ public class Database {
     public Ticket getCustomerTicketType(int customerID) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(new Customer().getCustomerTicketType())
+             var stmt = con.prepareStatement(Customer.getCustomerTicketType())
         ) {
             stmt.setInt(1, customerID);
             ResultSet rs = stmt.executeQuery();
@@ -661,7 +657,7 @@ public class Database {
 
     public int getNumTickets(ShowTimes movieShowTimes) {
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(new ShowTimes().getSelectedShowDetails())) {
+             var stmt = con.prepareStatement(ShowTimes.getSelectedShowDetails())) {
             stmt.setInt(1, movieShowTimes.getShowTimeID());
             ResultSet r = stmt.executeQuery();
 
@@ -680,7 +676,7 @@ public class Database {
     public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
         try (Connection conn = getConnection();
-             var stmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
+             var stmt = conn.prepareStatement(ShowTimes.updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
             var c = new Counter();

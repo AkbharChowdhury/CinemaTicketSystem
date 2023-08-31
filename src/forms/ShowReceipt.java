@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -123,7 +124,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
         } catch (ParseException ex) {
             Helper.showErrorMessage("The time cannot be formatted", "Time parse error");
-        } catch (SQLException | FileNotFoundException e) {
+        } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
     }
