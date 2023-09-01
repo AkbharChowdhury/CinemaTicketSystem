@@ -278,12 +278,11 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(MovieGenres.showMovieList(movieGenres))) {
             // search by genre and movie title
-            String movieTitle = movieGenres.getTitle();
             String genre = movieGenres.getGenre();
             var c = new Counter();
-            stmt.setString(c.getCounter(), "%" + movieTitle + "%");
+            stmt.setString(c.getCounter(), "%" + movieGenres.getTitle() + "%");
 
-            if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
+            if (!FormDetails.defaultGenre().equalsIgnoreCase(genre)) {
                 stmt.setString(c.getCounter(), '%' + genre + '%');
             }
 
