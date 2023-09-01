@@ -56,7 +56,7 @@ public class Sales implements Queries {
     }
 
 
-    public String salesExists() {
+    public  static String salesExists() {
         return "SELECT * FROM Sales WHERE show_time_id = ? AND customer_id = ? AND sales_date =?";
 
     }

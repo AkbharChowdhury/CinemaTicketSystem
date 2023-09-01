@@ -80,7 +80,8 @@ public final class Helper {
     }
 
     public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+
+        var formatter = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         return new SimpleDateFormat("yyyy-MM-dd").format(formatter.parse(dateStr));
     }
 

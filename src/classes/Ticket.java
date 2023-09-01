@@ -78,7 +78,7 @@ public class Ticket implements Queries {
 
         );
     }
-    public String getTickets(){
+    public static String getTickets(){
         return "SELECT * FROM " + TicketsTable.TABLE_NAME;
     }
 

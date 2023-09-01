@@ -374,12 +374,9 @@ public class Database {
 
     public boolean SalesExists(Sales sales) {
 
-        String sql = new Sales().salesExists();
-
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement(Sales.salesExists())) {
             var c = new Counter();
-
             stmt.setInt(c.getCounter(), sales.getShowTimeID());
             stmt.setInt(c.getCounter(), sales.getCustomerID());
             stmt.setString(c.getCounter(), sales.getSalesDate());
@@ -473,7 +470,7 @@ public class Database {
     public List<Ticket> getTickets() {
         List<Ticket> ticketList = new ArrayList<>();
         try (Connection con = getConnection(); Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(new Ticket().getTickets());
+            ResultSet rs = stmt.executeQuery(Ticket.getTickets());
 
             if (isResultSetEmpty(rs)) return ticketList;
 
@@ -539,10 +536,8 @@ public class Database {
 
     public boolean isAuthorised(String email, String password) {
 
-        String sql = "SELECT email, password FROM Customers WHERE email = ? AND password = ?";
-
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement("SELECT email, password FROM Customers WHERE email = ? AND password = ?")) {
 
             var c = new Counter();
             stmt.setString(c.getCounter(), email);
