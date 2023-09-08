@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Register extends JFrame implements ActionListener {
@@ -84,7 +85,7 @@ public final class Register extends JFrame implements ActionListener {
                 handleRegister();
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
-                ;
+
             }
             return;
         }
@@ -99,7 +100,7 @@ public final class Register extends JFrame implements ActionListener {
         String firstname = txtFirstname.getText().trim();
         String lastname = txtLastName.getText().trim();
         String email = txtEmail.getText().trim();
-        String password = txtPassword.getText();
+        String password = String.valueOf(txtPassword.getPassword());
         int ticketID = cbTicket.getSelectedIndex();
 
         Customer customer = new Customer(firstname, lastname, email, password, ticketID);
