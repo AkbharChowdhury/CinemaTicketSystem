@@ -103,7 +103,7 @@ public final class Register extends JFrame implements ActionListener {
         String password = String.valueOf(txtPassword.getPassword());
         int ticketID = cbTicket.getSelectedIndex();
 
-        Customer customer = new Customer(firstname, lastname, email, password, ticketID);
+        var customer = new Customer(firstname, lastname, email, password, ticketID);
         if (!Validation.validateRegisterForm(customer)) return;
         customer.setTicketID(ticketList.get(ticketID - 1).getTicketID());
         customer.setPassword(Encryption.encode(password));
