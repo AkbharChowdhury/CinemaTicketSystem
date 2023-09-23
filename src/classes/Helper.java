@@ -70,12 +70,7 @@ public final class Helper {
     }
 
     public static String formatDate(String date) {
-        String[] dateSplit = date.split("-");
-        int year = Integer.parseInt(dateSplit[0]);
-        int month = Integer.parseInt(dateSplit[1]);
-        int day = Integer.parseInt(dateSplit[2]);
-        LocalDate selectedDate = LocalDate.of(year, month, day);
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(selectedDate);
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(date));
 
     }
 
@@ -98,37 +93,14 @@ public final class Helper {
 
         switch (page) {
 
-            case LOGIN -> {
-                new Login();
-                currentPage.dispose();
-            }
-
-            case REGISTER -> {
-                new Register();
-                currentPage.dispose();
-            }
-
-            case LIST_MOVIES -> {
-                new MovieList();
-                currentPage.dispose();
-            }
-
-            case PURCHASE_TICKET -> {
-                new PurchaseTicket();
-                currentPage.dispose();
-            }
-
-            case SHOW_RECEIPT -> {
-                new ShowReceipt();
-                currentPage.dispose();
-            }
-
-
-            case SHOW_TIMES -> {
-                new ShowTimesForm();
-                currentPage.dispose();
-            }
+            case LOGIN -> new Login();
+            case REGISTER -> new Register();
+            case LIST_MOVIES -> new MovieList();
+            case PURCHASE_TICKET -> new PurchaseTicket();
+            case SHOW_RECEIPT -> new ShowReceipt();
+            case SHOW_TIMES -> new ShowTimesForm();
         }
+        currentPage.dispose();
 
     }
 
