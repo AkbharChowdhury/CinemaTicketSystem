@@ -131,13 +131,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     @Override
-    public void clearList(JList<String> table) {
-        ((DefaultListModel<String>) list.getModel()).removeAllElements();
-
-    }
-
-
-    @Override
     public void populateList() {
         final double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
         INVOICES.forEach(invoice -> model.addElement(Invoice.getDetails(invoice, PRICE)));
