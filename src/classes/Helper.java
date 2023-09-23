@@ -50,13 +50,7 @@ public final class Helper {
 
 
     public static String formatTime(String time) {
-        String[] timeSplit = time.split(":");
-        String timeColonPattern = "hh:mm a";
-
-        int hour = Integer.parseInt(timeSplit[0]);
-        int minute = Integer.parseInt(timeSplit[1]);
-        LocalTime colonTime = LocalTime.of(hour, minute);
-        return DateTimeFormatter.ofPattern(timeColonPattern).format(colonTime);
+        return DateTimeFormatter.ofPattern("hh:mm a").format(LocalTime.parse(time));
 
     }
 
@@ -108,8 +102,9 @@ public final class Helper {
     public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         if (LoginInfo.getCustomerID() == 0) {
-            int dialogButton = JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION);
-            if (dialogButton != JOptionPane.YES_OPTION && !LoginInfo.hasOpenFormOnStartUp()) {
+            if (JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION)
+                    != JOptionPane.YES_OPTION
+                    && !LoginInfo.hasOpenFormOnStartUp()) {
                 System.err.println("You must be logged in to view invoices or purchase tickets!");
                 System.exit(0);
             }
