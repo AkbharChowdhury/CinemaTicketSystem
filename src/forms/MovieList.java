@@ -68,8 +68,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         middle.add(txtMovieTitle);
         middle.add(new Label("Genre"));
         middle.add(cbGenres);
-
-
         JPanel south = new JPanel();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(600, 400));
@@ -172,7 +170,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         final int movieSize = movieList.size();
         for (int i = 0; i < movieSize; i++) {
             var c = new Counter(true);
-            MovieGenres movie = movieList.get(i);
+            var movie = movieList.get(i);
             model.addRow(new Object[0]);
             model.setValueAt(movie.getTitle(), i, c.getCounter());
             model.setValueAt(Helper.calcDuration(movie.getDuration()), i, c.getCounter());
