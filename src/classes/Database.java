@@ -490,10 +490,9 @@ public class Database {
 
     public String getMovieName(int movieID) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME, MovieTable.COLUMN_ID);
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement(STR."SELECT \{MovieTable.COLUMN_TITLE} FROM \{MovieTable.TABLE_NAME} WHERE \{MovieTable.COLUMN_ID} = ?")) {
             stmt.setInt(1, movieID);
             ResultSet rs = stmt.executeQuery();
 
@@ -557,15 +556,8 @@ public class Database {
 
 
     public boolean emailExists(String email) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
-                CustomerTable.COLUMN_EMAIL,
-                CustomerTable.TABLE_NAME,
-                CustomerTable.COLUMN_EMAIL
-        );
-
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} LIKE ?")) {
 
             stmt.setString(1, email);
 

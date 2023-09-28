@@ -34,12 +34,7 @@ public class Invoice {
     }
 
     public static String getDetails(Invoice invoice, double price) {
-        return String.format("%s, %s, %s, %s",
-                invoice.getMovieTitle(),
-                Helper.formatDate(invoice.getShowDate()),
-                Helper.formatTime(invoice.getShowTime()),
-                Helper.formatMoney(price * invoice.getTotalTicket())
-        );
+        return STR."\{invoice.getMovieTitle()}, \{Helper.formatDate(invoice.getShowDate())}, \{Helper.formatTime(invoice.getShowTime())}, \{ Helper.formatMoney(price * invoice.getTotalTicket())}";
     }
 
     public Invoice(boolean pdf) {
@@ -190,7 +185,7 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 16);
             cs.newLineAtOffset(180, 660);
-            cs.showText(String.format("Rating (%s)", (invoice.get(i).getRating())));
+            cs.showText(STR."Rating (\{invoice.get(i).getRating()})");
             cs.endText();
 
 
