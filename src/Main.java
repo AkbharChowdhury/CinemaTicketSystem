@@ -1,11 +1,8 @@
-import classes.Database;
-
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
+import javax.swing.*;
 
 public class Main {
-     public  static void main(String[] args) throws SQLException, FileNotFoundException {
-         System.out.println(Database.getInstance().getMovieName(2));
+    public static void main(String[] args) {
+        JOptionPane.showMessageDialog(null,"H");
     }
 
 
