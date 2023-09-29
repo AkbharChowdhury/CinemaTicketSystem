@@ -14,8 +14,8 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public final class Register extends JFrame implements ActionListener {
     JTextField txtFirstname = new JTextField();
@@ -24,9 +24,17 @@ public final class Register extends JFrame implements ActionListener {
     JPasswordField txtPassword = new JPasswordField();
     JComboBox<String> cbTicket = new JComboBox<>();
     JButton btnRegister = new JButton(Buttons.register());
+    JButton btnLogin = new JButton("Back to Login");
+
     List<Ticket> ticketList;
 
     Database db;
+
+    final Map<? extends javax.swing.JTextField, String> textFields = Map.of(
+            txtFirstname, "Firstname",
+            txtLastName, "LastName",
+            txtEmail, "Email"
+    );
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -40,29 +48,26 @@ public final class Register extends JFrame implements ActionListener {
 
         JPanel middle = new JPanel();
         middle.setLayout(new GridLayout(10, 1, 3, 3));
-        middle.add(new JLabel("Firstname"));
-        middle.add(txtFirstname);
-        middle.add(new JLabel("Lastname"));
-        middle.add(txtLastName);
-        middle.add(new JLabel("Email"));
-        middle.add(txtEmail);
+        textFields.forEach((key, value) -> {
+            middle.add(new JLabel(value));
+            middle.add(key);
+        });
+
         middle.add(new JLabel("Password"));
         middle.add(txtPassword);
         middle.add(new JLabel("Ticket Type:"));
         cbTicket.addItem("Select Ticket Type");
         ticketList.forEach(ticket -> cbTicket.addItem(ticket.getType()));
         middle.add(cbTicket);
-        add("Center", middle);
         JPanel bottom = new JPanel();
         bottom.add(btnRegister);
-        JButton btnLogin = new JButton("Back to Login");
         bottom.add(btnLogin);
+        add("Center", middle);
         add("South", bottom);
         add("West", new JPanel());
         add("East", new JPanel());
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
-
         setVisible(true);
     }
 
