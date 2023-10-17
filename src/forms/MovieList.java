@@ -1,6 +1,10 @@
 package forms;
 
 import classes.*;
+import classes.models.Counter;
+import classes.models.MovieGenres;
+import classes.models.ShowTimes;
+import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
 import interfaces.TableGUI;
@@ -29,6 +33,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
+//        System.out.println(new Movie().createTable());
+        System.out.println(ShowTimes.getSelectedShowDetails());
         db = Database.getInstance();
         if (Helper.disableReceipt(db)) {
             nav.btnShowReceipt.setEnabled(false);
@@ -116,8 +122,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -160,7 +164,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void showColumn() {
-        new MovieGenres().tableColumns().forEach(i -> model.addColumn(i));
+        new MovieGenres().tableColumns().forEach(model::addColumn);
     }
 
     @Override
@@ -185,6 +189,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public void navigation(JPanel top) {
         Arrays.stream(nav.navButtons()).forEach(top::add);
         Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
+
     }
 
     @Override

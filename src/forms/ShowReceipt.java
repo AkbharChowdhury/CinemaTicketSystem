@@ -2,6 +2,8 @@ package forms;
 
 
 import classes.*;
+import classes.models.Invoice;
+import classes.utils.Helper;
 import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
@@ -34,10 +36,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         db = Database.getInstance();
-        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) {
-            return;
-        }
-
+        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
             return;

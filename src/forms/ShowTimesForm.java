@@ -1,6 +1,10 @@
 package forms;
 
 import classes.*;
+import classes.models.Counter;
+import classes.models.Movie;
+import classes.models.ShowTimes;
+import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
 import interfaces.TableGUI;
@@ -14,10 +18,8 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -142,7 +144,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     @Override
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
-        new ShowTimes().tableColumns().forEach(i -> model.addColumn(i));
+        new ShowTimes().tableColumns().forEach(model::addColumn);
 
     }
 
@@ -174,12 +176,13 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     void populateShowDateComboBox() {
         cbDate.removeAllItems();
-        var showTimesList = db.showMovieTimes(movieShowTimes);
+        cbDate.addItem(FormDetails.defaultShowDate());
         // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
-        showTimesList.forEach(show -> linkedHashSet.add(show.getDate()));
-        cbDate.addItem(FormDetails.defaultShowDate());
+        db.showMovieTimes(movieShowTimes).forEach(show -> linkedHashSet.add(show.getDate()));
         linkedHashSet.forEach(date -> cbDate.addItem(Helper.formatDate(date)));
+
+
 
     }
 

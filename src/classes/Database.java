@@ -1,5 +1,8 @@
 package classes;
 
+import classes.models.*;
+import classes.utils.FileHandler;
+import classes.utils.Helper;
 import enums.Files;
 import enums.FormDetails;
 import org.sqlite.SQLiteConfig;
@@ -492,7 +495,7 @@ public class Database {
 
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR."SELECT \{MovieTable.COLUMN_TITLE} FROM \{MovieTable.TABLE_NAME} WHERE \{MovieTable.COLUMN_ID} = ?")) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_TITLE } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_ID } = ?" )) {
             stmt.setInt(1, movieID);
             ResultSet rs = stmt.executeQuery();
 
@@ -557,7 +560,7 @@ public class Database {
 
     public boolean emailExists(String email) {
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} LIKE ?")) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } LIKE ?" )) {
 
             stmt.setString(1, email);
 

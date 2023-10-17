@@ -1,6 +1,12 @@
 package forms;
 
 import classes.*;
+import classes.models.Counter;
+import classes.models.Sales;
+import classes.models.ShowTimes;
+import classes.models.Ticket;
+import classes.utils.Helper;
+import classes.utils.Validation;
 import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
@@ -285,7 +291,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     @Override
     public void showColumn() {
         model = (DefaultTableModel) table.getModel();
-        new ShowTimes().tableColumnsWithID().forEach(i -> model.addColumn(i));
+        var list = new ShowTimes().tableColumns();
+        list.addFirst("Show ID");
+        list.forEach(model::addColumn);
 
     }
 
