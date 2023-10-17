@@ -74,12 +74,6 @@ public class Movie implements Queries {
         this.duration = duration;
     }
 
-    public String getMovieList() {
-        return String.format("""
-                SELECT %s FROM %s
-                """, MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME);
-    }
-
     @Override
     public String createTable() {
         return STR. """

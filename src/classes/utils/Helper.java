@@ -13,10 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
@@ -72,9 +72,7 @@ public final class Helper {
     }
 
     public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
-
-        var formatter = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        return new SimpleDateFormat("yyyy-MM-dd").format(formatter.parse(dateStr));
+        return LocalDate.parse(dateStr, new DateTimeFormatterBuilder().appendPattern("dd MMM yyyy").toFormatter()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
 
