@@ -94,7 +94,7 @@ public final class Register extends JFrame implements ActionListener {
             try {
                 handleRegister();
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                System.err.println(ex.getMessage());
 
             }
             return;

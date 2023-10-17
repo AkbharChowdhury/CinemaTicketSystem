@@ -1,6 +1,8 @@
 package forms;
 
-import classes.*;
+import classes.Database;
+import classes.LoginInfo;
+import classes.Navigation;
 import classes.models.Counter;
 import classes.models.Sales;
 import classes.models.ShowTimes;
@@ -27,7 +29,6 @@ import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -56,6 +57,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+       LoginInfo.setCustomerID(1);
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
         }
@@ -105,8 +107,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         JPanel south = new JPanel();
 
-        showTicketPricesLabel();
-        south.add(lblTicket);
+        south.add(new JLabel(STR."Ticket: \{ticketDetails.getType()} (\{Helper.formatMoney(ticketDetails.getPrice())})"));
         south.add(spNumTickets);
 
         south.add(lblTotal);
@@ -145,7 +146,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-                    lblMovieDetails.setText(String.format("%s-%s: %s", db.getMovieName(movieID), date, time));
+                    lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}-\{date}: \{time}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -182,20 +183,11 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
     private void disableSpinnerInput() {
-        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spNumTickets.getEditor();
-        editor.getTextField().setEnabled(true);
-        editor.getTextField().setEditable(false);
+        JFormattedTextField editor = ((JSpinner.DefaultEditor) spNumTickets.getEditor()).getTextField();
+        editor.setEnabled(true);
+        editor.setEditable(false);
     }
 
-    private void showTicketPricesLabel() {
-        String output = MessageFormat.format("Ticket: {0} ({1})",
-                ticketDetails.getType(),
-                Helper.formatMoney(ticketDetails.getPrice())
-        );
-
-        lblTicket.setText(output);
-
-    }
 
     private void updateTotalLabel() {
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
@@ -316,7 +308,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+           System.err.println(e.getMessage());
 
         }
 
