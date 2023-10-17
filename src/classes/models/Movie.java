@@ -53,6 +53,17 @@ public class Movie implements Queries {
         this.ratingID = ratingID;
     }
 
+    @Override
+    public String toString() {
+        return STR."""
+                ID: \{movieID}
+                Movie: \{title}
+                duration: \{duration}
+                ratingID: \{ratingID}
+
+                """;
+    }
+
     public Movie(String title, int duration) {
         this.title = title;
         this.duration = duration;

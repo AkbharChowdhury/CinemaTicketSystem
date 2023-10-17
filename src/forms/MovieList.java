@@ -33,8 +33,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
-//        System.out.println(new Movie().createTable());
-        System.out.println(ShowTimes.getSelectedShowDetails());
+
         db = Database.getInstance();
         if (Helper.disableReceipt(db)) {
             nav.btnShowReceipt.setEnabled(false);
