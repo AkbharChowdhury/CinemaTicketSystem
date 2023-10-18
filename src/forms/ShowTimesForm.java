@@ -31,17 +31,15 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     JComboBox<String> cbMovies = new JComboBox<>();
     JComboBox<String> cbDate = new JComboBox<>();
     DefaultTableModel model;
-    boolean hasSelectedMovie = false;
+    boolean hasSelectedMovie;
     List<Movie> movieList;
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
-        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
+        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID()))
             nav.btnShowReceipt.setEnabled(false);
-        }
-        movieList = db.getAllMovieShowTimes();
-        movieShowTimes.setDate("");
 
+        movieList = db.getAllMovieShowTimes();
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(table);
         showColumn();
@@ -94,7 +92,6 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     public static void main(String[] args) throws SQLException, FileNotFoundException {
         new ShowTimesForm();
-
     }
 
 
@@ -113,26 +110,16 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         movieShowTimes.setMovieID(movieList.get(cbMovies.getSelectedIndex()).getMovieID());
         populateShowDateComboBox();
         populateTable();
+
     }
 
     private void showFilteredDateResults() {
-        // filter show times by date
-        if (cbDate.getSelectedIndex() != 0) {
-
-            try {
-                movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
-                populateTable();
-            } catch (ParseException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            return;
-
+        try {
+            movieShowTimes.setDate(cbDate.getSelectedIndex() != 0 ? Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()) : "");
+            populateTable();
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
         }
-
-        // display all show times
-        movieShowTimes.setDate("");
-        populateTable();
     }
 
 
@@ -165,8 +152,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            ;
+            System.err.println(e.getMessage());
 
         }
 
@@ -181,7 +167,6 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         Set<String> linkedHashSet = new LinkedHashSet<>();
         db.showMovieTimes(movieShowTimes).forEach(show -> linkedHashSet.add(show.getDate()));
         linkedHashSet.forEach(date -> cbDate.addItem(Helper.formatDate(date)));
-
 
 
     }

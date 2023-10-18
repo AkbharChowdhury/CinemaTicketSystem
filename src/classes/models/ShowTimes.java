@@ -2,6 +2,7 @@ package classes.models;
 
 import interfaces.Queries;
 import interfaces.TableProperties;
+import org.apache.commons.lang3.StringUtils;
 import tables.MovieTable;
 import tables.ShowTimesTable;
 
@@ -106,16 +107,16 @@ public class ShowTimes implements Queries, TableProperties {
     public static String getAllMovieShowTimes() {
         return """
                 SELECT DISTINCT
-                    (s.movie_id),
+                    s.movie_id,
                     m.title
                 FROM
                     ShowTimes s
                 JOIN Movies m ON
                     m.movie_id = s.movie_id
                 WHERE
-                    show_date >= DATE('NOW') AND DATE('now','start of month', '+1 month', '-1 day')\s
+                    show_date >= DATE('NOW')
+                    AND DATE('now','start of month',  '+1 month',  '-1 day')
                     AND num_tickets_left > 0
-                    AND show_time >= TIME('NOW')
                 ORDER BY
                     m.title
                 """;
@@ -133,24 +134,20 @@ public class ShowTimes implements Queries, TableProperties {
                  JOIN Movies m ON
                      m.movie_id = s.movie_id
                  WHERE
-                     m.movie_id = ? AND num_tickets_left > 0   
+                     m.movie_id = ? AND num_tickets_left > 0
                      AND show_date >= DATE('NOW')
                      AND DATE('now', 'start of month', '+1 month' , '-1 day')
                      """;
 
-        if (!movieShowTimes.getDate().isEmpty()) {
+        if (!StringUtils.isEmpty(movieShowTimes.getDate())) {
             sql += " AND show_date LIKE ?";
         }
-
         sql += """
                 GROUP BY show_time_id
                 HAVING show_time >= TIME('NOW')
                 OR show_date > DATE('NOW')
+                ORDER BY show_date, show_time
                 """;
-
-
-        sql += " ORDER BY show_date, show_time";
-
         return sql;
 
     }

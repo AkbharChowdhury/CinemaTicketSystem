@@ -5,6 +5,7 @@ import classes.utils.FileHandler;
 import classes.utils.Helper;
 import enums.Files;
 import enums.FormDetails;
+import org.apache.commons.lang3.StringUtils;
 import org.sqlite.SQLiteConfig;
 import tables.*;
 
@@ -318,22 +319,16 @@ public class Database {
         String showDate = movieShowTimes.getDate();
         List<ShowTimes> list = new ArrayList<>();
 
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(ShowTimes.getSelectedMovieShowTimes(movieShowTimes))) {
             var c = new Counter();
 
-            // selected movie id
+            // selected movie
             stmt.setInt(c.getCounter(), movieShowTimes.getMovieID());
-            if (!showDate.isEmpty()) {
-                stmt.setString(c.getCounter(), showDate);
-            }
-
-
+            // selected date
+            if (!StringUtils.isEmpty(showDate)) stmt.setString(c.getCounter(), showDate);
             ResultSet rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return list;
-            }
+            if (isResultSetEmpty(rs)) return list;
 
             while (rs.next()) {
                 String title = rs.getString(MovieTable.COLUMN_TITLE);
@@ -342,7 +337,6 @@ public class Database {
                 int ticketsLeft = rs.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
                 int showTimeID = rs.getInt(ShowTimesTable.COLUMN_ID);
                 int movieID = rs.getInt(ShowTimesTable.COLUMN_MOVIE_ID);
-
 
                 list.add(new ShowTimes(date, time, title, ticketsLeft, showTimeID, movieID));
 
@@ -608,11 +602,8 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(sql)) {
-
             stmt.setString(1, email);
             ResultSet rs3 = stmt.executeQuery();
-
-
             return rs3.getInt(CustomerTable.COLUMN_ID);
 
 

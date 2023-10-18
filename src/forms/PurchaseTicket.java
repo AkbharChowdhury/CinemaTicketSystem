@@ -70,7 +70,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         disableSpinnerInput();
 
-        movieShowTimes.setDate("");
         ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
 
