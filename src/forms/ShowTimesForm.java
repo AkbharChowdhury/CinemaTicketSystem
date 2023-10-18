@@ -102,11 +102,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
     private void handleMovieCB() {
-        if (!hasSelectedMovie) {
-            cbMovies.removeItemAt(0);
-            hasSelectedMovie = true;
-        }
-
+        Movie.movieComboBoxStatus(cbMovies);
         movieShowTimes.setMovieID(movieList.get(cbMovies.getSelectedIndex()).getMovieID());
         populateShowDateComboBox();
         populateTable();

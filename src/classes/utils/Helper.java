@@ -76,6 +76,7 @@ public final class Helper {
     }
 
 
+
     public static void goTo(JFrame currentPage, Pages page) {
         try {
             gotoForm(currentPage, page);

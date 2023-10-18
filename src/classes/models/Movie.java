@@ -1,8 +1,11 @@
 package classes.models;
 
+import enums.FormDetails;
 import interfaces.Queries;
 import tables.MovieTable;
 import tables.RatingTable;
+
+import javax.swing.*;
 
 public class Movie implements Queries {
     protected int movieID;
@@ -12,6 +15,14 @@ public class Movie implements Queries {
 
 
     public Movie() {
+
+    }
+
+    public static JComboBox<String> movieComboBoxStatus(JComboBox<String> cbMovies) {
+        if (((DefaultComboBoxModel<String>) cbMovies.getModel()).getIndexOf(FormDetails.defaultMovie()) != -1) {
+            cbMovies.removeItemAt(0);
+        }
+        return  cbMovies;
 
     }
 
@@ -55,13 +66,13 @@ public class Movie implements Queries {
 
     @Override
     public String toString() {
-        return STR."""
-                ID: \{movieID}
-                Movie: \{title}
-                duration: \{duration}
-                ratingID: \{ratingID}
+        return STR. """
+                ID: \{ movieID }
+                Movie: \{ title }
+                duration: \{ duration }
+                ratingID: \{ ratingID }
 
-                """;
+                """ ;
     }
 
     public Movie(String title, int duration) {
@@ -100,10 +111,10 @@ public class Movie implements Queries {
 
     @Override
     public String insert() {
-        return STR."""
-                        INSERT INTO \{ MovieTable.TABLE_NAME}
+        return STR. """
+                        INSERT INTO \{ MovieTable.TABLE_NAME }
                         VALUES (?, ?, ?, ?);
-                        """;
+                        """ ;
 
 
     }
