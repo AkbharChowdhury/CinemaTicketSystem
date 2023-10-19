@@ -158,12 +158,7 @@ public class ShowTimes implements Queries {
 
 
     public static String updateNumTickets() {
-        return String.format("UPDATE %s SET %s = ? WHERE %s = ?",
-                ShowTimesTable.TABLE_NAME,
-                ShowTimesTable.COLUMN_NUM_TICKETS_LEFT,
-                ShowTimesTable.COLUMN_ID
-        );
-
+        return STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?";
     }
 
 

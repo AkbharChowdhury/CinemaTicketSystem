@@ -3,19 +3,16 @@ package classes;
 public final class LoginInfo {
     private static int customerID;
     private static String email;
-    private static boolean hasOpenFormOnStartUp = false;
+    private static boolean hasOpenFormOnStartUp;
 
 
     public static boolean hasOpenFormOnStartUp() {
         return hasOpenFormOnStartUp;
     }
 
-    public static void setHasOpenFormOnStartUp(boolean hasOpenFormOnStartUp) {
-        LoginInfo.hasOpenFormOnStartUp = hasOpenFormOnStartUp;
+    public static void setHasOpenFormOnStartUp(boolean status) {
+        hasOpenFormOnStartUp = status;
     }
-
-
-
 
 
     public static String getEmail(){
@@ -31,8 +28,8 @@ public final class LoginInfo {
         return customerID;
     }
 
-    public static void setCustomerID(int customerID) {
-        LoginInfo.customerID = customerID;
+    public static void setCustomerID(int id) {
+        customerID = id;
     }
 
     private LoginInfo(){
