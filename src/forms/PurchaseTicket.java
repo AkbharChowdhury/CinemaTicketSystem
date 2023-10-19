@@ -326,7 +326,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             dispose();
         }
     }
-    private int getSelectedShowTimeID(){
+
+    private int getSelectedShowTimeID() {
         return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
     }
 }

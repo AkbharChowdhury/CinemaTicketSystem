@@ -3,12 +3,10 @@ package forms;
 import classes.*;
 import classes.models.Counter;
 import classes.models.MovieGenres;
-import classes.models.ShowTimes;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
 import interfaces.TableGUI;
-import interfaces.TableProperties;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public final class MovieList extends JFrame implements ActionListener, KeyListener, TableProperties, TableGUI, MenuNavigation {
+public final class MovieList extends JFrame implements ActionListener, KeyListener, TableGUI, MenuNavigation {
     private final Database db;
     private final MovieGenres movieGenre = new MovieGenres();
 
@@ -108,7 +106,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     private void setupTableProperties() {
         model = (DefaultTableModel) table.getModel();
-        new MovieGenres().tableColumns().forEach(column -> model.addColumn(column));
+        new MovieGenres().tableColumns().forEach(model::addColumn);
 
     }
 
@@ -150,10 +148,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
 
-    @Override
-    public List<String> tableColumns() {
-        return null;
-    }
+
 
 
     @Override

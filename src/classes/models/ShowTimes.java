@@ -1,7 +1,6 @@
 package classes.models;
 
 import interfaces.Queries;
-import interfaces.TableProperties;
 import org.apache.commons.lang3.StringUtils;
 import tables.MovieTable;
 import tables.ShowTimesTable;
@@ -9,7 +8,7 @@ import tables.ShowTimesTable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowTimes implements Queries, TableProperties {
+public class ShowTimes implements Queries {
     private int showTimeID;
     private int movieID;
     private String date;
@@ -67,7 +66,7 @@ public class ShowTimes implements Queries, TableProperties {
         this.numTicketsLeft = numTicketsLeft;
     }
 
-    @Override
+//    @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
         columns.add("Date");

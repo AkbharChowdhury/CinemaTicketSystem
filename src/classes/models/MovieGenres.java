@@ -2,7 +2,6 @@ package classes.models;
 
 import enums.FormDetails;
 import interfaces.Queries;
-import interfaces.TableProperties;
 import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
@@ -10,7 +9,7 @@ import tables.MovieTable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieGenres extends Movie implements Queries, TableProperties {
+public class MovieGenres extends Movie implements Queries {
     private int genreID;
     private String rating;
     private String genre;
@@ -145,7 +144,7 @@ public class MovieGenres extends Movie implements Queries, TableProperties {
                 """;
     }
 
-    @Override
+//    @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
         columns.add("Movie");
