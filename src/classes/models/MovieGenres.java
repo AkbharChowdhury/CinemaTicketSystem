@@ -12,7 +12,7 @@ import java.util.List;
 public class MovieGenres extends Movie implements Queries {
     private int genreID;
     private String rating;
-    private String genre;
+    private String genre = "";
 
     public String getGenre() {
         return genre;
@@ -153,6 +153,7 @@ public class MovieGenres extends Movie implements Queries {
         columns.add("Genre");
         return columns;
     }
+
 
 
 }

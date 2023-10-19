@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class Movie implements Queries {
     protected int movieID;
-    protected String title;
+    protected String title = "";
     protected int duration;
     protected int ratingID;
 
@@ -18,12 +18,10 @@ public class Movie implements Queries {
 
     }
 
-    public static JComboBox<String> movieComboBoxStatus(JComboBox<String> cbMovies) {
+    public static void movieComboBoxStatus(JComboBox<String> cbMovies) {
         if (((DefaultComboBoxModel<String>) cbMovies.getModel()).getIndexOf(FormDetails.defaultMovie()) != -1) {
             cbMovies.removeItemAt(0);
         }
-        return  cbMovies;
-
     }
 
     public int getMovieID() {
@@ -66,13 +64,12 @@ public class Movie implements Queries {
 
     @Override
     public String toString() {
-        return STR. """
-                ID: \{ movieID }
-                Movie: \{ title }
-                duration: \{ duration }
-                ratingID: \{ ratingID }
-
-                """ ;
+        return "Movie{" +
+                "movieID=" + movieID +
+                ", title='" + title + '\'' +
+                ", duration=" + duration +
+                ", ratingID=" + ratingID +
+                '}';
     }
 
     public Movie(String title, int duration) {
