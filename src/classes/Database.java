@@ -413,10 +413,10 @@ public class Database {
     }
 
 
-    public List<Invoice> getInvoice(int customerID) {
+    public List<classes.models.Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(Invoice.getInvoiceDetails())) {
+             var stmt = con.prepareStatement(classes.models.Invoice.getInvoiceDetails())) {
             stmt.setInt(1, customerID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
