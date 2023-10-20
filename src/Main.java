@@ -1,19 +1,13 @@
-import classes.Database;
-import classes.models.MovieGenres;
-
 import java.io.FileNotFoundException;
-import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
-        MovieGenres movieGenre = new MovieGenres();
-
-        List<MovieGenres> movieList = Database.getInstance().showMovieList(movieGenre);
-        movieList.stream()
-                .filter(m ->m.getTitle().startsWith(String.valueOf("A".equalsIgnoreCase(m.getTitle()))))
-                .forEach(m ->System.out.println(m.getTitle())
-                );
+    public static void main(String[] args) throws FileNotFoundException {
+        var drinks = new ArrayList<>(Arrays.asList("mango juice deluxe", "hot chocolate"));
+        var foods = new ArrayList<>(Arrays.asList("croissants", "cookies and cream desserts"));
+        var groceries = new ArrayList<>(Arrays.asList(foods, drinks));
+        groceries.forEach(list-> list.forEach(System.out::println));
 
 
     }
