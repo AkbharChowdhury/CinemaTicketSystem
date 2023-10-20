@@ -88,7 +88,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         cbMovies.addItem(FormDetails.defaultMovie());
-        populateMovieComboBox();
+        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
         middle.add(cbMovies);
 
 
@@ -166,14 +166,14 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         try {
             new PurchaseTicket();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
 
         }
 
     }
 
     private void disableSpinnerInput() {
-        JFormattedTextField editor = ((JSpinner.DefaultEditor) spNumTickets.getEditor()).getTextField();
+        var editor = ((JSpinner.DefaultEditor) spNumTickets.getEditor()).getTextField();
         editor.setEnabled(true);
         editor.setEditable(false);
     }
@@ -196,7 +196,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         try {
             handlePurchase();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         }
 
 
@@ -226,7 +226,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         int customerID = LoginInfo.getCustomerID();
         String salesDate = LocalDate.now().toString();
-        int selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
+        int selectedShowTimeID = getSelectedShowTimeID();
 
         if (!isValidNumTickets(numTickets)) return;
 
@@ -253,7 +253,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
             int numTicketsLeft = db.getNumTickets(validateShowTimes);
-            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : "You cannot exceed above " + numTicketsLeft + " tickets";
+            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR."You cannot exceed above \{numTicketsLeft} tickets";
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
             return false;
         }
@@ -292,7 +292,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
             }
 
-
         } catch (Exception e) {
             System.err.println(e.getMessage());
 
@@ -300,16 +299,12 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     }
 
-    private void populateMovieComboBox() {
-        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
 
-    }
 
 
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == spNumTickets) updateTotalLabel();
-
     }
 
 

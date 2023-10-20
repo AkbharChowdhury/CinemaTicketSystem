@@ -641,9 +641,8 @@ public class Database {
             stmt.setInt(1, movieShowTimes.getShowTimeID());
             ResultSet r = stmt.executeQuery();
 
-            if (isResultSetEmpty(r)) {
-                return 0;
-            }
+            if (isResultSetEmpty(r)) return 0;
+
             return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
