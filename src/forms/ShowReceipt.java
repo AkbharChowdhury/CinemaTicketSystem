@@ -43,9 +43,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         }
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-
         INVOICES = db.getInvoice(LoginInfo.getCustomerID());
-
 
         setResizable(false);
         setLayout(new BorderLayout());
@@ -79,7 +77,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         try {
             new ShowReceipt();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
 
