@@ -1,6 +1,7 @@
 package forms;
 
-import classes.*;
+import classes.Database;
+import classes.Navigation;
 import classes.models.Counter;
 import classes.models.MovieGenres;
 import classes.utils.Helper;
@@ -16,7 +17,6 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -27,7 +27,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private final JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
-    private final Navigation nav = new Navigation();
+    private final Navigation nav = new Navigation(this);
     private DefaultTableModel model;
 
     public MovieList() throws SQLException, FileNotFoundException {
@@ -182,16 +182,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     @Override
     public void navigation(JPanel top) {
         Arrays.stream(nav.navButtons()).forEach(top::add);
-        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
 
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 }
 
 

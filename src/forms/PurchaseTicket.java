@@ -31,7 +31,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
-    Navigation nav = new Navigation();
+    Navigation nav = new Navigation(this);
     String TOTAL_MSG = "Total to pay: ";
     SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
     Database db = Database.getInstance();
@@ -50,6 +50,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     DefaultTableModel model;
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
         }
@@ -257,6 +258,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
             return false;
         }
+
         return true;
     }
 
@@ -311,15 +313,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     @Override
     public void navigation(JPanel top) {
         Arrays.stream(nav.navButtons()).forEach(top::add);
-        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
+//        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 
     private int getSelectedShowTimeID() {
         return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());

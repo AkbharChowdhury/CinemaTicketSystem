@@ -27,7 +27,7 @@ import java.util.List;
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
     Database db;
     JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
-    Navigation nav = new Navigation();
+    Navigation nav = new Navigation(this);
     int selectedListInvoiceItem;
     DefaultListModel<String> model = new DefaultListModel<>();
     JList<String> list = new JList<>(model);
@@ -136,15 +136,9 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     @Override
     public void navigation(JPanel top) {
         Arrays.stream(nav.navButtons()).forEach(top::add);
-        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 }
 
 

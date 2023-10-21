@@ -23,7 +23,7 @@ import java.util.List;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
-    Navigation nav = new Navigation();
+    Navigation nav = new Navigation(this);
 
     Database db = Database.getInstance();
     ShowTimes movieShowTimes = new ShowTimes();
@@ -170,13 +170,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     @Override
     public void navigation(JPanel top) {
         Arrays.stream(nav.navButtons()).forEach(top::add);
-        Arrays.stream(nav.navButtons()).forEach(button -> button.addActionListener(this::navClick));
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 }
