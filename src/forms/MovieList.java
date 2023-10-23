@@ -49,7 +49,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        setUpMovieListInit();
+        populateTable();
+
         navigation(top);
 
         cbGenres.addItem(FormDetails.defaultGenre());
@@ -109,15 +110,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         new MovieGenres().tableColumns().forEach(model::addColumn);
 
     }
-
-
-    private void setUpMovieListInit() {
-        movieGenre.setGenre(FormDetails.defaultGenre());
-        movieGenre.setTitle("");
-        populateTable();
-
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
