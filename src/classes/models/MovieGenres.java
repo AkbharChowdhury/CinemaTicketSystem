@@ -137,10 +137,10 @@ public class MovieGenres extends Movie implements Queries {
 
     public static String getMovieGenreList() {
         return """
-                SELECT DISTINCT(g.genre), g.genre_id
+                SELECT DISTINCT(g.genre)
                 FROM MovieGenres mg
                 JOIN Genres g ON mg.genre_id = g.genre_id
-                ORDER BY g.genre                              
+                ORDER BY g.genre                         
                 """;
     }
 

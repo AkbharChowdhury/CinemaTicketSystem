@@ -18,7 +18,7 @@ public class Navigation extends JFrame implements ActionListener {
     public final JButton btnShowTimes = new JButton(Buttons.showTimes());
     public final JButton btnPurchase = new JButton(Buttons.purchaseTicket());
     public final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
-    public JFrame frame;
+    private final JFrame frame;
 
     public JButton[] navButtons() {
 
