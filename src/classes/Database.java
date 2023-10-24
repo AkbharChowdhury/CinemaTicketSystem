@@ -62,13 +62,11 @@ public class Database {
     }
 
     private void insertRatings() throws FileNotFoundException {
-        List<String> ratingList = Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION);
-        insertSingleColumnTable(ratingList, new Rating().insert());
+        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION), new Rating().insert());
     }
 
     private void insertGenres() throws FileNotFoundException {
-        List<String> GenreList = Helper.readSingleLineCSV(Files.Genres.DESCRIPTION);
-        insertSingleColumnTable(GenreList, new Genre().insert());
+        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Genres.DESCRIPTION), new Genre().insert());
 
     }
 
@@ -85,11 +83,13 @@ public class Database {
 
     }
 
-    private void createTable(String createTableSQL) throws SQLException {
+    private void createTable(String createTableSQL) {
+        try (var con = getConnection(); Statement stmt = con.createStatement()) {
+            stmt.execute(createTableSQL);
+        } catch (Exception e) {
+            getErrorMessage(e);
 
-        Connection con = getConnection();
-        Statement stmt = con.createStatement();
-        stmt.execute(createTableSQL);
+        }
 
     }
 
