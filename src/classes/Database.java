@@ -96,7 +96,7 @@ public class Database {
     // used for the lookup tables e.g. Movies, Genres, Ratings, and Tickets tables
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(insertSQL)) {
             for (String item : list) {
                 var c = new Counter();
@@ -172,13 +172,7 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Customer().insert())) {
             for (var customer : customerList) {
-                var c = new Counter();
-                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
-                stmt.setString(c.getCounter(), customer.getFirstname());
-                stmt.setString(c.getCounter(), customer.getLastname());
-                stmt.setString(c.getCounter(), customer.getEmail());
-                stmt.setString(c.getCounter(), customer.getPassword());
-                stmt.setInt(c.getCounter(), customer.getTicketID());
+                customerDataParams(customer, stmt);
 
                 stmt.executeUpdate();
 
@@ -195,19 +189,24 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Customer().insert())) {
-            var c = new Counter();
-            stmt.setNull(c.getCounter(), java.sql.Types.NULL);
-            stmt.setString(c.getCounter(), customer.getFirstname());
-            stmt.setString(c.getCounter(), customer.getLastname());
-            stmt.setString(c.getCounter(), customer.getEmail());
-            stmt.setString(c.getCounter(), customer.getPassword());
-            stmt.setInt(c.getCounter(), customer.getTicketID());
+            customerDataParams(customer, stmt);
             return stmt.executeUpdate() == 1;
 
         } catch (Exception ex) {
             getErrorMessage(ex);
         }
         return false;
+
+    }
+
+    private void customerDataParams(Customer customer, PreparedStatement stmt) throws SQLException {
+        var c = new Counter();
+        stmt.setNull(c.getCounter(), Types.NULL);
+        stmt.setString(c.getCounter(), customer.getFirstname());
+        stmt.setString(c.getCounter(), customer.getLastname());
+        stmt.setString(c.getCounter(), customer.getEmail());
+        stmt.setString(c.getCounter(), customer.getPassword());
+        stmt.setInt(c.getCounter(), customer.getTicketID());
 
     }
 
@@ -218,7 +217,7 @@ public class Database {
         List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
 
 
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(new MovieGenres().insert())) {
 
             for (var item : movieGenres) {
@@ -413,7 +412,7 @@ public class Database {
     }
 
 
-    public List<classes.models.Invoice> getInvoice(int customerID) {
+    public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(classes.models.Invoice.getInvoiceDetails())) {
@@ -488,7 +487,7 @@ public class Database {
     public String getMovieName(int movieID) {
 
 
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_TITLE } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_ID } = ?" )) {
             stmt.setInt(1, movieID);
             ResultSet rs = stmt.executeQuery();
@@ -511,13 +510,11 @@ public class Database {
 
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE))) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_ID } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_TITLE } = ?" )) {
             stmt.setString(1, title);
             ResultSet rs = stmt.executeQuery();
 
-            if (isResultSetEmpty(rs)) {
-                return 0;
-            }
+            if (isResultSetEmpty(rs)) return 0;
 
             return rs.getInt(MovieTable.COLUMN_ID);
 
@@ -533,7 +530,7 @@ public class Database {
     public boolean isAuthorised(String email, String password) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement("SELECT email, password FROM Customers WHERE email = ? AND password = ?")) {
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL}, \{CustomerTable.COLUMN_PASSWORD} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} = ? AND \{CustomerTable.COLUMN_PASSWORD} = ?")) {
 
             var c = new Counter();
             stmt.setString(c.getCounter(), email);
@@ -553,7 +550,7 @@ public class Database {
 
 
     public boolean emailExists(String email) {
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } LIKE ?" )) {
 
             stmt.setString(1, email);
@@ -573,14 +570,8 @@ public class Database {
 
     public boolean customerInvoiceExists(int customerID) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                SalesTable.COLUMN_CUSTOMER_ID,
-                SalesTable.TABLE_NAME,
-                SalesTable.COLUMN_CUSTOMER_ID
-        );
-
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+             var stmt = con.prepareStatement(STR."SELECT \{SalesTable.COLUMN_CUSTOMER_ID} FROM \{SalesTable.TABLE_NAME} WHERE \{SalesTable.COLUMN_CUSTOMER_ID} = ?")) {
             stmt.setInt(1, customerID);
 
             ResultSet rs2 = stmt.executeQuery();
@@ -597,11 +588,10 @@ public class Database {
     }
 
     public int getCustomerID(String email) {
-        String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
 
 
-        try (Connection con = getConnection();
-             var stmt = con.prepareStatement(sql)) {
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_ID} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} =?")) {
             stmt.setString(1, email);
             ResultSet rs3 = stmt.executeQuery();
             return rs3.getInt(CustomerTable.COLUMN_ID);

@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +37,11 @@ public final class Register extends JFrame implements ActionListener {
 
     Database db;
 
-    final Map<? extends javax.swing.JTextField, String> textFields = Map.of(
-            txtFirstname, "Firstname",
-            txtLastName, "LastName",
-            txtEmail, "Email"
-    );
+final LinkedHashMap< JTextField, String> textFields  = new LinkedHashMap<>() {{
+    put(txtFirstname, "Firstname");
+    put(txtLastName, "LastName");
+    put(txtEmail, "Email");
+}};
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -53,6 +55,9 @@ public final class Register extends JFrame implements ActionListener {
 
         JPanel middle = new JPanel();
         middle.setLayout(new GridLayout(10, 1, 3, 3));
+
+
+
         textFields.forEach((key, value) -> {
             middle.add(new JLabel(value));
             middle.add(key);
