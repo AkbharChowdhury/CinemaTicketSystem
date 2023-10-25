@@ -9,6 +9,9 @@ import tables.MovieTable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static classes.utils.Helper.SEP;
+import static classes.utils.Helper.fieldSep;
+
 public class MovieGenres extends Movie implements Queries {
     private int genreID;
     private String rating;
@@ -25,6 +28,18 @@ public class MovieGenres extends Movie implements Queries {
     public MovieGenres() {
 
     }
+
+    public static String toMovieList(MovieGenres m) {
+
+        return STR. """
+        \{ fieldSep(m.getTitle()) }
+        \{ fieldSep(m.getDuration()) }
+        \{ fieldSep(m.getRating()) }
+        \{ m.getGenres() }
+        """ ;
+    }
+
+
 
 
     public String getRating() {
@@ -152,7 +167,6 @@ public class MovieGenres extends Movie implements Queries {
         columns.add("Genre");
         return columns;
     }
-
 
 
 }

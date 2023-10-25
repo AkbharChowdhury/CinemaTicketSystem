@@ -1,5 +1,6 @@
 package classes.models;
 
+import classes.utils.Helper;
 import interfaces.Queries;
 import org.apache.commons.lang3.StringUtils;
 import tables.MovieTable;
@@ -7,6 +8,9 @@ import tables.ShowTimesTable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static classes.utils.Helper.SEP;
+import static classes.utils.Helper.fieldSep;
 
 public class ShowTimes implements Queries {
     private int showTimeID;
@@ -66,7 +70,7 @@ public class ShowTimes implements Queries {
         this.numTicketsLeft = numTicketsLeft;
     }
 
-//    @Override
+    //    @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
         columns.add("Date");
@@ -158,7 +162,7 @@ public class ShowTimes implements Queries {
 
 
     public static String updateNumTickets() {
-        return STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?";
+        return STR. "UPDATE \{ ShowTimesTable.TABLE_NAME } SET \{ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT } = ? WHERE \{ ShowTimesTable.COLUMN_ID } = ?" ;
     }
 
 
@@ -177,4 +181,11 @@ public class ShowTimes implements Queries {
 
     }
 
+    public static String toShowTimeList(ShowTimes showTime) {
+        return STR. """
+                \{ fieldSep(Helper.formatDate(showTime.getDate())) }
+                \{ fieldSep(Helper.formatTime(showTime.getTime())) }
+                 \{ fieldSep(showTime.getNumTicketsLeft()) }
+                """ ;
+    }
 }

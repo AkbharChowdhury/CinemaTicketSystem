@@ -1,7 +1,8 @@
 package forms;
 
 
-import classes.*;
+import classes.Database;
+import classes.LoginInfo;
 import classes.models.Customer;
 import classes.models.Ticket;
 import classes.utils.Encryption;
@@ -19,10 +20,10 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class Register extends JFrame implements ActionListener {
     JTextField txtFirstname = new JTextField();
@@ -37,14 +38,32 @@ public final class Register extends JFrame implements ActionListener {
 
     Database db;
 
-final LinkedHashMap< JTextField, String> textFields  = new LinkedHashMap<>() {{
-    put(txtFirstname, "Firstname");
-    put(txtLastName, "LastName");
-    put(txtEmail, "Email");
-}};
+    final LinkedHashMap<JTextField, String> textFields = new LinkedHashMap<>() {{
+        put(txtFirstname, "Firstname");
+        put(txtLastName, "LastName");
+        put(txtEmail, "Email");
+    }};
+
+    final LinkedHashMap<ArrayList<String>, Integer> textFields2 = new LinkedHashMap<>() {{
+        put(new ArrayList<>(), 2);
+    }};
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        var tickets = Database.getInstance().getTickets();
+        ArrayList<String> list = new ArrayList<>();
+        var sep = "]]";
+        for (var ticket : tickets) {
+            list.add(ticket.getType() + sep + ticket.getPrice());
+        }
+        for (int i = 0; i < list.size(); i++) {
+            var item = list.get(i).split(sep);
+            System.out.println(Arrays.toString(list.get(i).split("]]")));
+
+
+        }
+
+        System.exit(0);
         db = Database.getInstance();
         ticketList = db.getTickets();
         setLayout(new BorderLayout());
@@ -55,7 +74,6 @@ final LinkedHashMap< JTextField, String> textFields  = new LinkedHashMap<>() {{
 
         JPanel middle = new JPanel();
         middle.setLayout(new GridLayout(10, 1, 3, 3));
-
 
 
         textFields.forEach((key, value) -> {

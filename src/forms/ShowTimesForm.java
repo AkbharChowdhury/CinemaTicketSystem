@@ -1,9 +1,7 @@
 package forms;
 
 import classes.*;
-import classes.models.Counter;
-import classes.models.Movie;
-import classes.models.ShowTimes;
+import classes.models.*;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
@@ -31,7 +29,6 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     JComboBox<String> cbMovies = new JComboBox<>();
     JComboBox<String> cbDate = new JComboBox<>();
     DefaultTableModel model;
-    boolean hasSelectedMovie;
     List<Movie> movieList;
 
 
@@ -136,16 +133,8 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         try {
             clearTable(table);
             var showTimes = db.showMovieTimes(movieShowTimes);
-            final int size = showTimes.size();
-            for (int i = 0; i < size; i++) {
-                var c = new Counter(true);
-                ShowTimes showTime = showTimes.get(i);
-                model.addRow(new Object[0]);
-                model.setValueAt(Helper.formatDate(showTime.getDate()), i, c.getCounter());
-                model.setValueAt(Helper.formatTime(showTime.getTime()), i, c.getCounter());
-                model.setValueAt(showTime.getNumTicketsLeft(), i, c.getCounter());
-
-            }
+            var tableModel = new CustomTableModel(model);
+            tableModel.populateTable(showTimes.stream().map(ShowTimes::toShowTimeList).toList());
 
         } catch (Exception e) {
             System.err.println(e.getMessage());

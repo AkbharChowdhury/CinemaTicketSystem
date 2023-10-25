@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Locale;
 
 public final class Helper {
-
+    public static final String SEP = "///";
+    public static String fieldSep(Object obj) {
+        return obj + SEP;
+    }
     public static String getCSVPath() {
         return "src/csv/";
     }

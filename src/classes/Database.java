@@ -234,7 +234,7 @@ public class Database {
     }
 
 
-    public Connection getConnection() {
+    private Connection getConnection() {
 
         final String DATABASE_DRIVER = "org.sqlite.JDBC";
         final String CONN_STR = String.format("jdbc:sqlite:%s", DB_NAME);

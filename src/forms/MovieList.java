@@ -3,6 +3,7 @@ package forms;
 import classes.Database;
 import classes.Navigation;
 import classes.models.Counter;
+import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
 import classes.utils.Helper;
 import enums.FormDetails;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -140,9 +142,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
 
-
-
-
     @Override
     public void clearTable(JTable table) {
         ((DefaultTableModel) table.getModel()).setRowCount(0);
@@ -153,23 +152,20 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         new MovieGenres().tableColumns().forEach(model::addColumn);
     }
 
+    boolean open;
+
     @Override
     public void populateTable() {
+        if (!open) {
+            open = true;
+            return;
+        }
         clearTable(table);
         var movieList = db.showMovieList(movieGenre);
-        final int movieSize = movieList.size();
-        for (int i = 0; i < movieSize; i++) {
-            var c = new Counter(true);
-            var movie = movieList.get(i);
-            model.addRow(new Object[0]);
-            model.setValueAt(movie.getTitle(), i, c.getCounter());
-            model.setValueAt(Helper.calcDuration(movie.getDuration()), i, c.getCounter());
-            model.setValueAt(movie.getRating(), i, c.getCounter());
-            model.setValueAt(movie.getGenres(), i, c.getCounter());
-        }
-
-
+        var tableModel = new CustomTableModel(model);
+        tableModel.populateTable(movieList.stream().map(MovieGenres::toMovieList).toList());
     }
+
 
     @Override
     public void navigation(JPanel top) {
