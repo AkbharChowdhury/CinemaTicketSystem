@@ -23,18 +23,18 @@ import java.util.Objects;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableGUI, MenuNavigation {
-    private final Database db;
+    private final Database db = Database.getInstance();
     private final MovieGenres movieGenre = new MovieGenres();
 
     private final JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
     private final Navigation nav = new Navigation(this);
-    private DefaultTableModel model;
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();;
+    private final CustomTableModel tableModel = new CustomTableModel(model);;
 
     public MovieList() throws SQLException, FileNotFoundException {
 
-        db = Database.getInstance();
         if (Helper.disableReceipt(db)) {
             nav.btnShowReceipt.setEnabled(false);
         }
@@ -108,7 +108,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
     private void setupTableProperties() {
-        model = (DefaultTableModel) table.getModel();
         new MovieGenres().tableColumns().forEach(model::addColumn);
 
     }
@@ -152,18 +151,11 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         new MovieGenres().tableColumns().forEach(model::addColumn);
     }
 
-    boolean open;
-
     @Override
     public void populateTable() {
-        if (!open) {
-            open = true;
-            return;
-        }
+
         clearTable(table);
-        var movieList = db.showMovieList(movieGenre);
-        var tableModel = new CustomTableModel(model);
-        tableModel.populateTable(movieList.stream().map(MovieGenres::toMovieList).toList());
+        tableModel.populateTable(db.showMovieList(movieGenre).stream().map(MovieGenres::toMovieList).toList());
     }
 
 

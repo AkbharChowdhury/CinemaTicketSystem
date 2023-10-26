@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CustomTableModel {
-    DefaultTableModel model;
+    private final DefaultTableModel model;
 
     public CustomTableModel(DefaultTableModel model) {
         this.model = model;

@@ -304,6 +304,7 @@ public class Invoice {
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
+
         } finally {
             invoiceDocument.close();
         }

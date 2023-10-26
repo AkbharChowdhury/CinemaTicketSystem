@@ -21,15 +21,17 @@ import java.util.List;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
-    Navigation nav = new Navigation(this);
+    private final Navigation nav = new Navigation(this);
 
-    Database db = Database.getInstance();
-    ShowTimes movieShowTimes = new ShowTimes();
-    JTable table = new JTable();
-    JComboBox<String> cbMovies = new JComboBox<>();
-    JComboBox<String> cbDate = new JComboBox<>();
-    DefaultTableModel model;
-    List<Movie> movieList;
+    private final Database db = Database.getInstance();
+    private final ShowTimes movieShowTimes = new ShowTimes();
+    private final JTable table = new JTable();
+    private final JComboBox<String> cbMovies = new JComboBox<>();
+    private final JComboBox<String> cbDate = new JComboBox<>();
+    private final DefaultTableModel model =  (DefaultTableModel) table.getModel();
+    private final List<Movie> movieList;
+    private final CustomTableModel tableModel = new CustomTableModel(model);;
+
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
@@ -123,7 +125,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     @Override
     public void showColumn() {
-        model = (DefaultTableModel) table.getModel();
+
         new ShowTimes().tableColumns().forEach(model::addColumn);
 
     }
@@ -132,12 +134,8 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     public void populateTable() {
         try {
             clearTable(table);
-            var showTimes = db.showMovieTimes(movieShowTimes);
-            var tableModel = new CustomTableModel(model);
-            tableModel.populateTable(showTimes.stream().map(ShowTimes::toShowTimeList).toList());
-
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(ShowTimes::toShowTimeList).toList());
+        } catch (IndexOutOfBoundsException _) {
 
         }
 

@@ -26,17 +26,16 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
-    Database db;
-    JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
-    Navigation nav = new Navigation(this);
+    private  final Database db = Database.getInstance();
+    private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
+    private final Navigation nav = new Navigation(this);
     int selectedListInvoiceItem;
-    DefaultListModel<String> model = new DefaultListModel<>();
-    JList<String> list = new JList<>(model);
-    List<Invoice> INVOICES;
+    private final DefaultListModel<String> model = new DefaultListModel<>();
+    private final JList<String> list = new JList<>(model);
+    private List<Invoice> INVOICES;
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        db = Database.getInstance();
         LoginInfo.setCustomerID(1);
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
@@ -122,7 +121,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         } catch (ParseException ex) {
             Helper.showErrorMessage("The time cannot be formatted", "Time parse error");
         } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
     }
 

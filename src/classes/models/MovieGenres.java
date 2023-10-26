@@ -31,6 +31,7 @@ public class MovieGenres extends Movie implements Queries {
 
     public static String toMovieList(MovieGenres m) {
 
+
         return STR. """
         \{ fieldSep(m.getTitle()) }
         \{ fieldSep(m.getDuration()) }
