@@ -23,7 +23,6 @@ import java.util.Locale;
 
 public final class Helper {
     public static final String SEP = "///";
-    public static final String SEP3 = "///";
 
     public static String fieldSep(Object obj) {
         return obj + SEP;
