@@ -9,7 +9,6 @@ import tables.ShowTimesTable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static classes.utils.Helper.SEP;
 import static classes.utils.Helper.fieldSep;
 
 public class ShowTimes implements Queries {
@@ -182,10 +181,11 @@ public class ShowTimes implements Queries {
     }
 
     public static String toShowTimeList(ShowTimes showTime) {
+
         return STR. """
                 \{ fieldSep(Helper.formatDate(showTime.getDate())) }
                 \{ fieldSep(Helper.formatTime(showTime.getTime())) }
-                 \{ fieldSep(showTime.getNumTicketsLeft()) }
+                 \{ showTime.getNumTicketsLeft() }
                 """ ;
     }
 }

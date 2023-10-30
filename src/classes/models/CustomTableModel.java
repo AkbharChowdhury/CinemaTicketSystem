@@ -3,7 +3,6 @@ package classes.models;
 import classes.utils.Helper;
 
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class CustomTableModel {
         }
 
     }
+
 
 
 }

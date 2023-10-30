@@ -44,8 +44,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     private final JLabel lblMovieDetails = new JLabel();
     private final JLabel lblTotal = new JLabel();
     private Ticket ticketDetails;
-    private final DefaultTableModel model = (DefaultTableModel) table.getModel();;
-    private final CustomTableModel tableModel = new CustomTableModel(model);;
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
+    ;
+    private final CustomTableModel tableModel = new CustomTableModel(model);
+    ;
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
@@ -136,7 +138,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-                    lblMovieDetails.setText(STR. "\{ db.getMovieName(movieID) }-\{ date }: \{ time }" );
+                    lblMovieDetails.setText(STR. "\{ db.getMovieName(movieID) }- \{ date }: \{ time }" );
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -290,7 +292,11 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     private static String setField(ShowTimes showTime) {
 
-        return STR. "\{ fieldSep(showTime.getShowTimeID()) } \{ ShowTimes.toShowTimeList(showTime) }" ;
+        return STR. """
+                      \{ fieldSep(showTime.getShowTimeID()) }
+                        \{ ShowTimes.toShowTimeList(showTime) }
+                """
+                ;
 
 
     }
@@ -309,7 +315,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     private int getSelectedShowTimeID() {
-        return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
+        return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString().trim());
     }
 }
 

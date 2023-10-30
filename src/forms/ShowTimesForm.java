@@ -1,7 +1,11 @@
 package forms;
 
-import classes.*;
-import classes.models.*;
+import classes.Database;
+import classes.LoginInfo;
+import classes.Navigation;
+import classes.models.CustomTableModel;
+import classes.models.Movie;
+import classes.models.ShowTimes;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
@@ -15,9 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -28,10 +33,9 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     private final JTable table = new JTable();
     private final JComboBox<String> cbMovies = new JComboBox<>();
     private final JComboBox<String> cbDate = new JComboBox<>();
-    private final DefaultTableModel model =  (DefaultTableModel) table.getModel();
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
     private final List<Movie> movieList;
-    private final CustomTableModel tableModel = new CustomTableModel(model);;
-
+    private final CustomTableModel tableModel = new CustomTableModel(model);
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
@@ -110,9 +114,10 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     private void showFilteredDateResults() {
         try {
+
             movieShowTimes.setDate(cbDate.getSelectedIndex() != 0 ? Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()) : "");
             populateTable();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -135,7 +140,9 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         try {
             clearTable(table);
             tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(ShowTimes::toShowTimeList).toList());
-        } catch (IndexOutOfBoundsException _) {
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
 
         }
 
@@ -143,7 +150,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
 
-    void populateShowDateComboBox() {
+    private void populateShowDateComboBox() {
         cbDate.removeAllItems();
         cbDate.addItem(FormDetails.defaultShowDate());
         // get unique dates
@@ -161,3 +168,4 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
 
 }
+

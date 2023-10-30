@@ -9,7 +9,6 @@ import tables.MovieTable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static classes.utils.Helper.SEP;
 import static classes.utils.Helper.fieldSep;
 
 public class MovieGenres extends Movie implements Queries {

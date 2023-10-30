@@ -23,6 +23,8 @@ import java.util.Locale;
 
 public final class Helper {
     public static final String SEP = "///";
+    public static final String SEP2 = "///";
+
     public static String fieldSep(Object obj) {
         return obj + SEP;
     }
@@ -74,8 +76,8 @@ public final class Helper {
 
     }
 
-    public static String convertMediumDateToYYMMDD(String dateStr) throws ParseException {
-        return LocalDate.parse(dateStr, new DateTimeFormatterBuilder().appendPattern("dd MMM yyyy").toFormatter()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public static String convertMediumDateToYYMMDD(String dateStr)  {
+        return LocalDate.parse(dateStr,DateTimeFormatter.ofPattern("dd MMM yyyy")).toString();
     }
 
 
