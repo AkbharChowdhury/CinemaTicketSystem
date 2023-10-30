@@ -1,6 +1,11 @@
 package forms;
 
-import classes.*;
+import classes.Database;
+import classes.LoginInfo;
+import classes.Navigation;
+import classes.models.*;
+import classes.utils.Helper;
+import classes.utils.Validation;
 import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
@@ -13,7 +18,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,39 +26,28 @@ import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Arrays;
 
+import static classes.utils.Helper.fieldSep;
 
-public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
-    Navigation nav = new Navigation();
-
-    final String TOTAL_MSG = "Total to pay: ";
-    final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 8, 1);
-    private final Database db;
+public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
+    private final Navigation nav = new Navigation(this);
+    private final Database db = Database.getInstance();
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
 
-    private final JButton btnConfirm = new JButton(Buttons.confirmOrder());
-    private final JSpinner spNumTickets = new JSpinner(spinnerModel);
-
-
+    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
     private final JComboBox<String> cbMovies = new JComboBox<>();
 
     private final JLabel lblMovieDetails = new JLabel();
-    private final JLabel lblTicket = new JLabel();
     private final JLabel lblTotal = new JLabel();
     private Ticket ticketDetails;
-    private DefaultTableModel model;
-
-    private boolean hasSelectedMovie = false;
-
-    private int selectedShowTimeID;
-
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();;
+    private final CustomTableModel tableModel = new CustomTableModel(model);;
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        db = Database.getInstance();
 
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
@@ -65,9 +58,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
             nav.btnShowReceipt.setEnabled(false);
         }
 
+
         disableSpinnerInput();
 
-        movieShowTimes.setDate("");
         ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
 
@@ -94,7 +87,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         cbMovies.addItem(FormDetails.defaultMovie());
-        populateMovieComboBox();
+        db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
         middle.add(cbMovies);
 
 
@@ -104,13 +97,13 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
 
         JPanel south = new JPanel();
 
-        showTicketPricesLabel();
-        south.add(lblTicket);
+        south.add(new JLabel(STR. "Ticket: \{ ticketDetails.getType() } (\{ Helper.formatMoney(ticketDetails.getPrice()) })" ));
         south.add(spNumTickets);
 
         south.add(lblTotal);
         updateTotalLabel();
 
+        JButton btnConfirm = new JButton(Buttons.confirmOrder());
         south.add(btnConfirm);
 
 
@@ -118,10 +111,6 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
         add("Center", middle);
         add("South", south);
 
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
         cbMovies.addActionListener(this);
 
         btnConfirm.addActionListener(this);
@@ -143,14 +132,13 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
 
             private void handleTableClickEvent() {
                 try {
-                    selectedShowTimeID = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
-                    String date = model.getValueAt(table.getSelectedRow(), 1).toString();
-                    String time = model.getValueAt(table.getSelectedRow(), 2).toString();
+                    var c = new Counter();
+                    String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
+                    String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-                    lblMovieDetails.setText(String.format("%s-%s: %s", db.getMovieName(movieID), date, time));
-
+                    lblMovieDetails.setText(STR. "\{ db.getMovieName(movieID) }-\{ date }: \{ time }" );
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.err.println(ex.getMessage());
                 }
             }
 
@@ -174,31 +162,26 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        new PurchaseTicket();
+    public static void main(String[] args) {
+        try {
+            new PurchaseTicket();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+
+        }
 
     }
 
     private void disableSpinnerInput() {
-        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spNumTickets.getEditor();
-        editor.getTextField().setEnabled(true);
-        editor.getTextField().setEditable(false);
+        var editor = ((JSpinner.DefaultEditor) spNumTickets.getEditor()).getTextField();
+        editor.setEnabled(true);
+        editor.setEditable(false);
     }
 
-    private void showTicketPricesLabel() {
-        String output = MessageFormat.format("Ticket: {0} ({1})",
-                ticketDetails.getType(),
-                Helper.formatMoney(ticketDetails.getPrice())
-        );
-
-        lblTicket.setText(output);
-
-    }
 
     private void updateTotalLabel() {
-        double ticketPrice = ticketDetails.getPrice();
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(TOTAL_MSG + Helper.formatMoney(Helper.calcPrice(numTickets, ticketPrice)));
+        lblTotal.setText(STR. "Total to pay: \{ Helper.formatMoney(Helper.calcPrice(numTickets, ticketDetails.getPrice())) }" );
     }
 
 
@@ -210,29 +193,24 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
             handleMovieCB();
             return;
         }
-        try{
+        try {
             handlePurchase();
-        } catch (Exception ex){
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
         }
 
 
     }
 
     private void handleMovieCB() {
-        if (!hasSelectedMovie) {
-            cbMovies.removeItemAt(0);
-            hasSelectedMovie = true;
-
-        }
-
+        Movie.movieComboBoxStatus(cbMovies);
         movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
         populateTable();
     }
 
     private boolean updateNumTicksSold(int numTickets) {
         var updater = new ShowTimes();
-        updater.setShowTimeID(selectedShowTimeID);
+        updater.setShowTimeID(getSelectedShowTimeID());
         updater.setNumTicketsSold(numTickets);
         return db.updateNumTickets(updater);
     }
@@ -240,8 +218,7 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
 
     private void handlePurchase() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-
-        if (selectedShowTimeID == 0) {
+        if (table.getSelectedRow() == -1) {
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
             return;
         }
@@ -249,10 +226,9 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         int customerID = LoginInfo.getCustomerID();
         String salesDate = LocalDate.now().toString();
+        int selectedShowTimeID = getSelectedShowTimeID();
 
-        if (!isValidNumTickets(numTickets)) {
-            return;
-        }
+        if (!isValidNumTickets(numTickets)) return;
 
         var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
         if (db.SalesExists(sales)) {
@@ -260,33 +236,30 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
             return;
         }
 
-        if (db.addSales(sales)) {
+        if (db.addSales(sales) && updateNumTicksSold(numTickets)) {
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
-            if (updateNumTicksSold(numTickets)) {
-                Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-                return;
-            }
-            System.err.println("There was an error updating the number of tickets remaining");
-
-
+            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+            return;
         }
+        System.err.println("There was an error updating the number of tickets remaining");
+
     }
 
 
     private boolean isValidNumTickets(int numTickets) {
         ShowTimes validateShowTimes = new ShowTimes();
-        validateShowTimes.setShowTimeID(selectedShowTimeID);
+        validateShowTimes.setShowTimeID(getSelectedShowTimeID());
         validateShowTimes.setNumTicketsSold(numTickets);
 
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
             int numTicketsLeft = db.getNumTickets(validateShowTimes);
-            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : "You cannot exceed above " + numTicketsLeft + " tickets";
+            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR. "You cannot exceed above \{ numTicketsLeft } tickets" ;
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
             return false;
         }
+
         return true;
     }
-
 
 
     @Override
@@ -296,8 +269,10 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
 
     @Override
     public void showColumn() {
-        model = (DefaultTableModel) table.getModel();
-        new ShowTimes().tableColumnsWithID().forEach(i -> model.addColumn(i));
+
+        var list = new ShowTimes().tableColumns();
+        list.addFirst("Show ID");
+        list.forEach(model::addColumn);
 
     }
 
@@ -305,61 +280,36 @@ public class PurchaseTicket extends JFrame implements ActionListener, TableGUI, 
     public void populateTable() {
         try {
             clearTable(table);
-            int i = 0;
-            for (var showTime : db.showMovieTimes(movieShowTimes)) {
-                model.addRow(new Object[0]);
-                model.setValueAt(showTime.getShowTimeID(), i, 0);
-                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 1);
-                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 2);
-                model.setValueAt(showTime.getNumTicketsLeft(), i, 3);
-                i++;
+            tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(PurchaseTicket::setField).toList());
 
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IndexOutOfBoundsException _) {
 
         }
-
 
     }
 
-    private void populateMovieComboBox() {
+    private static String setField(ShowTimes showTime) {
 
-        for (var movie : db.getAllMovieShowTimes()) {
-            cbMovies.addItem(movie.getTitle());
-        }
+        return STR. "\{ fieldSep(showTime.getShowTimeID()) } \{ ShowTimes.toShowTimeList(showTime) }" ;
+
 
     }
 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == spNumTickets) {
-            updateTotalLabel();
-        }
-
+        if (e.getSource() == spNumTickets) updateTotalLabel();
     }
 
 
     @Override
     public void navigation(JPanel top) {
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
-
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+        Arrays.stream(nav.navButtons()).forEach(top::add);
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
+
+    private int getSelectedShowTimeID() {
+        return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
     }
 }
 

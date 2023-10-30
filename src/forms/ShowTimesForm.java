@@ -1,6 +1,8 @@
 package forms;
 
 import classes.*;
+import classes.models.*;
+import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
 import interfaces.TableGUI;
@@ -12,33 +14,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 
-public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
-    Navigation nav = new Navigation();
+public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
+    private final Navigation nav = new Navigation(this);
 
-    private final Database db;
+    private final Database db = Database.getInstance();
     private final ShowTimes movieShowTimes = new ShowTimes();
     private final JTable table = new JTable();
     private final JComboBox<String> cbMovies = new JComboBox<>();
     private final JComboBox<String> cbDate = new JComboBox<>();
+    private final DefaultTableModel model =  (DefaultTableModel) table.getModel();
+    private final List<Movie> movieList;
+    private final CustomTableModel tableModel = new CustomTableModel(model);;
 
-    private DefaultTableModel model;
-    private boolean hasSelectedMovie = false;
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
-        db = Database.getInstance();
-        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())) {
+        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID()))
             nav.btnShowReceipt.setEnabled(false);
-        }
-        movieShowTimes.setDate("");
 
+        movieList = db.getAllMovieShowTimes();
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(table);
         showColumn();
@@ -54,7 +54,6 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
         navigation(top);
 
 
-
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
@@ -62,7 +61,8 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
         cbMovies.addItem(FormDetails.defaultMovie());
-        populateMovieComboBox();
+        movieList.forEach(movie -> cbMovies.addItem(movie.getTitle()));
+
         middle.add(cbMovies);
 
         middle.add(new Label("Filter Date:"));
@@ -89,62 +89,33 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
     }
 
 
-
-    public static void main(String[] args) throws SQLException, FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ParseException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         new ShowTimesForm();
-
     }
 
 
     @Override
-    public void actionPerformed(ActionEvent e){
-
-
-        if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) {
-            showFilteredDateResults();
-
-        }
-
-        if (e.getSource() == cbMovies) {
-            handleMovieCB();
-        }
-
-
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == cbDate && cbDate.getSelectedItem() != null) showFilteredDateResults();
+        if (e.getSource() == cbMovies) handleMovieCB();
     }
 
     private void handleMovieCB() {
-        if(!hasSelectedMovie){
-            cbMovies.removeItemAt(0);
-            hasSelectedMovie = true;
-
-        }
-
-        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+        Movie.movieComboBoxStatus(cbMovies);
+        movieShowTimes.setMovieID(movieList.get(cbMovies.getSelectedIndex()).getMovieID());
         populateShowDateComboBox();
         populateTable();
+
     }
 
     private void showFilteredDateResults() {
-        // filter show times by date
-        if (cbDate.getSelectedIndex() != 0) {
-
-            try {
-                movieShowTimes.setDate(Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()));
-                populateTable();
-            } catch (ParseException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            return;
-
+        try {
+            movieShowTimes.setDate(cbDate.getSelectedIndex() != 0 ? Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()) : "");
+            populateTable();
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
         }
-
-        // display all show times
-        movieShowTimes.setDate("");
-        populateTable();
     }
-
-
 
 
     @Override
@@ -154,8 +125,8 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
 
     @Override
     public void showColumn() {
-        model = (DefaultTableModel) table.getModel();
-        new ShowTimes().tableColumns().forEach(i -> model.addColumn(i));
+
+        new ShowTimes().tableColumns().forEach(model::addColumn);
 
     }
 
@@ -163,66 +134,30 @@ public class ShowTimesForm extends JFrame implements ActionListener, TableGUI, M
     public void populateTable() {
         try {
             clearTable(table);
-            int i = 0;
-            for(var showTime : db.showMovieTimes(movieShowTimes)) {
-                model.addRow(new Object[0]);
-                model.setValueAt(Helper.formatDate(showTime.getDate()), i, 0);
-                model.setValueAt(Helper.formatTime(showTime.getTime()), i, 1);
-                model.setValueAt(showTime.getNumTicketsLeft(), i, 2);
-                i++;
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(ShowTimes::toShowTimeList).toList());
+        } catch (IndexOutOfBoundsException _) {
 
         }
 
 
     }
 
-    private void populateMovieComboBox() {
-
-        for (var movie : db.getAllMovieShowTimes()) {
-            cbMovies.addItem(movie.getTitle());
-        }
-
-    }
 
     void populateShowDateComboBox() {
         cbDate.removeAllItems();
-        var showTimesList = db.showMovieTimes(movieShowTimes);
-
+        cbDate.addItem(FormDetails.defaultShowDate());
         // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
+        db.showMovieTimes(movieShowTimes).forEach(show -> linkedHashSet.add(show.getDate()));
+        linkedHashSet.forEach(date -> cbDate.addItem(Helper.formatDate(date)));
 
-        for (var show : showTimesList) {
-            linkedHashSet.add(show.getDate());
-        }
-        cbDate.addItem(FormDetails.defaultShowDate());
-        for (var date : linkedHashSet) {
-            cbDate.addItem(Helper.formatDate(date));
-        }
 
     }
 
     @Override
     public void navigation(JPanel top) {
-        top.add(nav.btnListMovies);
-        top.add(nav.btnShowTimes);
-        top.add(nav.btnPurchase);
-        top.add(nav.btnShowReceipt);
-
-        nav.btnListMovies.addActionListener(this::navClick);
-        nav.btnShowTimes.addActionListener(this::navClick);
-        nav.btnPurchase.addActionListener(this::navClick);
-        nav.btnShowReceipt.addActionListener(this::navClick);
+        Arrays.stream(nav.navButtons()).forEach(top::add);
     }
 
-    @Override
-    public void navClick(ActionEvent e) {
-        if (nav.handleNavClick(e)) {
-            dispose();
-        }
-    }
+
 }

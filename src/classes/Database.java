@@ -1,7 +1,11 @@
 package classes;
 
+import classes.models.*;
+import classes.utils.FileHandler;
+import classes.utils.Helper;
 import enums.Files;
 import enums.FormDetails;
+import org.apache.commons.lang3.StringUtils;
 import org.sqlite.SQLiteConfig;
 import tables.*;
 
@@ -58,13 +62,11 @@ public class Database {
     }
 
     private void insertRatings() throws FileNotFoundException {
-        List<String> ratingList = Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION);
-        insertSingleColumnTable(ratingList, new Rating().insert());
+        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION), new Rating().insert());
     }
 
     private void insertGenres() throws FileNotFoundException {
-        List<String> GenreList = Helper.readSingleLineCSV(Files.Genres.DESCRIPTION);
-        insertSingleColumnTable(GenreList, new Genre().insert());
+        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Genres.DESCRIPTION), new Genre().insert());
 
     }
 
@@ -81,29 +83,37 @@ public class Database {
 
     }
 
-    private void createTable(String createTableSQL) throws SQLException {
+    private void createTable(String createTableSQL) {
+        try (var con = getConnection(); Statement stmt = con.createStatement()) {
+            stmt.execute(createTableSQL);
+        } catch (Exception e) {
+            getErrorMessage(e);
 
-        Connection con = getConnection();
-        Statement stmt = con.createStatement();
-        stmt.execute(createTableSQL);
+        }
 
     }
 
     // used for the lookup tables e.g. Movies, Genres, Ratings, and Tickets tables
     private void insertSingleColumnTable(List<String> list, String insertSQL) {
 
-        try (Connection con = getConnection()) {
-
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(insertSQL)) {
             for (String item : list) {
-                PreparedStatement stmt = con.prepareStatement(insertSQL);
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, item);
+                var c = new Counter();
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), item);
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
+
+    }
+
+    private void getErrorMessage(Exception ex) {
+        System.err.println(ex.getMessage());
+
 
     }
 
@@ -113,19 +123,19 @@ public class Database {
         List<Movie> movieList = FileHandler.getMovieData(movieFile);
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Movie().insert())) {
             for (var movie : movieList) {
-                PreparedStatement stmt = con.prepareStatement(new Movie().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, movie.getTitle());
-                stmt.setInt(3, movie.getDuration());
-                stmt.setInt(4, movie.getRatingID());
-
+                var c = new Counter();
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), movie.getTitle());
+                stmt.setInt(c.getCounter(), movie.getDuration());
+                stmt.setInt(c.getCounter(), movie.getRatingID());
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
@@ -135,20 +145,21 @@ public class Database {
         var showTimeList = FileHandler.getShowTimeData();
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new ShowTimes().insert())) {
             for (var showtime : showTimeList) {
-                PreparedStatement stmt = con.prepareStatement(new ShowTimes().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setInt(2, showtime.getMovieID());
-                stmt.setString(3, showtime.getDate());
-                stmt.setString(4, showtime.getTime());
-                stmt.setInt(5, showtime.getNumTicketsLeft());
+                var c = new Counter();
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setInt(c.getCounter(), showtime.getMovieID());
+                stmt.setString(c.getCounter(), showtime.getDate());
+                stmt.setString(c.getCounter(), showtime.getTime());
+                stmt.setInt(c.getCounter(), showtime.getNumTicketsLeft());
 
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
@@ -158,21 +169,17 @@ public class Database {
         var customerList = FileHandler.getCustomerData();
 
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Customer().insert())) {
             for (var customer : customerList) {
-                PreparedStatement stmt = con.prepareStatement(new Customer().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, customer.getFirstname());
-                stmt.setString(3, customer.getLastname());
-                stmt.setString(4, customer.getEmail());
-                stmt.setString(5, customer.getPassword());
-                stmt.setInt(6, customer.getTicketID());
+                customerDataParams(customer, stmt);
 
                 stmt.executeUpdate();
+
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
@@ -180,20 +187,26 @@ public class Database {
 
     public boolean addCustomer(Customer customer) {
 
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(new Customer().insert());
-            stmt.setNull(1, java.sql.Types.NULL);
-            stmt.setString(2, customer.getFirstname());
-            stmt.setString(3, customer.getLastname());
-            stmt.setString(4, customer.getEmail());
-            stmt.setString(5, customer.getPassword());
-            stmt.setInt(6, customer.getTicketID());
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Customer().insert())) {
+            customerDataParams(customer, stmt);
             return stmt.executeUpdate() == 1;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
         return false;
+
+    }
+
+    private void customerDataParams(Customer customer, PreparedStatement stmt) throws SQLException {
+        var c = new Counter();
+        stmt.setNull(c.getCounter(), Types.NULL);
+        stmt.setString(c.getCounter(), customer.getFirstname());
+        stmt.setString(c.getCounter(), customer.getLastname());
+        stmt.setString(c.getCounter(), customer.getEmail());
+        stmt.setString(c.getCounter(), customer.getPassword());
+        stmt.setInt(c.getCounter(), customer.getTicketID());
 
     }
 
@@ -204,22 +217,24 @@ public class Database {
         List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
 
 
-        try (Connection con = getConnection()) {
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(new MovieGenres().insert())) {
+
             for (var item : movieGenres) {
-                PreparedStatement stmt = con.prepareStatement(new MovieGenres().insert());
-                stmt.setInt(1, item.getMovieID());
-                stmt.setInt(2, item.getGenreID());
+                var c = new Counter();
+                stmt.setInt(c.getCounter(), item.getMovieID());
+                stmt.setInt(c.getCounter(), item.getGenreID());
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
 
 
-    public Connection getConnection() {
+    private Connection getConnection() {
 
         final String DATABASE_DRIVER = "org.sqlite.JDBC";
         final String CONN_STR = String.format("jdbc:sqlite:%s", DB_NAME);
@@ -231,7 +246,7 @@ public class Database {
             config.enforceForeignKeys(true); // enables foreign key constraint as sqlite disables them by default for compatibility
             connection = DriverManager.getConnection(CONN_STR, config.toProperties());
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            getErrorMessage(e);
             return null;
 
         }
@@ -242,39 +257,36 @@ public class Database {
     private void insertTickets() throws FileNotFoundException {
         List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
 
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Ticket().insert())) {
 
             for (var ticket : ticketList) {
-                PreparedStatement stmt = con.prepareStatement(new Ticket().insert());
-                stmt.setNull(1, java.sql.Types.NULL);
-                stmt.setString(2, ticket.getType());
-                stmt.setDouble(3, ticket.getPrice());
+                var c = new Counter();
+
+                stmt.setNull(c.getCounter(), java.sql.Types.NULL);
+                stmt.setString(c.getCounter(), ticket.getType());
+                stmt.setDouble(c.getCounter(), ticket.getPrice());
 
                 stmt.executeUpdate();
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getErrorMessage(ex);
         }
 
     }
 
     public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
         List<MovieGenres> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(MovieGenres.showMovieList(movieGenres))) {
             // search by genre and movie title
-            String movieTitle = movieGenres.getTitle();
-            String sql = movieGenres.showMovieList(movieGenres);
             String genre = movieGenres.getGenre();
+            var c = new Counter();
+            stmt.setString(c.getCounter(), "%" + movieGenres.getTitle() + "%");
 
-
-            PreparedStatement stmt = con.prepareStatement(sql);
-            int param = 1;
-            stmt.setString(param, "%" + movieTitle + "%");
-
-            if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
-                param++;
-                stmt.setString(param, '%' + genre + '%');
+            if (!FormDetails.defaultGenre().equalsIgnoreCase(genre)) {
+                stmt.setString(c.getCounter(), '%' + genre + '%');
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -296,7 +308,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return list;
     }
@@ -306,24 +318,16 @@ public class Database {
         String showDate = movieShowTimes.getDate();
         List<ShowTimes> list = new ArrayList<>();
 
-        try (Connection con = getConnection()) {
-            String sql = new ShowTimes().getSelectedMovieShowTimes(movieShowTimes);
-            PreparedStatement stmt = con.prepareStatement(sql);
-            int param = 1;
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(ShowTimes.getSelectedMovieShowTimes(movieShowTimes))) {
+            var c = new Counter();
 
-            // selected movie id
-            stmt.setInt(param, movieShowTimes.getMovieID());
-            if (!showDate.isEmpty()) {
-                param++;
-                stmt.setString(param, showDate);
-            }
-
-
+            // selected movie
+            stmt.setInt(c.getCounter(), movieShowTimes.getMovieID());
+            // selected date
+            if (!StringUtils.isEmpty(showDate)) stmt.setString(c.getCounter(), showDate);
             ResultSet rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return list;
-            }
+            if (isResultSetEmpty(rs)) return list;
 
             while (rs.next()) {
                 String title = rs.getString(MovieTable.COLUMN_TITLE);
@@ -333,13 +337,12 @@ public class Database {
                 int showTimeID = rs.getInt(ShowTimesTable.COLUMN_ID);
                 int movieID = rs.getInt(ShowTimesTable.COLUMN_MOVIE_ID);
 
-
                 list.add(new ShowTimes(date, time, title, ticketsLeft, showTimeID, movieID));
 
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return list;
     }
@@ -347,44 +350,32 @@ public class Database {
 
     // for movie search
     public List<String> getMovieGenreList() {
-        List<String> genreList = new ArrayList<>();
-        try (Connection con = getConnection()) {
+        List<String> list = new ArrayList<>();
+        try (Connection con = getConnection();
+             var stmt = con.createStatement()) {
+            ResultSet rs = stmt.executeQuery(MovieGenres.getMovieGenreList());
+            if (isResultSetEmpty(rs)) return list;
 
-            String sql = new MovieGenres().getMovieGenreList();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-
-            if (isResultSetEmpty(rs)) {
-                return genreList;
-            }
             while (rs.next()) {
-
-
-                genreList.add(rs.getString(GenreTable.COLUMN_GENRE));
-
+                list.add(rs.getString(GenreTable.COLUMN_GENRE));
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
-        return genreList;
+
+        return list.stream().sorted().toList();
     }
 
 
-    public boolean customerSalesExists(Sales sales) {
+    public boolean SalesExists(Sales sales) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                SalesTable.COLUMN_CUSTOMER_ID,
-                SalesTable.TABLE_NAME,
-                SalesTable.COLUMN_CUSTOMER_ID
-        );
-
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, sales.getShowTimeID());
-            stmt.setInt(2, sales.getCustomerID());
-            stmt.setString(3, sales.getSalesDate());
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(Sales.salesExists())) {
+            var c = new Counter();
+            stmt.setInt(c.getCounter(), sales.getShowTimeID());
+            stmt.setInt(c.getCounter(), sales.getCustomerID());
+            stmt.setString(c.getCounter(), sales.getSalesDate());
 
             ResultSet rs2 = stmt.executeQuery();
 
@@ -392,32 +383,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
-
-    public boolean SalesExists(Sales sales) {
-
-        String sql = new Sales().salesExists();
-
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, sales.getShowTimeID());
-            stmt.setInt(2, sales.getCustomerID());
-            stmt.setString(3, sales.getSalesDate());
-
-
-            rs2 = stmt.executeQuery();
-
-            return !isResultSetEmpty(rs2);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return false;
 
@@ -426,26 +392,20 @@ public class Database {
 
     public boolean addSales(Sales sales) {
 
-        try (Connection con = getConnection()) {
-            int param = 1;
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(new Sales().insert())
+        ) {
+            var c = new Counter();
 
-            PreparedStatement stmt1 = con.prepareStatement(new Sales().insert());
+            stmt.setInt(c.getCounter(), sales.getShowTimeID());
+            stmt.setInt(c.getCounter(), sales.getCustomerID());
+            stmt.setString(c.getCounter(), sales.getSalesDate());
+            stmt.setInt(c.getCounter(), sales.getTotalTicketsSold());
 
-            stmt1.setInt(param, sales.getShowTimeID());
-            param++;
+            return stmt.executeUpdate() == 1;
 
-            stmt1.setInt(param, sales.getCustomerID());
-            param++;
-
-            stmt1.setString(param, sales.getSalesDate());
-            param++;
-
-            stmt1.setInt(param, sales.getTotalTicketsSold());
-
-            return stmt1.executeUpdate() == 1;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            getErrorMessage(e);
         }
         return false;
 
@@ -454,35 +414,31 @@ public class Database {
 
     public List<Invoice> getInvoice(int customerID) {
         List<Invoice> invoices = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            try (PreparedStatement stmt = con.prepareStatement(new Invoice().getInvoiceDetails())) {
-                stmt.setInt(1, customerID);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    Invoice invoice = new Invoice();
-                    invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
-                    invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
-                    invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
-                    invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
-                    invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
-                    invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
-                    invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
-                    invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
-                    invoices.add(invoice);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(classes.models.Invoice.getInvoiceDetails())) {
+            stmt.setInt(1, customerID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setFirstname(rs.getString(CustomerTable.COLUMN_FIRSTNAME));
+                invoice.setLastname(rs.getString(CustomerTable.COLUMN_LASTNAME));
+                invoice.setSalesDate(rs.getString(SalesTable.COLUMN_SALES_DATE));
+                invoice.setShowDate(rs.getString(ShowTimesTable.COLUMN_SHOW_DATE));
+                invoice.setShowTime(rs.getString(ShowTimesTable.COLUMN_SHOW_TIME));
+                invoice.setMovieTitle(rs.getString(MovieTable.COLUMN_TITLE));
+                invoice.setRating(rs.getString(RatingTable.COLUMN_RATING));
+                invoice.setTotalTicket(rs.getInt(SalesTable.COLUMN_TOTAL_TICKETS_SOLD));
+                invoices.add(invoice);
 
 
-                }
-                return invoices;
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
+            return invoices;
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            getErrorMessage(ex);
         }
-        return null;
+
+        return invoices;
 
     }
 
@@ -490,11 +446,9 @@ public class Database {
     public List<Movie> getAllMovieShowTimes() {
         List<Movie> movies = new ArrayList<>();
 
-        try (Connection con = getConnection()) {
-
-            String sql = new ShowTimes().getAllMovieShowTimes();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+        try (Connection con = getConnection();
+             var stmt = con.createStatement()) {
+            ResultSet rs = stmt.executeQuery(ShowTimes.getAllMovieShowTimes());
 
             while (rs.next()) {
 
@@ -503,23 +457,19 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return movies;
     }
 
 
-    public List<Ticket> getTicket() {
+    public List<Ticket> getTickets() {
         List<Ticket> ticketList = new ArrayList<>();
-        try (Connection con = getConnection()) {
+        try (Connection con = getConnection(); Statement stmt = con.createStatement()) {
+            ResultSet rs = stmt.executeQuery(Ticket.getTickets());
 
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(new Ticket().getTickets());
+            if (isResultSetEmpty(rs)) return ticketList;
 
-
-            if (isResultSetEmpty(rs)) {
-                return ticketList;
-            }
             while (rs.next()) {
                 int ticketID = rs.getInt(TicketsTable.COLUMN_ID);
                 String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
@@ -529,21 +479,18 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return ticketList;
     }
 
     public String getMovieName(int movieID) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_TITLE, MovieTable.TABLE_NAME, MovieTable.COLUMN_ID);
 
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_TITLE } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_ID } = ?" )) {
             stmt.setInt(1, movieID);
-
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             if (isResultSetEmpty(rs)) {
                 return "Error: there are no movies that exists with the specified id!";
@@ -553,7 +500,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return "error fetching movie name by movie id";
 
@@ -561,70 +508,41 @@ public class Database {
 
     public int getMovieID(String title) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", MovieTable.COLUMN_ID, MovieTable.TABLE_NAME, MovieTable.COLUMN_TITLE);
 
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_ID } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_TITLE } = ?" )) {
             stmt.setString(1, title);
+            ResultSet rs = stmt.executeQuery();
 
-            rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return 0;
-            }
+            if (isResultSetEmpty(rs)) return 0;
 
             return rs.getInt(MovieTable.COLUMN_ID);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
 
     }
 
-
-    public int getGenreID(String genre) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", GenreTable.COLUMN_ID, GenreTable.TABLE_NAME, GenreTable.COLUMN_GENRE);
-
-        try (Connection con = getConnection()) {
-            ResultSet rs;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, genre);
-
-            rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return 0;
-            }
-
-            return rs.getInt(GenreTable.COLUMN_ID);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-
-    }
 
     public boolean isAuthorised(String email, String password) {
 
-        String sql = "SELECT email, password FROM Customers WHERE email = ? AND password = ?";
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL}, \{CustomerTable.COLUMN_PASSWORD} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} = ? AND \{CustomerTable.COLUMN_PASSWORD} = ?")) {
 
-        try (Connection con = getConnection()) {
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+            var c = new Counter();
+            stmt.setString(c.getCounter(), email);
+            stmt.setString(c.getCounter(), password);
             ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
+
         }
         return false;
 
@@ -632,25 +550,18 @@ public class Database {
 
 
     public boolean emailExists(String email) {
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } LIKE ?" )) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
-                CustomerTable.COLUMN_EMAIL,
-                CustomerTable.TABLE_NAME,
-                CustomerTable.COLUMN_EMAIL
-        );
-
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, email);
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return false;
 
@@ -659,74 +570,35 @@ public class Database {
 
     public boolean customerInvoiceExists(int customerID) {
 
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                SalesTable.COLUMN_CUSTOMER_ID,
-                SalesTable.TABLE_NAME,
-                SalesTable.COLUMN_CUSTOMER_ID
-        );
-
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(STR."SELECT \{SalesTable.COLUMN_CUSTOMER_ID} FROM \{SalesTable.TABLE_NAME} WHERE \{SalesTable.COLUMN_CUSTOMER_ID} = ?")) {
             stmt.setInt(1, customerID);
 
-            rs2 = stmt.executeQuery();
+            ResultSet rs2 = stmt.executeQuery();
 
             return !isResultSetEmpty(rs2);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
+
         return false;
 
     }
-
-
-    public boolean movieIDExists(int movieID) {
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?",
-                MovieTable.COLUMN_ID,
-                MovieTable.TABLE_NAME,
-                MovieTable.COLUMN_ID
-        );
-
-        try (Connection con = getConnection()) {
-            ResultSet rs2;
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, movieID);
-
-            rs2 = stmt.executeQuery();
-
-            return !isResultSetEmpty(rs2);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
 
     public int getCustomerID(String email) {
-        String sql = "SELECT " + CustomerTable.COLUMN_ID + " FROM " + CustomerTable.TABLE_NAME + " WHERE " + CustomerTable.COLUMN_EMAIL + " =?";
 
 
-        try (Connection con = getConnection()) {
-
-            ResultSet rs3;
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (var con = getConnection();
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_ID} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} =?")) {
             stmt.setString(1, email);
-
-            rs3 = stmt.executeQuery();
-// Asshole
-
+            ResultSet rs3 = stmt.executeQuery();
             return rs3.getInt(CustomerTable.COLUMN_ID);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
 
@@ -735,12 +607,10 @@ public class Database {
 
     public Ticket getCustomerTicketType(int customerID) {
 
-        try (Connection con = getConnection()) {
-
-            String sql = new Customer().getCustomerTicketType();
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(Customer.getCustomerTicketType())
+        ) {
             stmt.setInt(1, customerID);
-
             ResultSet rs = stmt.executeQuery();
             int ticketId = rs.getInt(TicketsTable.COLUMN_ID);
             String ticketType = rs.getString(TicketsTable.COLUMN_TYPE);
@@ -749,27 +619,24 @@ public class Database {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
 
         return null;
     }
 
     public int getNumTickets(ShowTimes movieShowTimes) {
-        try (Connection con = getConnection()) {
-
-            String sql = new ShowTimes().getSelectedShowDetails();
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement(ShowTimes.getSelectedShowDetails())) {
             stmt.setInt(1, movieShowTimes.getShowTimeID());
             ResultSet r = stmt.executeQuery();
 
-            if (isResultSetEmpty(r)) {
-                return 0;
-            }
+            if (isResultSetEmpty(r)) return 0;
+
             return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorMessage(e);
         }
         return 0;
     }
@@ -777,21 +644,18 @@ public class Database {
 
     public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
-
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(new ShowTimes().updateNumTickets())) {
+             var stmt = conn.prepareStatement(ShowTimes.updateNumTickets())) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
-
-
-            // set the corresponding param
-            pstmt.setInt(1, remainingTickets);
-            pstmt.setInt(2, movieShowTimes.getShowTimeID());
+            var c = new Counter();
+            stmt.setInt(c.getCounter(), remainingTickets);
+            stmt.setInt(c.getCounter(), movieShowTimes.getShowTimeID());
             // update
-            int result = pstmt.executeUpdate();
+            int result = stmt.executeUpdate();
             return result != 0;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            getErrorMessage(e);
         }
         return false;
     }
