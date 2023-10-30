@@ -50,6 +50,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     ;
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        table.setEnabled(false);
 
         if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;

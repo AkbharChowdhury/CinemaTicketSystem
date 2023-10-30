@@ -17,12 +17,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 public class Invoice {
     public static final String INVOICE_FILE = "invoice.txt";
     public static final String INVOICE_FILE_NAME = "invoice.pdf";
-//    private PDDocument invoiceDocument;
     private int n;
     private int totalTicket;
     private String salesDate;
@@ -119,7 +119,7 @@ public class Invoice {
         this.rating = rating;
     }
     public static String getDetails(Invoice invoice, double price) {
-        return STR."\{invoice.getMovieTitle()}, \{ Helper.formatDate(invoice.getShowDate())}, \{Helper.formatTime(invoice.getShowTime())}, \{ Helper.formatMoney(price * invoice.getTotalTicket())}";
+        return STR."\{invoice.getMovieTitle()}, \{ Helper.formatDate(invoice.getShowDate(), FormatStyle.MEDIUM)}, \{Helper.formatTime(invoice.getShowTime())}, \{ Helper.formatMoney(price * invoice.getTotalTicket())}";
     }
 
     public static String getInvoiceDetails() {

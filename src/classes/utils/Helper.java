@@ -74,6 +74,10 @@ public final class Helper {
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(date));
 
     }
+    public static String formatDate(String date, FormatStyle formatStyle) {
+        return DateTimeFormatter.ofLocalizedDate(formatStyle).format(LocalDate.parse(date));
+
+    }
 
     public static String convertMediumDateToYYMMDD(String dateStr)  {
         return LocalDate.parse(dateStr,DateTimeFormatter.ofPattern("dd MMM yyyy")).toString();

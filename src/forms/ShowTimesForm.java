@@ -39,6 +39,8 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
 
     public ShowTimesForm() throws SQLException, FileNotFoundException {
+        table.setEnabled(false);
+
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID()))
             nav.btnShowReceipt.setEnabled(false);
 

@@ -34,6 +34,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private final CustomTableModel tableModel = new CustomTableModel(model);;
 
     public MovieList() throws SQLException, FileNotFoundException {
+        table.setEnabled(false);
 
         if (Helper.disableReceipt(db)) {
             nav.btnShowReceipt.setEnabled(false);
