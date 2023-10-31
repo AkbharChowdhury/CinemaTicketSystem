@@ -1,5 +1,6 @@
 package classes.models;
 
+import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.Queries;
 import tables.GenreTable;
@@ -33,7 +34,7 @@ public class MovieGenres extends Movie implements Queries {
 
         return STR. """
         \{ fieldSep(m.getTitle()) }
-        \{ fieldSep(m.getDuration()) }
+        \{ fieldSep(Helper.calcDuration(m.getDuration())) }
         \{ fieldSep(m.getRating()) }
         \{ m.getGenres() }
         """ ;

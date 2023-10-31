@@ -450,6 +450,7 @@ public class Database {
              var stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery(ShowTimes.getAllMovieShowTimes());
 
+
             while (rs.next()) {
 
                 movies.add(new Movie(rs.getInt(MovieTable.COLUMN_ID), rs.getString(MovieTable.COLUMN_TITLE)));

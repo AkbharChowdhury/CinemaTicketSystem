@@ -118,6 +118,7 @@ public class ShowTimes implements Queries {
                 WHERE
                     show_date >= DATE('NOW')
                     AND DATE('now','start of month',  '+1 month',  '-1 day')
+                    AND show_time >= TIME('NOW')
                     AND num_tickets_left > 0
                 ORDER BY
                     m.title
