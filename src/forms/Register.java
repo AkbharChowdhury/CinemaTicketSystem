@@ -44,24 +44,11 @@ public final class Register extends JFrame implements ActionListener {
         put(txtEmail, "Email");
     }};
 
-    final LinkedHashMap<ArrayList<String>, Integer> textFields2 = new LinkedHashMap<>() {{
-        put(new ArrayList<>(), 2);
-    }};
+
 
 
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        var tickets = Database.getInstance().getTickets();
-        ArrayList<String> list = new ArrayList<>();
-        var sep = "]]";
-        for (var ticket : tickets) {
-            list.add(ticket.getType() + sep + ticket.getPrice());
-        }
-        for (int i = 0; i < list.size(); i++) {
-            var item = list.get(i).split(sep);
-            System.out.println(Arrays.toString(list.get(i).split("]]")));
 
-
-        }
 
         System.exit(0);
         db = Database.getInstance();

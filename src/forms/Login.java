@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public final class Login extends JFrame implements ActionListener {
-    private final Database db;
+    private final Database db = Database.getInstance();
     private final JTextField txtEmail = new JTextField();
     private final JButton btnLogin = new JButton(Buttons.login());
     private final JLabel hyperlink = new JLabel(FormDetails.hyperlink());
@@ -24,7 +24,6 @@ public final class Login extends JFrame implements ActionListener {
     public Login() throws SQLException, FileNotFoundException {
         setupHyperLink();
 
-        db = Database.getInstance();
         JPanel panel = new JPanel();
         panel.setLayout(null);
         setTitle(FormDetails.login());

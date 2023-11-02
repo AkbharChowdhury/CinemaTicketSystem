@@ -7,7 +7,9 @@ import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
@@ -28,7 +30,22 @@ public class MovieGenres extends Movie implements Queries {
     public MovieGenres() {
 
     }
+    public final LinkedHashMap<String, Integer> widths = new LinkedHashMap<>() {{
+        put("movie", 20);
+        put("duration", 30);
+        put("rating", 20);
+        put("genre", 100);
 
+
+    }};
+    public final LinkedHashMap<Integer, Integer> widths2 = new LinkedHashMap<>() {{
+        put(0, 135);
+        put(1, 30);
+        put(2, 20);
+        put(3, 140);
+
+
+    }};
     public static String toMovieList(MovieGenres m) {
 
 

@@ -13,11 +13,11 @@ import interfaces.TableGUI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -30,8 +30,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
     private final Navigation nav = new Navigation(this);
-    private final DefaultTableModel model = (DefaultTableModel) table.getModel();;
-    private final CustomTableModel tableModel = new CustomTableModel(model);;
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
+    ;
+    private final CustomTableModel tableModel = new CustomTableModel(model);
+    ;
 
     public MovieList() throws SQLException, FileNotFoundException {
         table.setEnabled(false);
@@ -42,6 +44,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
         JScrollPane scrollPane1 = new JScrollPane();
         scrollPane1.setViewportView(table);
+
         setupTableProperties();
 
         txtMovieTitle.addKeyListener(this);
@@ -60,14 +63,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         db.getMovieGenreList().forEach(cbGenres::addItem);
 
         populateTable();
-
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
-        table.getColumnModel().getColumn(1).setPreferredWidth(40);
-
-        table.getColumnModel().getColumn(3).setPreferredWidth(140);
-        var cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
-        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
 
 
         JPanel middle = new JPanel();
@@ -109,9 +104,47 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
     private void setupTableProperties() {
-        new MovieGenres().tableColumns().forEach(model::addColumn);
+        showColumn();
+        var c = new Counter(true);
+        int movieIndex = c.getCounter();
+        int durationIndex = c.getCounter();
+        int ratingIndex = c.getCounter();
+        int genreIndex = c.getCounter();
+//        System.out.println(movieGenre.widths.get("movie"));
+
+//        movieGenre.widths.values().forEach(i->  table.getColumnModel().getColumn(movieIndex).setPreferredWidth(i));
+
+
+
+//        table.getColumnModel().getColumn(movieIndex).setPreferredWidth(150);
+//        table.getColumnModel().getColumn(durationIndex).setPreferredWidth(30);
+//        table.getColumnModel().getColumn(ratingIndex).setPreferredWidth(10);
+//        table.getColumnModel().getColumn(genreIndex).setPreferredWidth(100);
+
+        displayWidths();
+
+//                table.getColumnModel().getColumn(movieIndex).setPreferredWidth(200);
+//        table.getColumnModel().getColumn(durationIndex).setPreferredWidth(40);
+//        table.getColumnModel().getColumn(ratingIndex).setPreferredWidth(30);
+//        table.getColumnModel().getColumn(genreIndex).setPreferredWidth(140);
+//        var cellRenderer = new DefaultTableCellRenderer();
+//        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+//        table.getColumnModel().getColumn(movieIndex).setCellRenderer(cellRenderer);
+//        for (int i = 0; i < table.getColumnCount(); i++) {
+//            TableColumn column = table.getColumnModel().getColumn(i);
+//            System.out.println("Width of column " + i + " : " + column.getWidth());
+//        }
 
     }
+    private void displayWidths() {
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setPreferredWidth(movieGenre.widths2.get(i));
+        }
+        var cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
