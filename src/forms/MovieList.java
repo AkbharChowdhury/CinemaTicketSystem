@@ -31,9 +31,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private final JComboBox<String> cbGenres = new JComboBox<>();
     private final Navigation nav = new Navigation(this);
     private final DefaultTableModel model = (DefaultTableModel) table.getModel();
-    ;
+
     private final CustomTableModel tableModel = new CustomTableModel(model);
-    ;
+
 
     public MovieList() throws SQLException, FileNotFoundException {
         table.setEnabled(false);

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 
-public class Navigation extends JFrame implements ActionListener {
+public class Navigation implements ActionListener {
     private final JButton btnListMovies = new JButton(Buttons.listMovies());
     public final JButton btnShowTimes = new JButton(Buttons.showTimes());
     public final JButton btnPurchase = new JButton(Buttons.purchaseTicket());
