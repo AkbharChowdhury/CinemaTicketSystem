@@ -105,7 +105,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         south.add(lblTotal);
         updateTotalLabel();
 
-        JButton btnConfirm = new JButton(Buttons.confirmOrder());
+        JButton btnConfirm = new JButton("Confirm Order");
         south.add(btnConfirm);
 
 

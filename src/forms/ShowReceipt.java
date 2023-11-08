@@ -27,7 +27,7 @@ import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
     private  final Database db = Database.getInstance();
-    private final JButton btnPrintReceipt = new JButton(Buttons.printReceipt());
+    private final JButton btnPrintReceipt = new JButton("Print Receipt");
     private final Navigation nav = new Navigation(this);
     int selectedListInvoiceItem;
     private final DefaultListModel<String> model = new DefaultListModel<>();

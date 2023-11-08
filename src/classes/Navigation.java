@@ -14,10 +14,10 @@ import java.text.ParseException;
 
 
 public final class Navigation implements ActionListener {
-    private final JButton btnListMovies = new JButton(Buttons.listMovies());
-    public final JButton btnShowTimes = new JButton(Buttons.showTimes());
-    public final JButton btnPurchase = new JButton(Buttons.purchaseTicket());
-    public final JButton btnShowReceipt = new JButton(Buttons.showReceipt());
+    private final JButton btnListMovies = new JButton("List Movies");
+    public final JButton btnShowTimes = new JButton("Show Times");
+    public final JButton btnPurchase = new JButton("Purchase Ticket");
+    public final JButton btnShowReceipt = new JButton("Show Receipt");
     private final JFrame frame;
 
     public JButton[] navButtons() {
