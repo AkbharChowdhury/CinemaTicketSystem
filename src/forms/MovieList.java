@@ -2,7 +2,6 @@ package forms;
 
 import classes.Database;
 import classes.Navigation;
-import classes.models.Counter;
 import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
 import classes.utils.Helper;
@@ -13,7 +12,6 @@ import interfaces.TableGUI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
@@ -105,40 +103,12 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     private void setupTableProperties() {
         showColumn();
-        var c = new Counter(true);
-        int movieIndex = c.getCounter();
-        int durationIndex = c.getCounter();
-        int ratingIndex = c.getCounter();
-        int genreIndex = c.getCounter();
-//        System.out.println(movieGenre.widths.get("movie"));
-
-//        movieGenre.widths.values().forEach(i->  table.getColumnModel().getColumn(movieIndex).setPreferredWidth(i));
-
-
-
-//        table.getColumnModel().getColumn(movieIndex).setPreferredWidth(150);
-//        table.getColumnModel().getColumn(durationIndex).setPreferredWidth(30);
-//        table.getColumnModel().getColumn(ratingIndex).setPreferredWidth(10);
-//        table.getColumnModel().getColumn(genreIndex).setPreferredWidth(100);
-
         displayWidths();
-
-//                table.getColumnModel().getColumn(movieIndex).setPreferredWidth(200);
-//        table.getColumnModel().getColumn(durationIndex).setPreferredWidth(40);
-//        table.getColumnModel().getColumn(ratingIndex).setPreferredWidth(30);
-//        table.getColumnModel().getColumn(genreIndex).setPreferredWidth(140);
-//        var cellRenderer = new DefaultTableCellRenderer();
-//        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
-//        table.getColumnModel().getColumn(movieIndex).setCellRenderer(cellRenderer);
-//        for (int i = 0; i < table.getColumnCount(); i++) {
-//            TableColumn column = table.getColumnModel().getColumn(i);
-//            System.out.println("Width of column " + i + " : " + column.getWidth());
-//        }
 
     }
     private void displayWidths() {
         for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(movieGenre.widths2.get(i));
+            table.getColumnModel().getColumn(i).setPreferredWidth(movieGenre.widths.get(i));
         }
         var cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
