@@ -66,9 +66,13 @@ public final class Navigation implements ActionListener {
         }
     }
 
-    private void showReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        LoginInfo.setHasOpenFormOnStartUp(true);
-        new ShowReceipt();
+    private void showReceipt() {
+        try {
+            LoginInfo.setHasOpenFormOnStartUp(true);
+            new ShowReceipt();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
 
