@@ -314,6 +314,49 @@ public class Database {
     }
 
 
+
+    public List<MovieGenres> showMovieList1() {
+        List<MovieGenres> list = new ArrayList<>();
+        try (Connection con = getConnection();
+             var stmt = con.prepareStatement("""
+             
+                             SELECT m.title,
+                                    m.duration,
+                                    r.rating,
+                                    Group_concat(g.genre, '/') genre_list,
+                                    Group_concat(g.genre_id)   genre_id_list,
+                                    mg.movie_id,
+                                    mg.genre_id
+                             FROM   MovieGenres mg
+                                    JOIN Movies m
+                                      ON mg.movie_id = m.movie_id
+                                    JOIN genres g
+                                      ON mg.genre_id = g.genre_id
+                                    JOIN Ratings r
+                                      ON m.rating_id = r.rating_id                         
+                             GROUP BY m.movie_id
+             """
+             )) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int movieID = rs.getInt(MovieTable.COLUMN_ID);
+                String title = rs.getString(MovieTable.COLUMN_TITLE);
+                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+                String rating = rs.getString(RatingTable.COLUMN_RATING);
+                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
+
+            }
+
+        } catch (Exception e) {
+            getErrorMessage(e);
+        }
+        return list;
+    }
+
+
     public List<ShowTimes> showMovieTimes(ShowTimes movieShowTimes) {
         String showDate = movieShowTimes.getDate();
         List<ShowTimes> list = new ArrayList<>();
