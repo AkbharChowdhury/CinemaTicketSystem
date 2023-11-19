@@ -167,8 +167,7 @@ public final class MovieList1 extends JFrame implements ActionListener, KeyListe
     public void populateTable() {
 
         clearTable(table);
-        var x = db.showMovieList1();
-        search.filterResults().forEach(System.out::println);
+
 
         tableModel.populateTable(search.filterResults().stream().map(MovieGenres::toMovieList).toList());
     }

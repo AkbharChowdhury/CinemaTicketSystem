@@ -4,6 +4,7 @@ import classes.Database;
 import classes.Navigation;
 import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
+import classes.models.SearchMovie;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
@@ -17,10 +18,13 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
 public final class MovieList extends JFrame implements ActionListener, KeyListener, TableGUI, MenuNavigation {
+
+
     private final Database db = Database.getInstance();
     private final MovieGenres movieGenre = new MovieGenres();
 
