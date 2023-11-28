@@ -1,9 +1,10 @@
 package classes.models;
 
 import interfaces.Queries;
+import lombok.Data;
 import tables.CustomerTable;
 import tables.TicketsTable;
-
+@Data
 public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
@@ -25,48 +26,7 @@ public class Customer extends Ticket implements Queries {
 
 
 
-    public int getCustomerID() {
-        return customerID;
-    }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public String createTable() {
