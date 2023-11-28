@@ -458,9 +458,9 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(Sales.salesExists())) {
             var c = new Counter();
-            stmt.setInt(c.getCounter(), sales.getShowTimeID());
-            stmt.setInt(c.getCounter(), sales.getCustomerID());
-            stmt.setString(c.getCounter(), sales.getSalesDate());
+            stmt.setInt(c.getCounter(), sales.showTimeID());
+            stmt.setInt(c.getCounter(), sales.customerID());
+            stmt.setString(c.getCounter(), sales.salesDate());
 
             ResultSet rs2 = stmt.executeQuery();
 
@@ -482,10 +482,10 @@ public class Database {
         ) {
             var c = new Counter();
 
-            stmt.setInt(c.getCounter(), sales.getShowTimeID());
-            stmt.setInt(c.getCounter(), sales.getCustomerID());
-            stmt.setString(c.getCounter(), sales.getSalesDate());
-            stmt.setInt(c.getCounter(), sales.getTotalTicketsSold());
+            stmt.setInt(c.getCounter(), sales.showTimeID());
+            stmt.setInt(c.getCounter(), sales.customerID());
+            stmt.setString(c.getCounter(), sales.salesDate());
+            stmt.setInt(c.getCounter(), sales.totalTicketsSold());
 
             return stmt.executeUpdate() == 1;
 

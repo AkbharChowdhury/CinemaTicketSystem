@@ -50,7 +50,6 @@ public final class Register extends JFrame implements ActionListener {
     public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
 
-        System.exit(0);
         db = Database.getInstance();
         ticketList = db.getTickets();
         setLayout(new BorderLayout());
@@ -86,7 +85,8 @@ public final class Register extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
+        System.out.println("S");
 
         try {
             new Register();
