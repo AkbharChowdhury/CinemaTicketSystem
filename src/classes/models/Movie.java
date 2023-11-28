@@ -2,11 +2,15 @@ package classes.models;
 
 import enums.FormDetails;
 import interfaces.Queries;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import tables.MovieTable;
 import tables.RatingTable;
 
 import javax.swing.*;
-
+@Data
 public class Movie implements Queries {
     protected int movieID;
     protected String title = "";
@@ -24,37 +28,7 @@ public class Movie implements Queries {
         }
     }
 
-    public int getMovieID() {
-        return movieID;
-    }
 
-    public void setMovieID(int movieID) {
-        this.movieID = movieID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public int getRatingID() {
-        return ratingID;
-    }
-
-    public void setRatingID(int ratingID) {
-        this.ratingID = ratingID;
-    }
 
     public Movie(String title, int duration, int ratingID) {
         this.title = title;
@@ -62,15 +36,7 @@ public class Movie implements Queries {
         this.ratingID = ratingID;
     }
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "movieID=" + movieID +
-                ", title='" + title + '\'' +
-                ", duration=" + duration +
-                ", ratingID=" + ratingID +
-                '}';
-    }
+
 
     public Movie(String title, int duration) {
         this.title = title;

@@ -3,33 +3,12 @@ package classes.models;
 import interfaces.Queries;
 import tables.GenreTable;
 
-public class Genre implements Queries {
-    private int genreID;
-    private String genre;
+public record Genre(int genreID, String genre) implements Queries {
 
-    public int getGenreID() {
-        return genreID;
-    }
-
-    public void setGenreID(int genreID) {
-        this.genreID = genreID;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
 
     public Genre() {
+        this(0, "");
 
-    }
-
-    public Genre(int genreID, String genre) {
-        this.genreID = genreID;
-        this.genre = genre;
     }
 
 

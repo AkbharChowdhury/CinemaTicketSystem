@@ -2,6 +2,7 @@ package classes.models;
 
 import classes.utils.Helper;
 import interfaces.Queries;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import tables.MovieTable;
 import tables.ShowTimesTable;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
+@Data
 
 public class ShowTimes implements Queries {
     private int showTimeID;
@@ -21,55 +23,7 @@ public class ShowTimes implements Queries {
 
     private int numTicketsSold;
 
-    public int getNumTicketsSold() {
-        return numTicketsSold;
-    }
 
-    public void setNumTicketsSold(int numTicketsSold) {
-        this.numTicketsSold = numTicketsSold;
-    }
-
-    public int getShowTimeID() {
-        return showTimeID;
-    }
-
-    public void setShowTimeID(int showTimeID) {
-        this.showTimeID = showTimeID;
-    }
-
-    public int getMovieID() {
-        return movieID;
-    }
-
-    public void setMovieID(int movieID) {
-        this.movieID = movieID;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public int getNumTicketsLeft() {
-        return numTicketsLeft;
-    }
-
-    public void setNumTicketsLeft(int numTicketsLeft) {
-        this.numTicketsLeft = numTicketsLeft;
-    }
-
-    //    @Override
     public List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
         columns.add("Date");

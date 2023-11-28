@@ -126,6 +126,7 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Movie().insert())) {
             for (var movie : movieList) {
+
                 var c = new Counter();
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), movie.getTitle());

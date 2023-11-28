@@ -3,33 +3,12 @@ package classes.models;
 import interfaces.Queries;
 import tables.*;
 
-public class Rating implements Queries {
-    private int ratingID;
-    private String rating;
+public record Rating(int ratingID, String rating) implements Queries {
+
 
     public Rating() {
+        this(0, "");
 
-    }
-
-    public int getRatingID() {
-        return ratingID;
-    }
-
-    public void setRatingID(int ratingID) {
-        this.ratingID = ratingID;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public Rating(int ratingID, String rating) {
-        this.ratingID = ratingID;
-        this.rating = rating;
     }
 
     @Override
@@ -44,10 +23,10 @@ public class Rating implements Queries {
 
     @Override
     public String insert() {
-        return STR."""
-                        INSERT INTO \{RatingTable.TABLE_NAME}
+        return STR. """
+                        INSERT INTO \{ RatingTable.TABLE_NAME }
                         VALUES (?, ?);
-                        """;
+                        """ ;
 
 
     }

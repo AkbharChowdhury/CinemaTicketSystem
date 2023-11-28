@@ -6,6 +6,7 @@ import classes.LoginInfo;
 import classes.models.Ticket;
 import classes.utils.Helper;
 import enums.FormDetails;
+import lombok.Data;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -19,7 +20,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.format.FormatStyle;
 import java.util.List;
-
+@Data
 public class Invoice {
     public static final String INVOICE_FILE = "invoice.txt";
     public static final String INVOICE_FILE_NAME = "invoice.pdf";
@@ -55,69 +56,7 @@ public class Invoice {
         return inputString;
     }
 
-    public int getTotalTicket() {
-        return totalTicket;
-    }
 
-    public void setTotalTicket(int totalTicket) {
-        this.totalTicket = totalTicket;
-    }
-
-    public String getSalesDate() {
-        return salesDate;
-    }
-
-    public void setSalesDate(String salesDate) {
-        this.salesDate = salesDate;
-    }
-
-    public String getShowDate() {
-        return showDate;
-    }
-
-    public void setShowDate(String showDate) {
-        this.showDate = showDate;
-    }
-
-    public String getShowTime() {
-        return showTime;
-    }
-
-    public void setShowTime(String showTime) {
-        this.showTime = showTime;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
     public static String getDetails(Invoice invoice, double price) {
         return STR."\{invoice.getMovieTitle()}, \{ Helper.formatDate(invoice.getShowDate(), FormatStyle.MEDIUM)}, \{Helper.formatTime(invoice.getShowTime())}, \{ Helper.formatMoney(price * invoice.getTotalTicket())}";
     }

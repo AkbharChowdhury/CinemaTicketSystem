@@ -1,21 +1,15 @@
 package classes.models;
 
 import interfaces.Queries;
+import lombok.Data;
 import tables.GenreTable;
 import tables.TicketsTable;
-
+@Data
 public class Ticket implements Queries {
     protected int ticketID;
     private String type;
     private double price;
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setTicketPrice(double ticketPrice) {
-        this.price = ticketPrice;
-    }
 
     public Ticket() {
 
@@ -37,23 +31,6 @@ public class Ticket implements Queries {
     public Ticket(int ticketID) {
         this.ticketID = ticketID;
 
-    }
-
-
-    public int getTicketID() {
-        return ticketID;
-    }
-
-    public void setTicketID(int ticketID) {
-        this.ticketID = ticketID;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override

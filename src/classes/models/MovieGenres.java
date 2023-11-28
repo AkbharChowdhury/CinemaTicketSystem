@@ -3,6 +3,8 @@ package classes.models;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.Queries;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
@@ -12,23 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
-
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class MovieGenres extends Movie implements Queries {
     private int genreID;
     private String rating;
     private String genre = FormDetails.defaultGenre();
+    private String genres;
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public MovieGenres() {
-
-    }
+    public MovieGenres() {}
 
     public final LinkedHashMap<Integer, Integer> widths = new LinkedHashMap<>() {{
         put(0, 135);
@@ -36,10 +30,8 @@ public class MovieGenres extends Movie implements Queries {
         put(2, 20);
         put(3, 140);
 
-
     }};
     public static String toMovieList(MovieGenres m) {
-
 
         return STR. """
         \{ fieldSep(m.getTitle()) }
@@ -51,56 +43,18 @@ public class MovieGenres extends Movie implements Queries {
 
 
 
-
-    public String getRating() {
-        return rating;
-    }
-
     public MovieGenres(int movieID, int genreID) {
         super(movieID);
         this.genreID = genreID;
     }
 
-    public String getGenres() {
-        return genres;
-    }
-
-    //    private String title,duration,genres;
-    private String genres;
-
-    public MovieGenres(String title, int duration, String genres) {
-        super(title, duration);
-        this.title = title;
-        this.duration = duration;
-        this.genres = genres;
-
-    }
-
     public MovieGenres(int movieID, String title, int duration, String genres, String rating) {
         super(title, duration);
         this.movieID = movieID;
-        this.title = title;
-        this.duration = duration;
         this.genres = genres;
         this.rating = rating;
 
 
-    }
-
-    public int getMovieID() {
-        return movieID;
-    }
-
-    public void setMovieID(int movieID) {
-        this.movieID = movieID;
-    }
-
-    public int getGenreID() {
-        return genreID;
-    }
-
-    public void setGenreID(int genreID) {
-        this.genreID = genreID;
     }
 
     @Override
