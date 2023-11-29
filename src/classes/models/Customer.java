@@ -1,20 +1,30 @@
 package classes.models;
 
 import interfaces.Queries;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tables.CustomerTable;
 import tables.TicketsTable;
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
     private String email;
     private String password;
+
+    public Customer(String firstname, String lastname, String email, String password, int ticketID) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.ticketID = ticketID;
+    }
+
+
+
+
 
     @Override
     public String createTable() {
@@ -45,7 +55,7 @@ public class Customer extends Ticket implements Queries {
 
     public  static String getCustomerTicketType(){
         return """
-                SELECT  c.customer_id, t.type, t.price, t.ticket_id                         
+                SELECT c.customer_id, t.type, t.price, t.ticket_id                         
                 FROM Customers c JOIN Tickets t ON t.ticket_id = c.ticket_id
                 WHERE customer_id = ?
                 """;

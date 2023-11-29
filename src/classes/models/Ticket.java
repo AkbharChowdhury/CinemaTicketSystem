@@ -1,26 +1,19 @@
 package classes.models;
 
 import interfaces.Queries;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import tables.GenreTable;
 import tables.TicketsTable;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ticket implements Queries {
     protected int ticketID;
     private String type;
     private double price;
-
-
-    public Ticket() {
-
-    }
-
-    public Ticket(int ticketID, String type, double price) {
-        this.ticketID = ticketID;
-        this.type = type;
-        this.price = price;
-
-    }
+    
 
     public Ticket(String type, double price) {
         this.type = type;
