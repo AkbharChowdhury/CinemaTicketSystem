@@ -1,32 +1,20 @@
 package classes.models;
 
 import interfaces.Queries;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import tables.CustomerTable;
 import tables.TicketsTable;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
     private String email;
     private String password;
-
-    public Customer() {
-
-    }
-
-    public Customer(String firstname, String lastname, String email, String password, int ticketID) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.ticketID = ticketID;
-    }
-
-
-
-
 
     @Override
     public String createTable() {
