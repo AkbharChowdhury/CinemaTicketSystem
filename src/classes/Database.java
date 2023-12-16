@@ -49,15 +49,9 @@ public class Database {
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
+        
         return instance;
-//        if (instance == null) {
-//            synchronized (Database.class) {
-//                if (instance == null) {
-//                    instance = new Database();
-//                }
-//            }
-//        }
-//        return instance;
+
 
     }
 
