@@ -27,8 +27,16 @@ public final class Helper {
     public static String fieldSep(Object obj) {
         return obj + SEP;
     }
+
     public static String getCSVPath() {
         return "src/csv/";
+    }
+
+    public static JSpinner disableSpinnerInput(JSpinner spinner) {
+        var editor = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
+        editor.setEnabled(true);
+        editor.setEditable(false);
+        return spinner;
     }
 
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
@@ -74,15 +82,15 @@ public final class Helper {
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(date));
 
     }
+
     public static String formatDate(String date, FormatStyle formatStyle) {
         return DateTimeFormatter.ofLocalizedDate(formatStyle).format(LocalDate.parse(date));
 
     }
 
-    public static String convertMediumDateToYYMMDD(String dateStr)  {
-        return LocalDate.parse(dateStr,DateTimeFormatter.ofPattern("dd MMM yyyy")).toString();
+    public static String convertMediumDateToYYMMDD(String dateStr) {
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd MMM yyyy")).toString();
     }
-
 
 
     public static void goTo(JFrame currentPage, Pages page) {

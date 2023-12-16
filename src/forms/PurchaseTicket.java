@@ -60,8 +60,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             nav.btnShowReceipt.setEnabled(false);
         }
 
-
-        disableSpinnerInput();
+        Helper.disableSpinnerInput(spNumTickets);
 
         ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         lblMovieDetails.setFont(new Font("Calibri", Font.BOLD, 15));
@@ -172,12 +171,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         }
 
-    }
-
-    private void disableSpinnerInput() {
-        var editor = ((JSpinner.DefaultEditor) spNumTickets.getEditor()).getTextField();
-        editor.setEnabled(true);
-        editor.setEditable(false);
     }
 
 
