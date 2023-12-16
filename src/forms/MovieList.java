@@ -14,8 +14,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -35,7 +33,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     private final CustomTableModel tableModel = new CustomTableModel(model);
 
 
-    public MovieList() throws SQLException, FileNotFoundException {
+    public MovieList() {
         table.setEnabled(false);
 
         if (Helper.disableReceipt(db)) {
@@ -89,7 +87,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
+    public static void main(String[] args) {
         new MovieList();
 
     }

@@ -38,7 +38,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     private final CustomTableModel tableModel = new CustomTableModel(model);
 
 
-    public ShowTimesForm() throws SQLException, FileNotFoundException {
+    public ShowTimesForm() {
         table.setEnabled(false);
 
         if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID()))

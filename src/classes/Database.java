@@ -20,27 +20,44 @@ public class Database {
     private static final String DB_NAME = "cinema.db";
     private static volatile Database instance;
 
-    private Database() throws SQLException, FileNotFoundException {
+    private Database() {
 
         // if database file does not exist create the database file and populate tables with default values
-        File databaseFile = new File(DB_NAME);
-        if (!databaseFile.exists()) {
-            createAllTables();
-            insertDefaultValues();
+       try {
+           File databaseFile = new File(DB_NAME);
+           if (!databaseFile.exists()) {
+               createAllTables();
+               insertDefaultValues();
 
-        }
+           }
+
+       } catch (Exception e){
+
+       }
 
     }
 
-    public static Database getInstance() throws SQLException, FileNotFoundException {
-        if (instance == null) {
-            synchronized (Database.class) {
-                if (instance == null) {
-                    instance = new Database();
+    public static Database getInstance() {
+        try {
+            if (instance == null) {
+                synchronized (Database.class) {
+                    if (instance == null) {
+                        instance = new Database();
+                    }
                 }
             }
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
         }
         return instance;
+//        if (instance == null) {
+//            synchronized (Database.class) {
+//                if (instance == null) {
+//                    instance = new Database();
+//                }
+//            }
+//        }
+//        return instance;
 
     }
 
@@ -71,7 +88,7 @@ public class Database {
     }
 
 
-    private void createAllTables() throws SQLException {
+    private void createAllTables() {
         createTable(new Ticket().createTable());
         createTable(new Rating().createTable());
         createTable(new Movie().createTable());
@@ -313,29 +330,29 @@ public class Database {
         }
         return list;
     }
+
     public List<MovieGenres> showMovieList12() {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.prepareStatement("""
-                SELECT m.title,
-                       m.duration,
-                       r.rating,
-                       Group_concat(g.genre, '/') genre_list,
-                       Group_concat(g.genre_id)   genre_id_list,
-                       mg.movie_id,
-                       mg.genre_id
-                FROM   MovieGenres mg
-                       JOIN Movies m
-                         ON mg.movie_id = m.movie_id
-                       JOIN genres g
-                         ON mg.genre_id = g.genre_id
-                       JOIN Ratings r
-                         ON m.rating_id = r.rating_id
-                          
-                GROUP BY m.movie_id
-                                             
-                """)) {
-
+                     SELECT m.title,
+                            m.duration,
+                            r.rating,
+                            Group_concat(g.genre, '/') genre_list,
+                            Group_concat(g.genre_id)   genre_id_list,
+                            mg.movie_id,
+                            mg.genre_id
+                     FROM   MovieGenres mg
+                            JOIN Movies m
+                              ON mg.movie_id = m.movie_id
+                            JOIN genres g
+                              ON mg.genre_id = g.genre_id
+                            JOIN Ratings r
+                              ON m.rating_id = r.rating_id
+                               
+                     GROUP BY m.movie_id
+                                                  
+                     """)) {
 
 
             ResultSet rs = stmt.executeQuery();
@@ -357,28 +374,27 @@ public class Database {
     }
 
 
-
     public List<MovieGenres> showMovieList1() {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.prepareStatement("""
-             
-                             SELECT m.title,
-                                    m.duration,
-                                    r.rating,
-                                    Group_concat(g.genre, '/') genre_list,
-                                    Group_concat(g.genre_id)   genre_id_list,
-                                    mg.movie_id,
-                                    mg.genre_id
-                             FROM   MovieGenres mg
-                                    JOIN Movies m
-                                      ON mg.movie_id = m.movie_id
-                                    JOIN genres g
-                                      ON mg.genre_id = g.genre_id
-                                    JOIN Ratings r
-                                      ON m.rating_id = r.rating_id                         
-                             GROUP BY m.movie_id
-             """
+                                  
+                                     SELECT m.title,
+                                            m.duration,
+                                            r.rating,
+                                            Group_concat(g.genre, '/') genre_list,
+                                            Group_concat(g.genre_id)   genre_id_list,
+                                            mg.movie_id,
+                                            mg.genre_id
+                                     FROM   MovieGenres mg
+                                            JOIN Movies m
+                                              ON mg.movie_id = m.movie_id
+                                            JOIN genres g
+                                              ON mg.genre_id = g.genre_id
+                                            JOIN Ratings r
+                                              ON m.rating_id = r.rating_id                         
+                                     GROUP BY m.movie_id
+                     """
              )) {
 
             ResultSet rs = stmt.executeQuery();
@@ -617,7 +633,7 @@ public class Database {
     public boolean isAuthorised(String email, String password) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL}, \{CustomerTable.COLUMN_PASSWORD} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} = ? AND \{CustomerTable.COLUMN_PASSWORD} = ?")) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL }, \{ CustomerTable.COLUMN_PASSWORD } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } = ? AND \{ CustomerTable.COLUMN_PASSWORD } = ?" )) {
 
             var c = new Counter();
             stmt.setString(c.getCounter(), email);
@@ -658,7 +674,7 @@ public class Database {
     public boolean customerInvoiceExists(int customerID) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR."SELECT \{SalesTable.COLUMN_CUSTOMER_ID} FROM \{SalesTable.TABLE_NAME} WHERE \{SalesTable.COLUMN_CUSTOMER_ID} = ?")) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ SalesTable.COLUMN_CUSTOMER_ID } FROM \{ SalesTable.TABLE_NAME } WHERE \{ SalesTable.COLUMN_CUSTOMER_ID } = ?" )) {
             stmt.setInt(1, customerID);
 
             ResultSet rs2 = stmt.executeQuery();
@@ -678,7 +694,7 @@ public class Database {
 
 
         try (var con = getConnection();
-             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_ID} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} =?")) {
+             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_ID } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } =?" )) {
             stmt.setString(1, email);
             ResultSet rs3 = stmt.executeQuery();
             return rs3.getInt(CustomerTable.COLUMN_ID);
