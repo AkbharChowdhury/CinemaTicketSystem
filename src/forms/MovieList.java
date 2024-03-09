@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -165,9 +164,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void navigation(JPanel top) {
-        Arrays.stream(nav.navButtons()).forEach(top::add);
+        nav.addButtons(top);
 
     }
+
 
 
 }

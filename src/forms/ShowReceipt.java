@@ -1,10 +1,11 @@
 package forms;
 
 
-import classes.*;
+import classes.Database;
+import classes.LoginInfo;
+import classes.Navigation;
 import classes.models.Invoice;
 import classes.utils.Helper;
-import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,7 +68,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
         populateList();
         list.setPreferredSize(new Dimension(550, 600));
-        list.addListSelectionListener((ListSelectionEvent e) -> selectedListInvoiceItem = list.getSelectedIndex());
+        list.addListSelectionListener((ListSelectionEvent _) -> selectedListInvoiceItem = list.getSelectedIndex());
 
         setVisible(true);
     }
@@ -134,9 +134,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     @Override
     public void navigation(JPanel top) {
-        Arrays.stream(nav.navButtons()).forEach(top::add);
+        nav.addButtons(top);
     }
-
 
 }
 

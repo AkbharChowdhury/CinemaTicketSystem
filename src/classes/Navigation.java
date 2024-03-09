@@ -6,16 +6,17 @@ import forms.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 
 public final class Navigation implements ActionListener {
     private final JButton btnListMovies = new JButton("List Movies");
-    public final JButton btnShowTimes = new JButton("Show Times");
-    public final JButton btnPurchase = new JButton("Purchase Ticket");
+    private final JButton btnShowTimes = new JButton("Show Times");
+    private final JButton btnPurchase = new JButton("Purchase Ticket");
     public final JButton btnShowReceipt = new JButton("Show Receipt");
     private final JFrame frame;
 
-    public JButton[] navButtons() {
+    private JButton[] navButtons() {
 
         return new JButton[]{
                 btnListMovies,
@@ -40,11 +41,9 @@ public final class Navigation implements ActionListener {
                 return;
             }
 
-
             LoginInfo.setHasOpenFormOnStartUp(true);
 
             if (JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-
                 Form.setRedirectPage(RedirectPage.PURCHASE_TICKET);
                 new Login();
 
@@ -54,8 +53,6 @@ public final class Navigation implements ActionListener {
                 System.err.println("You must be logged in to view invoices or purchase tickets!");
                 System.exit(0);
             }
-
-
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -89,7 +86,9 @@ public final class Navigation implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         handleNavClick(e);
         frame.dispose();
-
+    }
+    public void addButtons(JPanel top){
+        Arrays.stream(navButtons()).forEach(top::add);
     }
 }
 

@@ -98,7 +98,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         JPanel south = new JPanel();
 
-        south.add(new JLabel(STR. "Ticket: \{ ticketDetails.getType() } (\{ Helper.formatMoney(ticketDetails.getPrice()) })" ));
+        south.add(new JLabel(STR."Ticket: \{ticketDetails.getType()} (\{Helper.formatMoney(ticketDetails.getPrice())})"));
         south.add(spNumTickets);
 
         south.add(lblTotal);
@@ -137,7 +137,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
-                    lblMovieDetails.setText(STR. "\{ db.getMovieName(movieID) }- \{ date }: \{ time }" );
+                    lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{date}: \{time}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -176,7 +176,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     private void updateTotalLabel() {
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(STR. "Total to pay: \{ Helper.formatMoney(Helper.calcPrice(numTickets, ticketDetails.getPrice())) }" );
+        lblTotal.setText(STR."Total to pay: \{Helper.formatMoney(Helper.calcPrice(numTickets, ticketDetails.getPrice()))}");
     }
 
 
@@ -248,7 +248,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
             int numTicketsLeft = db.getNumTickets(validateShowTimes);
-            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR. "You cannot exceed above \{ numTicketsLeft } tickets" ;
+            String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR."You cannot exceed above \{numTicketsLeft} tickets";
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
             return false;
         }
@@ -285,9 +285,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     private static String setField(ShowTimes showTime) {
 
-        return STR. """
-                      \{ fieldSep(showTime.getShowTimeID()) }
-                        \{ ShowTimes.toShowTimeList(showTime) }
+        return STR."""
+                      \{fieldSep(showTime.getShowTimeID())}
+                        \{ShowTimes.toShowTimeList(showTime)}
                 """
                 ;
 
@@ -303,7 +303,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void navigation(JPanel top) {
-        Arrays.stream(nav.navButtons()).forEach(top::add);
+        nav.addButtons(top);
     }
 
 

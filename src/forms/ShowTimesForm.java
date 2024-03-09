@@ -165,7 +165,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
     @Override
     public void navigation(JPanel top) {
-        Arrays.stream(nav.navButtons()).forEach(top::add);
+        nav.addButtons(top);
     }
 
 
