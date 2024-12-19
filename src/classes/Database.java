@@ -325,24 +325,20 @@ public class Database {
         return list;
     }
 
-    public List<MovieGenres> showMovieList12() {
+    public List<MovieGenres> getMovies() {
         List<MovieGenres> list = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.prepareStatement("""
                      SELECT m.title,
                             m.duration,
                             r.rating,
-                            Group_concat(g.genre, '/') genre_list,
-                            Group_concat(g.genre_id)   genre_id_list,
+                            Group_concat(genre, '/') genre_list,
                             mg.movie_id,
                             mg.genre_id
                      FROM   MovieGenres mg
-                            JOIN Movies m
-                              ON mg.movie_id = m.movie_id
-                            JOIN genres g
-                              ON mg.genre_id = g.genre_id
-                            JOIN Ratings r
-                              ON m.rating_id = r.rating_id
+                            NATURAL JOIN Movies m
+                            NATURAL JOIN genres g
+                            NATURAL JOIN Ratings r
                                
                      GROUP BY m.movie_id
                                                   

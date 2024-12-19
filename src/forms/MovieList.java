@@ -4,6 +4,7 @@ import classes.Database;
 import classes.Navigation;
 import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
+import classes.models.SearchMovie;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
@@ -14,6 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -21,7 +23,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
 
     private final Database db = Database.getInstance();
-    private final MovieGenres movieGenre = new MovieGenres();
+//    private final MovieGenres movieGenre = new MovieGenres();
+    SearchMovie movieGenre = new SearchMovie(Database.getInstance().getMovies());
+
 
     private final JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
@@ -107,8 +111,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
     private void displayWidths() {
         for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(movieGenre.widths.get(i));
+            table.getColumnModel().getColumn(i).setPreferredWidth(MovieGenres.TABLE_WIDTHS.get(i));
         }
+
         var cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
@@ -158,7 +163,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public void populateTable() {
 
         clearTable(table);
-        tableModel.populateTable(db.showMovieList(movieGenre).stream().map(MovieGenres::toMovieList).toList());
+//        tableModel.populateTable(db.showMovieList(movieGenre).stream().map(MovieGenres::toMovieList).toList());
+        tableModel.populateTable(movieGenre.getList().stream().map(MovieGenres::toMovieList).toList());
+
     }
 
 
