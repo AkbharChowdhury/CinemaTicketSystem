@@ -7,6 +7,8 @@ public static void main(String[] args) {
     movie.setGenre("Sci-Fi");
     movie.filterResults().forEach(i -> System.out.println(STR."\{i.getTitle()} \{i.getGenres()}"));
 
-
+    var d = Database.getInstance();
+    var x = d.getCustomerTicketType(1);
+    System.out.println(x);
 }
 

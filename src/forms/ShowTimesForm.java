@@ -45,6 +45,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             nav.btnShowReceipt.setEnabled(false);
 
         movieList = db.getAllMovieShowTimes();
+        System.out.println(movieList);
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(table);
         showColumn();

@@ -67,12 +67,11 @@ public class ShowTimes implements Queries {
                     m.title
                 FROM
                     ShowTimes s
-                JOIN Movies m ON
-                    m.movie_id = s.movie_id
+                NATURAL JOIN Movies m ON
                 WHERE
                     show_date >= DATE('NOW')
                     AND DATE('now','start of month',  '+1 month',  '-1 day')
-                    AND show_time >= TIME('NOW')
+                    -- AND show_time >= TIME('NOW')
                     AND num_tickets_left > 0
                 ORDER BY
                     m.title
@@ -88,8 +87,7 @@ public class ShowTimes implements Queries {
                      s.*
                  FROM
                      ShowTimes s
-                 JOIN Movies m ON
-                     m.movie_id = s.movie_id
+                 NATURAL JOIN Movies m ON
                  WHERE
                      m.movie_id = ? AND num_tickets_left > 0
                      AND show_date >= DATE('NOW')

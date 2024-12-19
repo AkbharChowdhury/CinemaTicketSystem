@@ -22,7 +22,6 @@ public class Database {
 
     private Database() {
 
-        // if database file does not exist create the database file and populate tables with default values
        try {
            File databaseFile = new File(DB_NAME);
            if (!databaseFile.exists()) {
@@ -32,6 +31,7 @@ public class Database {
            }
 
        } catch (Exception e){
+           System.err.println(e.getMessage());
 
        }
 
@@ -47,6 +47,7 @@ public class Database {
                 }
             }
         } catch (Exception ex) {
+
             System.err.println(ex.getMessage());
         }
         
@@ -124,8 +125,7 @@ public class Database {
 
     private void getErrorMessage(Exception ex) {
         System.err.println(ex.getMessage());
-
-
+        ex.printStackTrace();
     }
 
     private void insertMovies() throws FileNotFoundException {
@@ -661,7 +661,12 @@ public class Database {
     public Ticket getCustomerTicketType(int customerID) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(Customer.getCustomerTicketType())
+             var stmt = con.prepareStatement("""
+                SELECT c.customer_id, t.type, t.price, t.ticket_id                        
+                FROM Customers c
+                NATURAL JOIN Tickets t
+                WHERE customer_id = ?
+""")
         ) {
             stmt.setInt(1, customerID);
             ResultSet rs = stmt.executeQuery();
