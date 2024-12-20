@@ -38,9 +38,7 @@ public class Ticket implements Queries {
                         """;
 
     }
-    public static String getTickets(){
-        return STR."SELECT * FROM \{TicketsTable.TABLE_NAME}" ;
-    }
+
 
     @Override
     public String insert() {

@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
 
@@ -45,9 +46,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     private final JLabel lblTotal = new JLabel();
     private Ticket ticketDetails;
     private final DefaultTableModel model = (DefaultTableModel) table.getModel();
-    ;
+
     private final CustomTableModel tableModel = new CustomTableModel(model);
-    ;
+    List<ShowTimes> list;
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
@@ -136,7 +137,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     var c = new Counter();
                     String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
                     String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
-                    int movieID = db.getMovieID(cbMovies.getSelectedItem().toString());
+                    int movieID = list.get(table.getSelectedRow()).getMovieID();
                     lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{date}: \{time}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
@@ -220,6 +221,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         int customerID = LoginInfo.getCustomerID();
+
         String salesDate = LocalDate.now().toString();
         int selectedShowTimeID = getSelectedShowTimeID();
 
@@ -276,6 +278,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         try {
             clearTable(table);
             tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(PurchaseTicket::setField).toList());
+            var x = db.showMovieTimes(movieShowTimes);
+            list =  db.showMovieTimes(movieShowTimes);
+            System.out.println(x);
+            System.out.println("yes");
 
         } catch (IndexOutOfBoundsException _) {
 

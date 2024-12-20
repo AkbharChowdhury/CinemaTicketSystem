@@ -60,49 +60,33 @@ public class ShowTimes implements Queries {
     }
 
 
-    public static String getAllMovieShowTimes() {
-        return """
-                SELECT DISTINCT
-                    s.movie_id,
-                    m.title
-                FROM
-                    ShowTimes s
-                NATURAL JOIN Movies m ON
-                WHERE
-                    show_date >= DATE('NOW')
-                    AND DATE('now','start of month',  '+1 month',  '-1 day')
-                    -- AND show_time >= TIME('NOW')
-                    AND num_tickets_left > 0
-                ORDER BY
-                    m.title
-                """;
-    }
 
 
     public static String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
 
         String sql = """
                 SELECT
-                     m.title,
-                     s.*
-                 FROM
-                     ShowTimes s
-                 NATURAL JOIN Movies m ON
-                 WHERE
-                     m.movie_id = ? AND num_tickets_left > 0
-                     AND show_date >= DATE('NOW')
-                     AND DATE('now', 'start of month', '+1 month' , '-1 day')
+                                    m.title,
+                                    m.movie_id,
+                                    s.*
+                                FROM
+                                    ShowTimes s
+                                NATURAL JOIN Movies m
+                                WHERE
+                                    m.movie_id = ? AND num_tickets_left > 0
+                                   			AND	show_date BETWEEN Date('NOW') AND   Date('now', 'start of month', '+1 month', '-1 day')
                      """;
 
         if (!StringUtils.isEmpty(movieShowTimes.getDate())) {
             sql += " AND show_date LIKE ?";
         }
-        sql += """
-                GROUP BY show_time_id
-                HAVING show_time >= TIME('NOW')
-                OR show_date > DATE('NOW')
-                ORDER BY show_date, show_time
-                """;
+        sql+= " ORDER BY show_date, show_time";
+//        sql += """
+//                GROUP BY show_time_id
+//                HAVING show_time >= TIME('NOW')
+//                OR show_date > DATE('NOW')
+//                ORDER BY show_date, show_time
+//                """;
         return sql;
 
     }

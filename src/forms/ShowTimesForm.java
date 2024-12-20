@@ -19,10 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -41,11 +39,13 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     public ShowTimesForm() {
         table.setEnabled(false);
 
-        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID()))
+        if (LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID())){
             nav.btnShowReceipt.setEnabled(false);
+        }
+
 
         movieList = db.getAllMovieShowTimes();
-        System.out.println(movieList);
+
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(table);
         showColumn();

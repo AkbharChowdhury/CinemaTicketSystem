@@ -500,8 +500,16 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(ShowTimes.getAllMovieShowTimes());
+            ResultSet rs = stmt.executeQuery("""
+               SELECT DISTINCT s.movie_id,
+                                m.title
+                FROM   showtimes s
+                       NATURAL JOIN movies m
+                WHERE  show_date BETWEEN Date('NOW') AND Date('now', 'start of month','+1 month','-1 day')
+                       AND num_tickets_left > 0
+                ORDER  BY m.title
 
+""");
 
             while (rs.next()) {
 
@@ -519,7 +527,7 @@ public class Database {
     public List<Ticket> getTickets() {
         List<Ticket> ticketList = new ArrayList<>();
         try (Connection con = getConnection(); Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(Ticket.getTickets());
+            ResultSet rs = stmt.executeQuery(STR."SELECT * FROM \{TicketsTable.TABLE_NAME}");
 
             if (isResultSetEmpty(rs)) return ticketList;
 
