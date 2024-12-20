@@ -6,7 +6,6 @@ import classes.Navigation;
 import classes.models.*;
 import classes.utils.Helper;
 import classes.utils.Validation;
-import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
@@ -28,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
@@ -129,16 +127,13 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             public void mousePressed(MouseEvent e) {
                 handleTableClickEvent();
 
-
             }
 
             private void handleTableClickEvent() {
                 try {
-                    var c = new Counter();
-                    String date = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
-                    String time = model.getValueAt(table.getSelectedRow(), c.getCounter()).toString();
-                    int movieID = list.get(table.getSelectedRow()).getMovieID();
-                    lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{date}: \{time}");
+                    ShowTimes showTime = list.get(table.getSelectedRow());
+                    int movieID = showTime.getMovieID();
+                    lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{showTime.getDate()}: \{showTime.getTime()}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -278,10 +273,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         try {
             clearTable(table);
             tableModel.populateTable(db.showMovieTimes(movieShowTimes).stream().map(PurchaseTicket::setField).toList());
-            var x = db.showMovieTimes(movieShowTimes);
-            list =  db.showMovieTimes(movieShowTimes);
-            System.out.println(x);
-            System.out.println("yes");
+            list = db.showMovieTimes(movieShowTimes);
+
 
         } catch (IndexOutOfBoundsException _) {
 
