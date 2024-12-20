@@ -4,6 +4,7 @@ package forms;
 import classes.Database;
 import classes.LoginInfo;
 import classes.Navigation;
+import classes.models.Customer;
 import classes.models.Invoice;
 import classes.utils.Helper;
 import enums.FormDetails;
@@ -26,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
-    private  final Database db = Database.getInstance();
+    private final Database db = Database.getInstance();
     private final JButton btnPrintReceipt = new JButton("Print Receipt");
     private final Navigation nav = new Navigation(this);
     int selectedListInvoiceItem;
@@ -36,7 +37,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        if (!Helper.isCustomerLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
+        if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
             return;
@@ -115,7 +116,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     public void printInvoice(int i) {
         try {
             new Invoice(true).generatePDFInvoice(INVOICES, i);
-            Helper.message(STR. "Your invoice has been saved as \{ Invoice.INVOICE_FILE_NAME }" );
+            Helper.message(STR."Your invoice has been saved as \{Invoice.INVOICE_FILE_NAME}");
 
         } catch (ParseException ex) {
             Helper.showErrorMessage("The time cannot be formatted", "Time parse error");

@@ -4,7 +4,6 @@ import interfaces.Queries;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tables.GenreTable;
 import tables.TicketsTable;
 @Data
 @NoArgsConstructor

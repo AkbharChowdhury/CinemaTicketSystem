@@ -46,11 +46,13 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     private final DefaultTableModel model = (DefaultTableModel) table.getModel();
 
     private final CustomTableModel tableModel = new CustomTableModel(model);
-    List<ShowTimes> list;
+
+    private List<ShowTimes> list;
+
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        if (!Helper.isCustomerLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
+        if (!Customer.isLoggedIn(this, RedirectPage.PURCHASE_TICKET)) {
             return;
         }
 
@@ -78,8 +80,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         JPanel top = new JPanel();
         navigation(top);
 
-
-        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        var cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -133,6 +134,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                 try {
                     ShowTimes showTime = list.get(table.getSelectedRow());
                     int movieID = showTime.getMovieID();
+
                     lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{showTime.getDate()}: \{showTime.getTime()}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
@@ -216,14 +218,13 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
         int customerID = LoginInfo.getCustomerID();
-
         String salesDate = LocalDate.now().toString();
         int selectedShowTimeID = getSelectedShowTimeID();
 
         if (!isValidNumTickets(numTickets)) return;
 
         var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
-        if (db.SalesExists(sales)) {
+        if (db.salesExists(sales)) {
             Helper.showErrorMessage("You have already booked this show time", "booking error");
             return;
         }
@@ -231,9 +232,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         if (db.addSales(sales) && updateNumTicksSold(numTickets)) {
             Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
-            return;
         }
-        System.err.println("There was an error updating the number of tickets remaining");
 
     }
 
@@ -307,7 +306,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     private int getSelectedShowTimeID() {
-        return Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString().trim());
+        return list.get(table.getSelectedRow()).getShowTimeID();
     }
 }
 

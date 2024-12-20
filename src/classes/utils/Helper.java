@@ -1,10 +1,8 @@
 package classes.utils;
 
 import classes.Database;
-import classes.Form;
 import classes.LoginInfo;
 import enums.Pages;
-import enums.RedirectPage;
 import forms.*;
 
 import javax.swing.*;
@@ -16,7 +14,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
@@ -112,32 +109,6 @@ public final class Helper {
             case SHOW_TIMES -> new ShowTimesForm();
         }
         currentPage.dispose();
-
-    }
-
-
-    public static boolean isCustomerLoggedIn(JFrame frame, RedirectPage page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
-        if (LoginInfo.getCustomerID() == 0) {
-            if (JOptionPane.showConfirmDialog(null, "You must be logged in to purchase tickets or print invoices, do you want to login?", "WARNING", JOptionPane.YES_NO_OPTION)
-                    != JOptionPane.YES_OPTION
-                    && !LoginInfo.hasOpenFormOnStartUp()) {
-                System.err.println("You must be logged in to view invoices or purchase tickets!");
-                System.exit(0);
-            }
-
-            Form.setRedirectPage(page);
-            if (LoginInfo.hasOpenFormOnStartUp()) {
-                Helper.gotoForm(frame, Pages.LOGIN);
-                return false;
-            }
-            new Login();
-            frame.dispose();
-
-
-        }
-
-        return LoginInfo.getCustomerID() != 0;
 
     }
 

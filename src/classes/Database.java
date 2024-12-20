@@ -22,18 +22,18 @@ public class Database {
 
     private Database() {
 
-       try {
-           File databaseFile = new File(DB_NAME);
-           if (!databaseFile.exists()) {
-               createAllTables();
-               insertDefaultValues();
+        try {
+            File databaseFile = new File(DB_NAME);
+            if (!databaseFile.exists()) {
+                createAllTables();
+                insertDefaultValues();
 
-           }
+            }
 
-       } catch (Exception e){
-           System.err.println(e.getMessage());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
 
-       }
+        }
 
     }
 
@@ -50,7 +50,7 @@ public class Database {
 
             System.err.println(ex.getMessage());
         }
-        
+
         return instance;
 
 
@@ -364,8 +364,6 @@ public class Database {
     }
 
 
-
-
     public List<ShowTimes> showMovieTimes(ShowTimes movieShowTimes) {
         String showDate = movieShowTimes.getDate();
         List<ShowTimes> list = new ArrayList<>();
@@ -420,7 +418,7 @@ public class Database {
     }
 
 
-    public boolean SalesExists(Sales sales) {
+    public boolean salesExists(Sales sales) {
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(Sales.salesExists())) {
@@ -501,15 +499,15 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("""
-               SELECT DISTINCT s.movie_id,
-                                m.title
-                FROM   showtimes s
-                       NATURAL JOIN movies m
-                WHERE  show_date BETWEEN Date('NOW') AND Date('now', 'start of month','+1 month','-1 day')
-                       AND num_tickets_left > 0
-                ORDER  BY m.title
+                                   SELECT DISTINCT s.movie_id,
+                                                    m.title
+                                    FROM   showtimes s
+                                           NATURAL JOIN movies m
+                                    WHERE  show_date BETWEEN Date('NOW') AND Date('now', 'start of month','+1 month','-1 day')
+                                           AND num_tickets_left > 0
+                                    ORDER  BY m.title
 
-""");
+                    """);
 
             while (rs.next()) {
 
@@ -549,7 +547,7 @@ public class Database {
 
 
         try (var con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_TITLE } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_ID } = ?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{MovieTable.COLUMN_TITLE} FROM \{MovieTable.TABLE_NAME} WHERE \{MovieTable.COLUMN_ID} = ?")) {
             stmt.setInt(1, movieID);
             ResultSet rs = stmt.executeQuery();
 
@@ -571,7 +569,7 @@ public class Database {
 
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ MovieTable.COLUMN_ID } FROM \{ MovieTable.TABLE_NAME } WHERE \{ MovieTable.COLUMN_TITLE } = ?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{MovieTable.COLUMN_ID} FROM \{MovieTable.TABLE_NAME} WHERE \{MovieTable.COLUMN_TITLE} = ?")) {
             stmt.setString(1, title);
             ResultSet rs = stmt.executeQuery();
 
@@ -591,7 +589,7 @@ public class Database {
     public boolean isAuthorised(String email, String password) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL }, \{ CustomerTable.COLUMN_PASSWORD } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } = ? AND \{ CustomerTable.COLUMN_PASSWORD } = ?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL}, \{CustomerTable.COLUMN_PASSWORD} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} = ? AND \{CustomerTable.COLUMN_PASSWORD} = ?")) {
 
             var c = new Counter();
             stmt.setString(c.getCounter(), email);
@@ -612,7 +610,7 @@ public class Database {
 
     public boolean emailExists(String email) {
         try (var con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_EMAIL } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } LIKE ?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} LIKE ?")) {
 
             stmt.setString(1, email);
 
@@ -632,7 +630,7 @@ public class Database {
     public boolean customerInvoiceExists(int customerID) {
 
         try (Connection con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ SalesTable.COLUMN_CUSTOMER_ID } FROM \{ SalesTable.TABLE_NAME } WHERE \{ SalesTable.COLUMN_CUSTOMER_ID } = ?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{SalesTable.COLUMN_CUSTOMER_ID} FROM \{SalesTable.TABLE_NAME} WHERE \{SalesTable.COLUMN_CUSTOMER_ID} = ?")) {
             stmt.setInt(1, customerID);
 
             ResultSet rs2 = stmt.executeQuery();
@@ -652,7 +650,7 @@ public class Database {
 
 
         try (var con = getConnection();
-             var stmt = con.prepareStatement(STR. "SELECT \{ CustomerTable.COLUMN_ID } FROM \{ CustomerTable.TABLE_NAME } WHERE \{ CustomerTable.COLUMN_EMAIL } =?" )) {
+             var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_ID} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} =?")) {
             stmt.setString(1, email);
             ResultSet rs3 = stmt.executeQuery();
             return rs3.getInt(CustomerTable.COLUMN_ID);
@@ -670,11 +668,11 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement("""
-                SELECT c.customer_id, t.type, t.price, t.ticket_id                        
-                FROM Customers c
-                NATURAL JOIN Tickets t
-                WHERE customer_id = ?
-""")
+                                     SELECT c.customer_id, t.type, t.price, t.ticket_id                        
+                                     FROM Customers c
+                                     NATURAL JOIN Tickets t
+                                     WHERE customer_id = ?
+                     """)
         ) {
             stmt.setInt(1, customerID);
             ResultSet rs = stmt.executeQuery();
@@ -711,7 +709,7 @@ public class Database {
     public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
         try (Connection conn = getConnection();
-             var stmt = conn.prepareStatement(ShowTimes.updateNumTickets())) {
+             var stmt = conn.prepareStatement(STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?")) {
             int numTicketsLeft = getNumTickets(movieShowTimes);
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
             var c = new Counter();
