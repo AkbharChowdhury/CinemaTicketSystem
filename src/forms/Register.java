@@ -85,9 +85,7 @@ public final class Register extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public static void main(String[] args)  {
-        System.out.println("S");
-
+    public static void main()  {
         try {
             new Register();
         } catch (Exception e) {

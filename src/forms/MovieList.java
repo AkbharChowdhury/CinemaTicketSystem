@@ -78,7 +78,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
 
-    public static void main(String[] args) {
+    public static void main() {
         new MovieList();
 
     }
@@ -160,7 +160,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     @Override
     public void navigation(JPanel top) {
         nav.addButtons(top);
-
     }
 
 

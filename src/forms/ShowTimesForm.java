@@ -94,7 +94,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     }
 
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
+    public static void main() {
         new ShowTimesForm();
     }
 

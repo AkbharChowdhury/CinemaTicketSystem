@@ -163,7 +163,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
 
-    public static void main(String[] args) {
+    public static void main() {
         try {
             new PurchaseTicket();
         } catch (Exception e) {

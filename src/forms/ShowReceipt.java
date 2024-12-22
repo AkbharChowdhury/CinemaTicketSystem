@@ -37,7 +37,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        LoginInfo.setCustomerID(1);
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
@@ -75,7 +74,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public static void main() {
         try {
             new ShowReceipt();
         } catch (Exception e) {
