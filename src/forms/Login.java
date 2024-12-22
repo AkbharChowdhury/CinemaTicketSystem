@@ -18,12 +18,11 @@ public final class Login extends JFrame implements ActionListener {
     private final Database db = Database.getInstance();
     private final JTextField txtEmail = new JTextField();
     private final JButton btnLogin = new JButton("Login");
-    private final JLabel hyperlink = new JLabel(FormDetails.hyperlink());
+    private final JLabel hyperlink = new JLabel("Return to movie list");
     private final JPasswordField txtPassword;
 
-    public Login() throws SQLException, FileNotFoundException {
+    public Login()  {
         setupHyperLink();
-
         JPanel panel = new JPanel();
         panel.setLayout(null);
         setTitle(FormDetails.login());
@@ -67,13 +66,11 @@ public final class Login extends JFrame implements ActionListener {
 
         JTextFieldEnterKey();
         setVisible(true);
-//        txtEmail.setText("john@gmail.com");
-//        txtPassword.setText("password");
 
 
     }
 
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
+    public static void main() throws SQLException, FileNotFoundException {
         new Login();
     }
 
@@ -128,16 +125,12 @@ public final class Login extends JFrame implements ActionListener {
 
     private void hyperlinkClick(JFrame currentPage) {
         hyperlink.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-
+                Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
             }
         });
+
 
 
     }
@@ -177,18 +170,13 @@ public final class Login extends JFrame implements ActionListener {
     }
 
     private void redirect() {
-        try {
-            var redirectPage = switch (Form.getRedirectPage()) {
-                case null -> Pages.LIST_MOVIES;
-                case PURCHASE_TICKET -> Pages.PURCHASE_TICKET;
-                case SHOW_RECEIPT -> Pages.SHOW_RECEIPT;
-            };
+        var redirectPage = switch (Form.getRedirectPage()) {
+            case null -> Pages.LIST_MOVIES;
+            case PURCHASE_TICKET -> Pages.PURCHASE_TICKET;
+            case SHOW_RECEIPT -> Pages.SHOW_RECEIPT;
+        };
 
-            Helper.gotoForm(this, redirectPage);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Helper.gotoForm(this, redirectPage);
     }
 
 }

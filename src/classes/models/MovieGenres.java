@@ -120,7 +120,7 @@ public class MovieGenres extends Movie implements Queries {
                 """;
     }
 
-    public List<String> tableColumns() {
+    public static List<String> tableColumns() {
         List<String> columns = new ArrayList<>();
         columns.add("Movie");
         columns.add("Duration");

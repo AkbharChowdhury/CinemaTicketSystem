@@ -20,9 +20,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
 
 public final class Register extends JFrame implements ActionListener {
@@ -34,24 +32,22 @@ public final class Register extends JFrame implements ActionListener {
     JButton btnRegister = new JButton(Buttons.register());
     JButton btnLogin = new JButton("Back to Login");
 
-    List<Ticket> ticketList;
+    private final List<Ticket> ticketList;
 
     Database db;
 
-    final LinkedHashMap<JTextField, String> textFields = new LinkedHashMap<>() {{
-        put(txtFirstname, "Firstname");
-        put(txtLastName, "LastName");
-        put(txtEmail, "Email");
+    final LinkedHashMap<String, JTextField> textFields = new LinkedHashMap<>() {{
+        put("Firstname", txtFirstname);
+        put("LastName", txtLastName);
+        put("Email", txtEmail);
     }};
 
 
-
-
-    public Register() throws SQLException, FileNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
+    public Register() {
 
         db = Database.getInstance();
-        ticketList = db.getTickets();
+        ticketList = Collections.unmodifiableList(db.getTickets());
+
         setLayout(new BorderLayout());
         setSize(310, 500);
         setTitle(FormDetails.register());
@@ -61,10 +57,9 @@ public final class Register extends JFrame implements ActionListener {
         JPanel middle = new JPanel();
         middle.setLayout(new GridLayout(10, 1, 3, 3));
 
-
-        textFields.forEach((key, value) -> {
-            middle.add(new JLabel(value));
-            middle.add(key);
+        textFields.forEach((label, textField) -> {
+            middle.add(new JLabel(label));
+            middle.add(textField);
         });
 
         middle.add(new JLabel("Password"));
@@ -85,7 +80,7 @@ public final class Register extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public static void main()  {
+    public static void main() {
         try {
             new Register();
         } catch (Exception e) {
@@ -109,20 +104,17 @@ public final class Register extends JFrame implements ActionListener {
         }
 
         Helper.goTo(this, Pages.LOGIN);
-
-
     }
 
 
-    private void handleRegister() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private void handleRegister() {
         String firstname = txtFirstname.getText().trim();
         String lastname = txtLastName.getText().trim();
         String email = txtEmail.getText().trim();
         String password = String.valueOf(txtPassword.getPassword());
         int ticketID = cbTicket.getSelectedIndex();
-
         var customer = new Customer(firstname, lastname, email, password, ticketID);
-        if (!Validation.validateRegisterForm(customer)) return;
+        if (!Validation.validateRegisterForm(customer, db)) return;
         customer.setTicketID(ticketList.get(ticketID - 1).getTicketID());
         customer.setPassword(Encryption.encode(password));
         if (db.addCustomer(customer)) {

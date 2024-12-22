@@ -125,7 +125,6 @@ public class Database {
 
     private void getErrorMessage(Exception ex) {
         System.err.println(ex.getMessage());
-        ex.printStackTrace();
     }
 
     private void insertMovies() throws FileNotFoundException {
@@ -303,7 +302,6 @@ public class Database {
 
             ResultSet rs = stmt.executeQuery();
 
-
             if (isResultSetEmpty(rs)) {
                 return list;
             }
@@ -372,9 +370,7 @@ public class Database {
              var stmt = con.prepareStatement(ShowTimes.getSelectedMovieShowTimes(movieShowTimes))) {
             var c = new Counter();
 
-            // selected movie
             stmt.setInt(c.getCounter(), movieShowTimes.getMovieID());
-            // selected date
             if (!StringUtils.isEmpty(showDate)) stmt.setString(c.getCounter(), showDate);
             ResultSet rs = stmt.executeQuery();
             if (isResultSetEmpty(rs)) return list;
@@ -398,7 +394,6 @@ public class Database {
     }
 
 
-    // for movie search
     public List<String> getMovieGenreList() {
         List<String> list = new ArrayList<>();
         try (Connection con = getConnection();
@@ -715,7 +710,6 @@ public class Database {
             var c = new Counter();
             stmt.setInt(c.getCounter(), remainingTickets);
             stmt.setInt(c.getCounter(), movieShowTimes.getShowTimeID());
-            // update
             int result = stmt.executeUpdate();
             return result != 0;
         } catch (SQLException e) {

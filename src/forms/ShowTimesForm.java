@@ -1,7 +1,6 @@
 package forms;
 
 import classes.Database;
-import classes.LoginInfo;
 import classes.Navigation;
 import classes.models.CustomTableModel;
 import classes.models.Movie;
@@ -17,8 +16,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 

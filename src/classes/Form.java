@@ -1,22 +1,16 @@
 package classes;
 
 import enums.RedirectPage;
+import lombok.Getter;
+import lombok.Setter;
 
 public final class Form {
-    public static RedirectPage getRedirectPage() {
-        return redirectPage;
-    }
 
-    public static void setRedirectPage(RedirectPage page) {
-        redirectPage = page;
-    }
-
+    @Setter
+    @Getter
     private static RedirectPage redirectPage;
 
-
-
-    private Form(){
-
+    private Form() {
     }
 
 }

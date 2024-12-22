@@ -18,10 +18,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -95,43 +92,29 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         middle.add(lblMovieDetails);
         middle.add(new JScrollPane(scrollPane));
 
+        JButton btnConfirm = new JButton("Confirm Order");
 
         JPanel south = new JPanel();
 
         south.add(new JLabel(STR."Ticket: \{ticketDetails.getType()} (\{Helper.formatMoney(ticketDetails.getPrice())})"));
         south.add(spNumTickets);
-
-        south.add(lblTotal);
-        updateTotalLabel();
-
-        JButton btnConfirm = new JButton("Confirm Order");
         south.add(btnConfirm);
+        south.add(lblTotal);
 
-
+        updateTotalLabel();
         add(BorderLayout.NORTH, top);
         add(BorderLayout.CENTER, middle);
         add(BorderLayout.SOUTH, south);
 
         cbMovies.addActionListener(this);
-
-        btnConfirm.addActionListener(this);
         spNumTickets.addChangeListener(this);
+        btnConfirm.addActionListener(this);
         setVisible(true);
         tableEvent();
-
-
     }
 
     private void tableEvent() {
-
-
-        table.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
+        table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 try {
@@ -140,26 +123,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
-
-
-            }
-
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
             }
         });
+
     }
 
 
@@ -168,11 +134,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
             new PurchaseTicket();
         } catch (Exception e) {
             System.err.println(e.getMessage());
-
         }
-
     }
-
 
     private void updateTotalLabel() {
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
@@ -182,26 +145,16 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-
         if (e.getSource() == cbMovies) {
-            handleMovieCB();
+            Movie.movieComboBoxStatus(cbMovies);
+            movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+            populateTable();
             return;
         }
-        try {
-            handlePurchase();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-        }
-
-
+        handlePurchase();
     }
 
-    private void handleMovieCB() {
-        Movie.movieComboBoxStatus(cbMovies);
-        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
-        populateTable();
-    }
+
 
     private boolean updateNumTicksSold(int numTickets) {
         var updater = new ShowTimes();
@@ -211,7 +164,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
 
-    private void handlePurchase() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private void handlePurchase() {
 
         if (table.getSelectedRow() == -1) {
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
@@ -243,7 +196,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         ShowTimes validateShowTimes = new ShowTimes();
         validateShowTimes.setShowTimeID(getSelectedShowTimeID());
         validateShowTimes.setNumTicketsSold(numTickets);
-
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
             int numTicketsLeft = db.getNumTickets(validateShowTimes);
             String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR."You cannot exceed above \{numTicketsLeft} tickets";

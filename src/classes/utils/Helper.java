@@ -7,10 +7,7 @@ import forms.*;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -98,17 +95,22 @@ public final class Helper {
         }
     }
 
-    public static void gotoForm(JFrame currentPage, Pages page) throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void gotoForm(JFrame currentPage, Pages page){
+        try {
+            switch (page) {
+                case LOGIN -> new Login();
+                case REGISTER -> new Register();
+                case LIST_MOVIES -> new MovieList();
+                case PURCHASE_TICKET -> new PurchaseTicket();
+                case SHOW_RECEIPT -> new ShowReceipt();
+                case SHOW_TIMES -> new ShowTimesForm();
+            }
+            currentPage.dispose();
+        } catch (Exception ex){
+            System.err.println(ex.getMessage());
 
-        switch (page) {
-            case LOGIN -> new Login();
-            case REGISTER -> new Register();
-            case LIST_MOVIES -> new MovieList();
-            case PURCHASE_TICKET -> new PurchaseTicket();
-            case SHOW_RECEIPT -> new ShowReceipt();
-            case SHOW_TIMES -> new ShowTimesForm();
+
         }
-        currentPage.dispose();
 
     }
 

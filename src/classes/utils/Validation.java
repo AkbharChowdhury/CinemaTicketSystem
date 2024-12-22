@@ -18,8 +18,8 @@ public final class Validation {
     private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
 
-    public static boolean validateRegisterForm(Customer customer) throws SQLException, FileNotFoundException {
-        Database db = Database.getInstance();
+    public static boolean validateRegisterForm(Customer customer, Database db)  {
+//        Database db = Database.getInstance();
         List<String> errors = new ArrayList<>();
         String firstname = customer.getFirstname().trim();
         String lastname = customer.getLastname().trim();

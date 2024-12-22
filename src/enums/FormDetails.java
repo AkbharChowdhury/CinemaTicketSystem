@@ -4,16 +4,11 @@ package enums;
 public enum FormDetails {
     ;
     private static final String APP_NAME = "Cinema Ticket Machine - ";
-    public final String DESCRIPTION;
 
 
-    FormDetails(String title) {
-        this.DESCRIPTION = title;
-
-    }
 
     public static String movieList() {
-        return APP_NAME + "List Movies";
+        return STR."\{APP_NAME}List Movies";
 
     }
 
@@ -23,26 +18,24 @@ public enum FormDetails {
     }
 
     public static String login() {
-        return APP_NAME + "Login";
+        return STR."\{APP_NAME}Login";
 
     }
 
-    public static String hyperlink() {
-        return "Return to movie list";
-    }
+
 
     public static String showTimes() {
-        return APP_NAME + "Show Times";
+        return STR."\{APP_NAME}Show Times";
 
     }
 
     public static String purchaseTicket() {
-        return APP_NAME + "Purchase Ticket";
+        return STR."\{APP_NAME}Purchase Ticket";
 
     }
 
     public static String showReceipt() {
-        return APP_NAME + "Show Receipt";
+        return STR."\{APP_NAME}Show Receipt";
 
     }
 

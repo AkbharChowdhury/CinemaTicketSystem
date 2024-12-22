@@ -18,7 +18,7 @@ import java.awt.event.*;
 import java.util.Objects;
 
 
-public final class MovieList extends JFrame implements ActionListener, KeyListener, TableGUI, MenuNavigation {
+public final class MovieList extends JFrame implements ActionListener, TableGUI, MenuNavigation {
 
 
     private final Database db = Database.getInstance();
@@ -35,11 +35,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public MovieList() {
         if (Helper.disableReceipt(db)) nav.btnShowReceipt.setEnabled(false);
 
-
         new JScrollPane().setViewportView(table);
         setupTableProperties();
 
-        txtMovieTitle.addKeyListener(this);
+
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
@@ -74,13 +73,19 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         db.getMovieGenreList().forEach(cbGenres::addItem);
         populateTable();
 
+        txtMovieTitle.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                movies.setTitle(txtMovieTitle.getText());
+                populateTable();
+            }
+        });
 
     }
 
 
     public static void main() {
         new MovieList();
-
     }
 
     private void autofocus() {
@@ -112,30 +117,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (e.getSource() == cbGenres) {
             movies.setGenre(Objects.requireNonNull(cbGenres.getSelectedItem()).toString());
             populateTable();
         }
-    }
-
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-        movies.setTitle(txtMovieTitle.getText());
-        populateTable();
-
     }
 
 
@@ -146,7 +131,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void showColumn() {
-        new MovieGenres().tableColumns().forEach(model::addColumn);
+        MovieGenres.tableColumns().forEach(model::addColumn);
     }
 
     @Override
