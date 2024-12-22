@@ -14,7 +14,6 @@ import interfaces.ListGUI;
 import interfaces.MenuNavigation;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,6 +37,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        LoginInfo.setCustomerID(1);
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
             Helper.gotoForm(this, Pages.LIST_MOVIES);
@@ -89,8 +89,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnPrintReceipt) {
-            if (!processSelectedListItem()) System.err.println("unable to print the selected invoice");
-
+//            if (!processSelectedListItem()) System.err.println("unable to print the selected invoice");
+            processSelectedListItem();
         }
 
 
@@ -116,7 +116,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     public void printInvoice(int i) {
         try {
-            new Invoice(true).generatePDFInvoice(INVOICES, i);
+            new Invoice().printInvoice(INVOICES.get(i));
             Helper.message(STR."Your invoice has been saved as \{Invoice.INVOICE_FILE_NAME}");
 
         } catch (ParseException ex) {

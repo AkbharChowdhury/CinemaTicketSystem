@@ -3,7 +3,6 @@ package classes.models;
 
 import classes.Database;
 import classes.LoginInfo;
-import classes.models.Ticket;
 import classes.utils.Helper;
 import enums.FormDetails;
 import lombok.Data;
@@ -13,10 +12,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -33,17 +31,12 @@ public class Invoice {
     private String lastname;
     private String movieTitle;
     private String rating;
-    private boolean isPDF;
 
     public Invoice() {
 
     }
 
-    public Invoice(boolean isPDF) {
-        this.isPDF = isPDF;
 
-
-    }
 
     private static String escapeMetaCharacters(String inputString) {
         final String[] metaCharacters = {"\\", "^", "$", "{", "}", "[", "]", "(", ")", ".", "*", "+", "?", "|", "<", ">", "-", "&", "%", "'"};
@@ -89,24 +82,17 @@ public class Invoice {
                 """;
     }
 
-    public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, IOException {
-        if (!isPDF){
-            Helper.showErrorMessage("cannot generate invoice as PDF option not selected","Invoice error");
-            System.exit(0);
-        }
-
-
+    public void printInvoice(Invoice myInvoice) throws ParseException, SQLException, IOException {
         var invoiceDocument = new PDDocument();
         invoiceDocument.addPage(new PDPage());
 
         Database db = Database.getInstance();
         Ticket ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-        var mInvoice = invoice.get(i);
 
 
         try {
-            double total = ticketDetails.getPrice() * mInvoice.getTotalTicket();
+            double total = ticketDetails.getPrice() * myInvoice.getTotalTicket();
 
 
             //Prepare Content Stream
@@ -125,20 +111,20 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 18);
             cs.newLineAtOffset(180, 690);
-            cs.showText(mInvoice.getMovieTitle());
+            cs.showText(myInvoice.getMovieTitle());
             cs.endText();
 
             cs.beginText();
             cs.setFont(font, 16);
             cs.newLineAtOffset(180, 660);
-            cs.showText(String.format("Rating (%s)", (mInvoice.getRating())));
+            cs.showText(String.format("Rating (%s)", (myInvoice.getRating())));
             cs.endText();
 
 
             cs.beginText();
             cs.setFont(font, 16);
             cs.newLineAtOffset(180, 630);
-            cs.showText(STR."Show Date/time (\{Helper.formatDate(mInvoice.getShowDate())}, \{Helper.formatTime(mInvoice.getShowTime())})");
+            cs.showText(STR."Show Date/time (\{Helper.formatDate(myInvoice.getShowDate())}, \{Helper.formatTime(myInvoice.getShowTime())})");
             cs.endText();
 
 
@@ -147,7 +133,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(60, 610);
 
-            cs.showText(WordUtils.capitalizeFully(STR."\{mInvoice.getFirstname()} \{mInvoice.getLastname()}"));
+            cs.showText(WordUtils.capitalizeFully(STR."\{myInvoice.getFirstname()} \{myInvoice.getLastname()}"));
 
             cs.newLine();
             cs.showText("Purchase date: ");
@@ -159,7 +145,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(170, 610);
             cs.newLine();
-            cs.showText(Helper.formatDate(mInvoice.getSalesDate()));
+            cs.showText(Helper.formatDate(myInvoice.getSalesDate()));
 
 
             cs.endText();
@@ -210,7 +196,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(310, 520);
 
-            cs.showText(String.valueOf(mInvoice.getTotalTicket()));
+            cs.showText(String.valueOf(myInvoice.getTotalTicket()));
             cs.newLine();
             cs.endText();
 
@@ -240,6 +226,7 @@ public class Invoice {
             cs.close();
             //Save the PDF
             invoiceDocument.save(Invoice.INVOICE_FILE_NAME);
+            invoiceDocument.getDocument();
 
         } catch (IOException e) {
             System.err.println(e.getMessage());

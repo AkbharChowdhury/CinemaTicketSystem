@@ -1,8 +1,15 @@
 package classes;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public final class LoginInfo {
+    @Getter
+    @Setter
     private static int customerID;
+    @Getter
     private static String email;
+    @Setter
     private static boolean hasOpenFormOnStartUp;
 
 
@@ -10,27 +17,11 @@ public final class LoginInfo {
         return hasOpenFormOnStartUp;
     }
 
-    public static void setHasOpenFormOnStartUp(boolean status) {
-        hasOpenFormOnStartUp = status;
-    }
 
-
-    public static String getEmail(){
-        return email;
-    }
     public static void setEmail(String email){
        LoginInfo.email = email;
     }
 
-
-
-    public static int getCustomerID() {
-        return customerID;
-    }
-
-    public static void setCustomerID(int id) {
-        customerID = id;
-    }
 
     private LoginInfo(){
 

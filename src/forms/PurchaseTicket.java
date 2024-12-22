@@ -116,9 +116,17 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         btnConfirm.addActionListener(this);
         spNumTickets.addChangeListener(this);
+        setVisible(true);
+        tableEvent();
+
+
+    }
+
+    private void tableEvent() {
 
 
         table.addMouseListener(new MouseListener() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -126,20 +134,16 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
             @Override
             public void mousePressed(MouseEvent e) {
-                handleTableClickEvent();
-
-            }
-
-            private void handleTableClickEvent() {
                 try {
                     ShowTimes showTime = list.get(table.getSelectedRow());
-                    int movieID = showTime.getMovieID();
-
-                    lblMovieDetails.setText(STR."\{db.getMovieName(movieID)}- \{showTime.getDate()}: \{showTime.getTime()}");
+                    lblMovieDetails.setText(STR."\{db.getMovieName(showTime.getMovieID())}- \{showTime.getDate()}: \{showTime.getTime()}");
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
+
+
             }
+
 
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -156,8 +160,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
             }
         });
-
-        setVisible(true);
     }
 
 
