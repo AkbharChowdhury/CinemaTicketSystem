@@ -83,9 +83,9 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         south.add(movieScrollPane);
 
-        add("North", top);
-        add("Center", middle);
-        add("South", south);
+        add(BorderLayout.NORTH, top);
+        add(BorderLayout.CENTER, middle);
+        add(BorderLayout.SOUTH, south);
 
         cbMovies.addActionListener(this);
         cbDate.addActionListener(this);

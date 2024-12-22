@@ -108,9 +108,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         south.add(btnConfirm);
 
 
-        add("North", top);
-        add("Center", middle);
-        add("South", south);
+        add(BorderLayout.NORTH, top);
+        add(BorderLayout.CENTER, middle);
+        add(BorderLayout.SOUTH, south);
 
         cbMovies.addActionListener(this);
 

@@ -76,10 +76,10 @@ public final class Register extends JFrame implements ActionListener {
         JPanel bottom = new JPanel();
         bottom.add(btnRegister);
         bottom.add(btnLogin);
-        add("Center", middle);
-        add("South", bottom);
-        add("West", new JPanel());
-        add("East", new JPanel());
+        add(BorderLayout.CENTER, middle);
+        add(BorderLayout.SOUTH, bottom);
+        add(BorderLayout.WEST, new JPanel());
+        add(BorderLayout.EAST, new JPanel());
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
         setVisible(true);

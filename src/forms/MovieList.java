@@ -61,9 +61,9 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
         south.add(scrollPane);
 
-        add("North", top);
-        add("Center", middle);
-        add("South", south);
+        add(BorderLayout.NORTH, top);
+        add(BorderLayout.CENTER, middle);
+        add(BorderLayout.SOUTH, south);
 
 
         cbGenres.addActionListener(this);

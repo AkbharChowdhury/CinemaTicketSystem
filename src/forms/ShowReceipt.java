@@ -14,6 +14,7 @@ import interfaces.ListGUI;
 import interfaces.MenuNavigation;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,9 +62,9 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         JPanel south = new JPanel();
         south.add(btnPrintReceipt);
 
-        add("North", top);
-        add("Center", middle);
-        add("South", south);
+        add(BorderLayout.NORTH, top);
+        add(BorderLayout.CENTER, middle);
+        add(BorderLayout.SOUTH, south);
 
         btnPrintReceipt.addActionListener(this);
 
