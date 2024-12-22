@@ -15,7 +15,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -23,10 +22,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
 
     private final Database db = Database.getInstance();
-//    private final MovieGenres movieGenre = new MovieGenres();
-    SearchMovie movieGenre = new SearchMovie(Database.getInstance().getMovies());
-
-
+    private final SearchMovie movies = new SearchMovie(db.getMovies());
     private final JTable table = new JTable();
     private final JTextField txtMovieTitle = new JTextField(20);
     private final JComboBox<String> cbGenres = new JComboBox<>();
@@ -37,15 +33,11 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
 
     public MovieList() {
-        table.setEnabled(false);
-
         if (Helper.disableReceipt(db)) {
             nav.btnShowReceipt.setEnabled(false);
         }
 
-        JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setViewportView(table);
-
+        new JScrollPane().setViewportView(table);
         setupTableProperties();
 
         txtMovieTitle.addKeyListener(this);
@@ -56,15 +48,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
-        populateTable();
 
         navigation(top);
-
-        cbGenres.addItem(FormDetails.defaultGenre());
-        db.getMovieGenreList().forEach(cbGenres::addItem);
-
-        populateTable();
-
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie Title:"));
@@ -86,6 +71,10 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         autofocus();
         setVisible(true);
 
+        cbGenres.addItem(FormDetails.defaultGenre());
+        db.getMovieGenreList().forEach(cbGenres::addItem);
+        populateTable();
+
 
     }
 
@@ -105,10 +94,12 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
     private void setupTableProperties() {
+        table.setEnabled(false);
         showColumn();
         displayWidths();
 
     }
+
     private void displayWidths() {
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(MovieGenres.TABLE_WIDTHS.get(i));
@@ -124,7 +115,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == cbGenres) {
-            movieGenre.setGenre(Objects.requireNonNull(cbGenres.getSelectedItem()).toString());
+            movies.setGenre(Objects.requireNonNull(cbGenres.getSelectedItem()).toString());
             populateTable();
         }
     }
@@ -143,7 +134,7 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     @Override
     public void keyReleased(KeyEvent e) {
 
-        movieGenre.setTitle(txtMovieTitle.getText());
+        movies.setTitle(txtMovieTitle.getText());
         populateTable();
 
     }
@@ -161,11 +152,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
     @Override
     public void populateTable() {
-
         clearTable(table);
-//        tableModel.populateTable(db.showMovieList(movieGenre).stream().map(MovieGenres::toMovieList).toList());
-        tableModel.populateTable(movieGenre.getList().stream().map(MovieGenres::toMovieList).toList());
-
+        tableModel.populateTable(movies.filterResults().stream().map(MovieGenres::toMovieList).toList());
     }
 
 
@@ -174,7 +162,6 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
         nav.addButtons(top);
 
     }
-
 
 
 }
