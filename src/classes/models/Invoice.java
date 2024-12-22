@@ -91,15 +91,8 @@ public class Invoice {
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
 
 
-        try {
+        try(var cs = new PDPageContentStream(invoiceDocument, invoiceDocument.getPage(0))) {
             double total = ticketDetails.getPrice() * myInvoice.getTotalTicket();
-
-
-            //Prepare Content Stream
-            PDPageContentStream cs = new PDPageContentStream(invoiceDocument, invoiceDocument.getPage(0));
-
-            //Writing Single Line text
-            //Writing the Invoice title
             cs.beginText();
             cs.setFont(font, 20);
 
@@ -217,16 +210,13 @@ public class Invoice {
 
             cs.beginText();
             cs.setFont(font, 14);
-            //Calculating where total is to be written using number of products
+
             cs.newLineAtOffset(410, (500 - (20 * n)));
             cs.showText(Helper.formatMoney(total));
             cs.endText();
 
-            //Close the content stream
             cs.close();
-            //Save the PDF
             invoiceDocument.save(Invoice.INVOICE_FILE_NAME);
-            invoiceDocument.getDocument();
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
