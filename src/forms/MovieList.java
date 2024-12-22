@@ -33,9 +33,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
 
 
     public MovieList() {
-        if (Helper.disableReceipt(db)) {
-            nav.btnShowReceipt.setEnabled(false);
-        }
+        if (Helper.disableReceipt(db)) nav.btnShowReceipt.setEnabled(false);
+
 
         new JScrollPane().setViewportView(table);
         setupTableProperties();
@@ -151,7 +150,8 @@ public final class MovieList extends JFrame implements ActionListener, KeyListen
     }
 
     @Override
-    public void populateTable() {
+    public void
+    populateTable() {
         clearTable(table);
         tableModel.populateTable(movies.filterResults().stream().map(MovieGenres::toMovieList).toList());
     }
