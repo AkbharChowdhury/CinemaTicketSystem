@@ -119,7 +119,7 @@ public final class Register extends JFrame implements ActionListener {
         customer.setPassword(Encryption.encode(password));
         if (db.addCustomer(customer)) {
             LoginInfo.setEmail(email);
-            Helper.message("Your account has been created, you can now login");
+            Helper.message.accept("Your account has been created, you can now login");
         }
         Helper.gotoForm(this, Pages.LOGIN);
 

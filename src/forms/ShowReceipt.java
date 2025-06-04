@@ -117,7 +117,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     public void printInvoice(int i) {
         try {
             new Invoice().printInvoice(INVOICES.get(i));
-            Helper.message(STR."Your invoice has been saved as \{Invoice.INVOICE_FILE_NAME}");
+            Helper.message.accept(STR."Your invoice has been saved as \{Invoice.INVOICE_FILE_NAME}");
 
         } catch (ParseException ex) {
             Helper.showErrorMessage("The time cannot be formatted", "Time parse error");

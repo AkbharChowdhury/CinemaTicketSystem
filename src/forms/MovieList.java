@@ -37,7 +37,7 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
 
 
     public MovieList() {
-        if (Helper.disableReceipt(db)) nav.btnShowReceipt.setEnabled(false);
+        if (Helper.disableReceipt.apply(db)) nav.btnShowReceipt.setEnabled(false);
 
         new JScrollPane().setViewportView(table);
         setupTableProperties();

@@ -3,6 +3,7 @@ package classes.models;
 
 import classes.Database;
 import classes.LoginInfo;
+import classes.utils.CalendarUtils;
 import classes.utils.Helper;
 import enums.FormDetails;
 import lombok.Data;
@@ -83,7 +84,7 @@ public class Invoice {
 
 
     public static String getDetails(Invoice invoice, double price) {
-        return STR."\{invoice.getMovieTitle()}, \{ Helper.formatDate(invoice.getShowDate(), FormatStyle.MEDIUM)}, \{Helper.formatTime(invoice.getShowTime())}, \{ Helper.formatMoney(price * invoice.getTotalTicket())}";
+        return STR."\{invoice.getMovieTitle()}, \{ CalendarUtils.formatDateStyle.apply(invoice.getShowDate(), FormatStyle.MEDIUM)}, \{CalendarUtils.formatTime.apply(invoice.getShowTime())}, \{ Helper.formatMoney.apply(price * invoice.getTotalTicket())}";
     }
 
     public static String getInvoiceDetails() {
@@ -149,7 +150,7 @@ public class Invoice {
             cs.beginText();
             cs.setFont(font, 16);
             cs.newLineAtOffset(180, 630);
-            cs.showText(STR."Show Date/time (\{Helper.formatDate(myInvoice.getShowDate())}, \{Helper.formatTime(myInvoice.getShowTime())})");
+            cs.showText(STR."Show Date/time (\{CalendarUtils.formatDate.apply(myInvoice.getShowDate())}, \{CalendarUtils.formatTime.apply(myInvoice.getShowTime())})");
             cs.endText();
 
 
@@ -170,7 +171,7 @@ public class Invoice {
             cs.setLeading(20f);
             cs.newLineAtOffset(170, 610);
             cs.newLine();
-            cs.showText(Helper.formatDate(myInvoice.getSalesDate()));
+            cs.showText(CalendarUtils.formatDate.apply(myInvoice.getSalesDate()));
 
 
             cs.endText();
@@ -212,7 +213,7 @@ public class Invoice {
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(200, 520);
-            cs.showText(Helper.formatMoney(ticketDetails.getPrice()));
+            cs.showText(Helper.formatMoney.apply(ticketDetails.getPrice()));
             cs.newLine();
             cs.endText();
 
@@ -229,7 +230,7 @@ public class Invoice {
             cs.setFont(font, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(410, 520);
-            cs.showText(Helper.formatMoney(total));
+            cs.showText(Helper.formatMoney.apply(total));
             cs.newLine();
 
             cs.endText();
@@ -244,7 +245,7 @@ public class Invoice {
             cs.setFont(font, 14);
 
             cs.newLineAtOffset(410, (500 - (20 * n)));
-            cs.showText(Helper.formatMoney(total));
+            cs.showText(Helper.formatMoney.apply(total));
             cs.endText();
 
             cs.close();

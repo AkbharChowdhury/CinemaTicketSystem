@@ -54,7 +54,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         }
 
 
-        if (Helper.disableReceipt(db)) {
+        if (Helper.disableReceipt.apply(db)) {
             nav.btnShowReceipt.setEnabled(false);
         }
 
@@ -96,7 +96,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         JPanel south = new JPanel();
 
-        south.add(new JLabel(STR."Ticket: \{ticketDetails.getType()} (\{Helper.formatMoney(ticketDetails.getPrice())})"));
+        south.add(new JLabel(STR."Ticket: \{ticketDetails.getType()} (\{Helper.formatMoney.apply(ticketDetails.getPrice())})"));
         south.add(spNumTickets);
         south.add(btnConfirm);
         south.add(lblTotal);
@@ -139,7 +139,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     private void updateTotalLabel() {
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(STR."Total to pay: \{Helper.formatMoney(Helper.calcPrice(numTickets, ticketDetails.getPrice()))}");
+        lblTotal.setText(STR."Total to pay: \{Helper.formatMoney.apply(Helper.calcPrice(numTickets, ticketDetails.getPrice()))}");
     }
 
 
@@ -185,7 +185,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         }
 
         if (db.addSales(sales) && updateNumTicksSold(numTickets)) {
-            Helper.message("Thank you for your purchase. you will now be redirected to the receipt page");
+            Helper.message.accept("Thank you for your purchase. you will now be redirected to the receipt page");
             Helper.gotoForm(this, Pages.SHOW_RECEIPT);
         }
 

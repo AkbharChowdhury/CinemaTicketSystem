@@ -1,5 +1,6 @@
 package classes.models;
 
+import classes.utils.CalendarUtils;
 import classes.utils.Helper;
 import interfaces.Queries;
 import lombok.Data;
@@ -15,6 +16,31 @@ import static classes.utils.Helper.fieldSep;
 
 public class ShowTimes implements Queries {
     private int showTimeID;
+
+    public void setShowTimeID(int showTimeID) {
+        this.showTimeID = showTimeID;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setNumTicketsLeft(int numTicketsLeft) {
+        this.numTicketsLeft = numTicketsLeft;
+    }
+
+    public void setNumTicketsSold(int numTicketsSold) {
+        this.numTicketsSold = numTicketsSold;
+    }
+
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
+    }
+
     private int movieID;
     private String date;
     private String time;
@@ -120,8 +146,8 @@ public class ShowTimes implements Queries {
     public static String toShowTimeList(ShowTimes showTime) {
 
         return STR. """
-                \{ fieldSep(Helper.formatDate(showTime.getDate())) }
-                \{ fieldSep(Helper.formatTime(showTime.getTime())) }
+                \{ fieldSep(CalendarUtils.formatDate.apply(showTime.getDate())) }
+                \{ fieldSep(CalendarUtils.formatTime.apply(showTime.getTime())) }
                  \{ showTime.getNumTicketsLeft() }
                 """ ;
     }
@@ -144,10 +170,6 @@ public class ShowTimes implements Queries {
 
     public int getNumTicketsLeft() {
         return numTicketsLeft;
-    }
-
-    public String getMovieTitle() {
-        return movieTitle;
     }
 
     public int getNumTicketsSold() {

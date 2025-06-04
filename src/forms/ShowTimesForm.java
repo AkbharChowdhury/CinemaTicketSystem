@@ -5,6 +5,7 @@ import classes.Navigation;
 import classes.models.CustomTableModel;
 import classes.models.Movie;
 import classes.models.ShowTimes;
+import classes.utils.CalendarUtils;
 import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
@@ -36,7 +37,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     public ShowTimesForm() {
         table.setEnabled(false);
 
-        if (Helper.disableReceipt(db)) nav.btnShowReceipt.setEnabled(false);
+        if (Helper.disableReceipt.apply(db)) nav.btnShowReceipt.setEnabled(false);
 
 
         movieList = db.getAllMovieShowTimes();
@@ -113,7 +114,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     private void showFilteredDateResults() {
         try {
 
-            movieShowTimes.setDate(cbDate.getSelectedIndex() != 0 ? Helper.convertMediumDateToYYMMDD(cbDate.getSelectedItem().toString()) : "");
+            movieShowTimes.setDate(cbDate.getSelectedIndex() != 0 ? CalendarUtils.convertMediumDateToYYMMDD.apply(cbDate.getSelectedItem().toString()) : "");
             populateTable();
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -154,7 +155,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         // get unique dates
         Set<String> linkedHashSet = new LinkedHashSet<>();
         db.showMovieTimes(movieShowTimes).forEach(show -> linkedHashSet.add(show.getDate()));
-        linkedHashSet.forEach(date -> cbDate.addItem(Helper.formatDate(date)));
+        linkedHashSet.forEach(date -> cbDate.addItem(CalendarUtils.formatDate.apply(date)));
 
 
     }

@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class Helper {
@@ -24,7 +26,7 @@ public final class Helper {
     }
 
 
-    public  static Supplier<String> getCSVPath = () -> "src/csv/";
+    public static Supplier<String> getCSVPath = () -> "src/csv/";
 
 
     public static JSpinner disableSpinnerInput(JSpinner spinner) {
@@ -38,9 +40,7 @@ public final class Helper {
         return FileHandler.readSingleColumn(getCSVPath.get() + filename);
     }
 
-    public static boolean disableReceipt(Database db) {
-        return LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
-    }
+    public static Function <Database, Boolean> disableReceipt = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
 
 
     public static String calcDuration(int duration) {
@@ -53,39 +53,20 @@ public final class Helper {
         JOptionPane.showMessageDialog(null, message,
                 title, JOptionPane.ERROR_MESSAGE);
     }
+    public static Consumer<String> message = message->  JOptionPane.showMessageDialog(null, message);
 
-    public static void message(String message) {
-        JOptionPane.showMessageDialog(null, message);
-    }
+//    public static void message(String message) {
+//        JOptionPane.showMessageDialog(null, message);
+//    }
 
 
-    public static String formatTime(String time) {
-        return DateTimeFormatter.ofPattern("hh:mm a").format(LocalTime.parse(time));
-
-    }
-
-    public static String formatMoney(double amount) {
-        return NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
-    }
+    public static Function<Double, String> formatMoney = amount -> NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
 
 
     public static double calcPrice(int numTickets, double price) {
         return numTickets * price;
     }
 
-    public static String formatDate(String date) {
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(date));
-
-    }
-
-    public static String formatDate(String date, FormatStyle formatStyle) {
-        return DateTimeFormatter.ofLocalizedDate(formatStyle).format(LocalDate.parse(date));
-
-    }
-
-    public static String convertMediumDateToYYMMDD(String dateStr) {
-        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd MMM yyyy")).toString();
-    }
 
 
     public static void goTo(JFrame currentPage, Pages page) {
@@ -96,7 +77,7 @@ public final class Helper {
         }
     }
 
-    public static void gotoForm(JFrame currentPage, Pages page){
+    public static void gotoForm(JFrame currentPage, Pages page) {
         try {
             switch (page) {
                 case LOGIN -> new Login();
@@ -107,7 +88,7 @@ public final class Helper {
                 case SHOW_TIMES -> new ShowTimesForm();
             }
             currentPage.dispose();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println(ex.getMessage());
 
 

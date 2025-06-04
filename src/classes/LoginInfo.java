@@ -12,6 +12,10 @@ public final class LoginInfo {
         return email;
     }
 
+    public static void setHasOpenFormOnStartUp(boolean hasOpenFormOnStartUp) {
+        LoginInfo.hasOpenFormOnStartUp = hasOpenFormOnStartUp;
+    }
+
     @Getter
     @Setter
     private static int customerID;
@@ -33,5 +37,9 @@ public final class LoginInfo {
 
     private LoginInfo(){
 
+    }
+
+    public static void setCustomerID(int customerID) {
+        LoginInfo.customerID = customerID;
     }
 }
