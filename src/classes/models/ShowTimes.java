@@ -100,7 +100,7 @@ public class ShowTimes implements Queries {
                                 NATURAL JOIN Movies m
                                 WHERE
                                     m.movie_id = ? AND num_tickets_left > 0
-                                   			AND	show_date BETWEEN Date('NOW') AND   Date('now', 'start of month', '+1 month', '-1 day')
+                                   			AND	show_date BETWEEN Date('NOW') AND Date('now', 'start of month', '+1 month', '-1 day')
                      """;
 
         if (!StringUtils.isEmpty(movieShowTimes.getDate())) {

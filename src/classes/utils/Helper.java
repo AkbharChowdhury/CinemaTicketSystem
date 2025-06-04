@@ -29,18 +29,17 @@ public final class Helper {
     public static Supplier<String> getCSVPath = () -> "src/csv/";
 
 
-    public static JSpinner disableSpinnerInput(JSpinner spinner) {
-        var editor = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
+    public static void disableSpinnerInput(JSpinner spinner) {
+        JFormattedTextField editor = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
         editor.setEnabled(true);
         editor.setEditable(false);
-        return spinner;
     }
 
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
         return FileHandler.readSingleColumn(getCSVPath.get() + filename);
     }
 
-    public static Function <Database, Boolean> disableReceipt = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
+    public static Function<Database, Boolean> disableReceipt = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
 
 
     public static String calcDuration(int duration) {
@@ -53,11 +52,8 @@ public final class Helper {
         JOptionPane.showMessageDialog(null, message,
                 title, JOptionPane.ERROR_MESSAGE);
     }
-    public static Consumer<String> message = message->  JOptionPane.showMessageDialog(null, message);
 
-//    public static void message(String message) {
-//        JOptionPane.showMessageDialog(null, message);
-//    }
+    public static Consumer<String> message = message -> JOptionPane.showMessageDialog(null, message);
 
 
     public static Function<Double, String> formatMoney = amount -> NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
@@ -66,7 +62,6 @@ public final class Helper {
     public static double calcPrice(int numTickets, double price) {
         return numTickets * price;
     }
-
 
 
     public static void goTo(JFrame currentPage, Pages page) {

@@ -152,10 +152,9 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     private void populateShowDateComboBox() {
         cbDate.removeAllItems();
         cbDate.addItem(FormDetails.defaultShowDate());
-        // get unique dates
-        Set<String> linkedHashSet = new LinkedHashSet<>();
-        db.showMovieTimes(movieShowTimes).forEach(show -> linkedHashSet.add(show.getDate()));
-        linkedHashSet.forEach(date -> cbDate.addItem(CalendarUtils.formatDate.apply(date)));
+        Set<String> uniqueDates = new LinkedHashSet<>();
+        db.showMovieTimes(movieShowTimes).forEach(show -> uniqueDates.add(show.getDate()));
+        uniqueDates.forEach(date -> cbDate.addItem(CalendarUtils.formatDate.apply(date)));
 
 
     }
