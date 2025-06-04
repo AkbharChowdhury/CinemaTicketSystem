@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 public final class Helper {
     public static final String SEP = "///";
@@ -22,9 +23,9 @@ public final class Helper {
         return obj + SEP;
     }
 
-    public static String getCSVPath() {
-        return "src/csv/";
-    }
+
+    public  static Supplier<String> getCSVPath = () -> "src/csv/";
+
 
     public static JSpinner disableSpinnerInput(JSpinner spinner) {
         var editor = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
@@ -34,7 +35,7 @@ public final class Helper {
     }
 
     public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
-        return FileHandler.readSingleColumn(getCSVPath() + filename);
+        return FileHandler.readSingleColumn(getCSVPath.get() + filename);
     }
 
     public static boolean disableReceipt(Database db) {

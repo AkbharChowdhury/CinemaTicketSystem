@@ -129,7 +129,7 @@ public class Database {
 
     private void insertMovies() throws FileNotFoundException {
 
-        String movieFile = Helper.getCSVPath() + Files.Movies.DESCRIPTION;
+        String movieFile = Helper.getCSVPath.get() + Files.Movies.DESCRIPTION;
         List<Movie> movieList = FileHandler.getMovieData(movieFile);
 
 
@@ -158,7 +158,7 @@ public class Database {
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new ShowTimes().insert())) {
-            for (var showtime : showTimeList) {
+            for (ShowTimes showtime : showTimeList) {
                 var c = new Counter();
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setInt(c.getCounter(), showtime.getMovieID());
@@ -224,14 +224,14 @@ public class Database {
 
     private void insertMovieGenres() throws FileNotFoundException {
 
-        String movieGenreFile = Helper.getCSVPath() + Files.MovieGenres.DESCRIPTION;
+        String movieGenreFile = Helper.getCSVPath.get() + Files.MovieGenres.DESCRIPTION;
         List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
 
 
         try (var con = getConnection();
              var stmt = con.prepareStatement(new MovieGenres().insert())) {
 
-            for (var item : movieGenres) {
+            for (MovieGenres item : movieGenres) {
                 var c = new Counter();
                 stmt.setInt(c.getCounter(), item.getMovieID());
                 stmt.setInt(c.getCounter(), item.getGenreID());
@@ -266,7 +266,7 @@ public class Database {
     }
 
     private void insertTickets() throws FileNotFoundException {
-        List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath() + Files.Tickets.DESCRIPTION);
+        List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath.get() + Files.Tickets.DESCRIPTION);
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Ticket().insert())) {
@@ -337,9 +337,9 @@ public class Database {
                             NATURAL JOIN Movies m
                             NATURAL JOIN genres g
                             NATURAL JOIN Ratings r
-                               
+                     
                      GROUP BY m.movie_id
-                                                  
+                     
                      """)) {
 
 
@@ -501,7 +501,7 @@ public class Database {
                                     WHERE  show_date BETWEEN Date('NOW') AND Date('now', 'start of month','+1 month','-1 day')
                                            AND num_tickets_left > 0
                                     ORDER  BY m.title
-
+                    
                     """);
 
             while (rs.next()) {

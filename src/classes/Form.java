@@ -13,4 +13,11 @@ public final class Form {
     private Form() {
     }
 
+    public static RedirectPage getRedirectPage() {
+        return redirectPage;
+    }
+
+    public static void setRedirectPage(RedirectPage redirectPage) {
+        Form.redirectPage = redirectPage;
+    }
 }

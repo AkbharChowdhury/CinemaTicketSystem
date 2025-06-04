@@ -41,4 +41,12 @@ public final class SearchMovie {
     public String toString() {
         return list.stream().toList().toString();
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 }

@@ -28,7 +28,7 @@ public class FileHandler {
 
         List<Customer> customerList = new ArrayList<>();
 
-        for (String line : getCSVFileDetails(Helper.getCSVPath() + Files.Customers.DESCRIPTION)) {
+        for (String line : getCSVFileDetails(Helper.getCSVPath.get() + Files.Customers.DESCRIPTION)) {
             String[] values = line.split(",");
             String firstname = values[0];
             String lastname = values[1];
@@ -43,7 +43,7 @@ public class FileHandler {
     }
 
     public static List<ShowTimes> getShowTimeData() throws FileNotFoundException {
-        String fileName = Helper.getCSVPath() + Files.ShowTimes.DESCRIPTION;
+        String fileName = Helper.getCSVPath.get() + Files.ShowTimes.DESCRIPTION;
         List<ShowTimes> showTimeList = new ArrayList<>();
 
         for (String line : getCSVFileDetails(fileName)) {

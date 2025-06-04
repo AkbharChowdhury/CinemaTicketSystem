@@ -12,6 +12,7 @@ import tables.MovieTable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static classes.utils.Helper.fieldSep;
 
@@ -26,13 +27,16 @@ public class MovieGenres extends Movie implements Queries {
     public MovieGenres() {
     }
 
-    public static final LinkedHashMap<Integer, Integer> TABLE_WIDTHS = new LinkedHashMap<>() {{
-        put(0, 135);
-        put(1, 30);
-        put(2, 20);
-        put(3, 140);
 
-    }};
+    public static Supplier<LinkedHashMap<String, String>> TABLE_WIDTHS = () -> {
+        Counter c = new Counter(true);
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put(String.valueOf(c.getCounter()), String.valueOf(145));
+        map.put(String.valueOf(c.getCounter()), String.valueOf(30));
+        map.put(String.valueOf(c.getCounter()), String.valueOf(20));
+        map.put(String.valueOf(c.getCounter()), String.valueOf(140));
+        return map;
+    };
 
     public static String toMovieList(MovieGenres m) {
 
@@ -99,7 +103,7 @@ public class MovieGenres extends Movie implements Queries {
                        NATURAL JOIN Ratings r
                  WHERE title LIKE ?                        
                 GROUP BY m.movie_id
-                                             
+                
                 """;
 
 
@@ -130,4 +134,35 @@ public class MovieGenres extends Movie implements Queries {
     }
 
 
+    public int getGenreID() {
+        return genreID;
+    }
+
+    public void setGenreID(int genreID) {
+        this.genreID = genreID;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
 }

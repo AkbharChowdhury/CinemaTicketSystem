@@ -32,6 +32,38 @@ public class Invoice {
     private String movieTitle;
     private String rating;
 
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setShowTime(String showTime) {
+        this.showTime = showTime;
+    }
+
+    public void setShowDate(String showDate) {
+        this.showDate = showDate;
+    }
+
+    public void setSalesDate(String salesDate) {
+        this.salesDate = salesDate;
+    }
+
+    public void setTotalTicket(int totalTicket) {
+        this.totalTicket = totalTicket;
+    }
+
     public Invoice() {
 
     }
@@ -227,4 +259,39 @@ public class Invoice {
     }
 
 
+    public int getN() {
+        return n;
+    }
+
+    public int getTotalTicket() {
+        return totalTicket;
+    }
+
+    public String getSalesDate() {
+        return salesDate;
+    }
+
+    public String getShowDate() {
+        return showDate;
+    }
+
+    public String getShowTime() {
+        return showTime;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public String getRating() {
+        return rating;
+    }
 }

@@ -6,14 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import tables.TicketsTable;
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Ticket implements Queries {
     protected int ticketID;
     private String type;
     private double price;
-    
 
+    public Ticket(int ticketID, String type, double price) {
+        this.ticketID = ticketID;
+        this.type = type;
+        this.price = price;
+    }
+
+    public Ticket(){}
     public Ticket(String type, double price) {
         this.type = type;
         this.price = price;
@@ -47,5 +53,29 @@ public class Ticket implements Queries {
                         """;
 
 
+    }
+
+    public int getTicketID() {
+        return ticketID;
+    }
+
+    public void setTicketID(int ticketID) {
+        this.ticketID = ticketID;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

@@ -81,4 +81,20 @@ public class Movie implements Queries {
 
 
     }
+
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public int getRatingID() {
+        return ratingID;
+    }
 }

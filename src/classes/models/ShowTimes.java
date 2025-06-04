@@ -125,4 +125,32 @@ public class ShowTimes implements Queries {
                  \{ showTime.getNumTicketsLeft() }
                 """ ;
     }
+
+    public int getShowTimeID() {
+        return showTimeID;
+    }
+
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public int getNumTicketsLeft() {
+        return numTicketsLeft;
+    }
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public int getNumTicketsSold() {
+        return numTicketsSold;
+    }
 }

@@ -18,14 +18,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-@Data
-@NoArgsConstructor
+//@Data
+//@NoArgsConstructor
 public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
     private String lastname;
     private String email;
     private String password;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Customer(String firstname, String lastname, String email, String password, int ticketID) {
         this.firstname = firstname;
@@ -34,6 +38,7 @@ public class Customer extends Ticket implements Queries {
         this.password = password;
         this.ticketID = ticketID;
     }
+    public Customer(){}
     
     @Override
     public String createTable() {
@@ -85,4 +90,23 @@ public class Customer extends Ticket implements Queries {
     }
 
 
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
