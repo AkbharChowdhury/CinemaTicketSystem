@@ -46,7 +46,7 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.movieList());
+        setTitle(FormDetails.movieList.get());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -73,7 +73,7 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
         autofocus();
         setVisible(true);
 
-        cbGenres.addItem(FormDetails.defaultGenre());
+        cbGenres.addItem(FormDetails.defaultGenre.get());
         db.getMovieGenreList().forEach(cbGenres::addItem);
         populateTable();
 

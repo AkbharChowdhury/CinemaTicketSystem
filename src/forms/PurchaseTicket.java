@@ -71,7 +71,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.purchaseTicket());
+        setTitle(FormDetails.purchaseTicket.get());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -84,7 +84,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
-        cbMovies.addItem(FormDetails.defaultMovie());
+        cbMovies.addItem(FormDetails.defaultMovie.get());
         db.getAllMovieShowTimes().forEach(movie -> cbMovies.addItem(movie.getTitle()));
         middle.add(cbMovies);
 

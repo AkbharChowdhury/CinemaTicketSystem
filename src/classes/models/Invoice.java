@@ -130,7 +130,7 @@ public class Invoice {
             cs.setFont(font, 20);
 
             cs.newLineAtOffset(140, 750);
-            cs.showText(String.format("%s", FormDetails.getInvoiceTitle()));
+            cs.showText(String.format("%s", FormDetails.getInvoiceTitle.get()));
 
             cs.endText();
 

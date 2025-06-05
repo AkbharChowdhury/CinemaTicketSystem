@@ -21,7 +21,7 @@ import static classes.utils.Helper.fieldSep;
 public class MovieGenres extends Movie implements Queries {
     private int genreID;
     private String rating;
-    private String genre = FormDetails.defaultGenre();
+    private String genre = FormDetails.defaultGenre.get();
     private String genres;
 
     public MovieGenres() {
@@ -107,7 +107,7 @@ public class MovieGenres extends Movie implements Queries {
                 """;
 
 
-        if (!genre.equalsIgnoreCase(FormDetails.defaultGenre())) {
+        if (!genre.equalsIgnoreCase(FormDetails.defaultGenre.get())) {
             sql += " HAVING genre_list LIKE ?";
         }
 

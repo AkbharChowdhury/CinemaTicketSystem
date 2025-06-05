@@ -18,11 +18,11 @@ public final class SearchMovie {
     @Setter
     private String title = "";
     @Setter
-    private String genre = FormDetails.defaultGenre();
+    private String genre = FormDetails.defaultGenre.get();
     private final Predicate<MovieGenres> filterTitle = p -> StringUtils.containsIgnoreCase(p.getTitle(), title);
 
     private Predicate<MovieGenres> filterGenre() {
-        return !FormDetails.defaultGenre().equals(genre) ? p -> StringUtils.containsIgnoreCase(p.getGenres(), genre) : p -> true;
+        return !FormDetails.defaultGenre.get().equals(genre) ? p -> StringUtils.containsIgnoreCase(p.getGenres(), genre) : p -> true;
     }
 
     public SearchMovie(List<MovieGenres> LIST) {

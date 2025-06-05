@@ -50,7 +50,7 @@ public final class Register extends JFrame implements ActionListener {
 
         setLayout(new BorderLayout());
         setSize(310, 500);
-        setTitle(FormDetails.register());
+        setTitle(FormDetails.register.get());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

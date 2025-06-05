@@ -1,62 +1,72 @@
 package enums;
 
 
+import org.apache.commons.lang3.text.WordUtils;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public enum FormDetails {
     ;
     private static final String APP_NAME = "Cinema Ticket Machine - ";
 
+    private static Function<String, String> windowTitle = title-> STR."\{APP_NAME} \{title}";
 
 
-    public static String movieList() {
-        return STR."\{APP_NAME}List Movies";
-
-    }
-
-    public static String register() {
-        return "Customer registration";
-
-    }
-
-    public static String login() {
-        return STR."\{APP_NAME}Login";
-
-    }
+//    public static String movieList() {
+//        return STR."\{APP_NAME}List Movies";
+//
+//    }
 
 
+    public static final Supplier<String> movieList = () ->  windowTitle.apply(WordUtils.capitalizeFully("list movies"));
 
-    public static String showTimes() {
-        return STR."\{APP_NAME}Show Times";
 
-    }
+//    public static String register() {
+//        return "Customer registration";
+//
+//    }
+//
+//    public static String login() {
+//        return STR."\{APP_NAME}Login";
+//
+//    }
 
-    public static String purchaseTicket() {
-        return STR."\{APP_NAME}Purchase Ticket";
+    public static final Supplier<String> register = () -> WordUtils.capitalizeFully("customer registration");
 
-    }
 
-    public static String showReceipt() {
-        return STR."\{APP_NAME}Show Receipt";
+    public static final Supplier<String> login = () -> WordUtils.capitalize("login");
 
-    }
 
-    public static String getInvoiceTitle() {
-        return "Cinema Ticket System Customer Invoice";
-    }
+    public static final Supplier<String> showTimes = () ->  windowTitle.apply(WordUtils.capitalizeFully("show times"));
 
-    public static String defaultGenre() {
-        return "Any Genre";
 
-    }
 
-    public static String defaultMovie() {
-        return "Select Movie";
+//    public static final Supplier<String> showTimes = () ->  STR."\{APP_NAME}Show Times";
 
-    }
 
-    public static String defaultShowDate() {
-        return "Show All Dates";
 
-    }
+
+    public static final Supplier<String> purchaseTicket = () ->  windowTitle.apply(WordUtils.capitalizeFully("purchase ticket"));
+    public static final Supplier<String> showReceipt = () ->  windowTitle.apply(WordUtils.capitalizeFully("show receipt"));
+
+
+
+
+
+
+
+    public static final Supplier<String> getInvoiceTitle = () ->  windowTitle.apply(WordUtils.capitalizeFully("customer invoice"));
+
+
+
+    public static final Supplier<String> defaultGenre = () -> "Any Genre";
+
+
+    public static final Supplier<String> defaultMovie = () -> "Select Movie";
+
+
+    public static final Supplier<String> defaultShowDate = () -> "Show All Dates";
 
 
 }

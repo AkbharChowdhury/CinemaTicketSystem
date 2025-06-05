@@ -23,7 +23,7 @@ public class Movie implements Queries {
     }
 
     public static void movieComboBoxStatus(JComboBox<String> cbMovies) {
-        if (((DefaultComboBoxModel<String>) cbMovies.getModel()).getIndexOf(FormDetails.defaultMovie()) != -1) {
+        if (((DefaultComboBoxModel<String>) cbMovies.getModel()).getIndexOf(FormDetails.defaultMovie.get()) != -1) {
             cbMovies.removeItemAt(0);
         }
     }

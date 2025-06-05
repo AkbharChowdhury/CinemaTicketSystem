@@ -49,7 +49,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
         setResizable(false);
         setLayout(new BorderLayout());
         setSize(700, 550);
-        setTitle(FormDetails.showTimes());
+        setTitle(FormDetails.showTimes.get());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel top = new JPanel();
@@ -63,7 +63,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));
-        cbMovies.addItem(FormDetails.defaultMovie());
+        cbMovies.addItem(FormDetails.defaultMovie.get());
         movieList.forEach(movie -> cbMovies.addItem(movie.getTitle()));
 
         middle.add(cbMovies);
@@ -72,7 +72,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         populateShowDateComboBox();
 
-        cbDate.addItem(FormDetails.defaultShowDate());
+        cbDate.addItem(FormDetails.defaultShowDate.get());
         middle.add(cbDate);
 
 
@@ -144,14 +144,12 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
             System.err.println(e.getMessage());
 
         }
-
-
     }
 
 
     private void populateShowDateComboBox() {
         cbDate.removeAllItems();
-        cbDate.addItem(FormDetails.defaultShowDate());
+        cbDate.addItem(FormDetails.defaultShowDate.get());
         Set<String> uniqueDates = new LinkedHashSet<>();
         db.showMovieTimes(movieShowTimes).forEach(show -> uniqueDates.add(show.getDate()));
         uniqueDates.forEach(date -> cbDate.addItem(CalendarUtils.formatDate.apply(date)));

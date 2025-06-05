@@ -296,7 +296,7 @@ public class Database {
             var c = new Counter();
             stmt.setString(c.getCounter(), "%" + movieGenres.getTitle() + "%");
 
-            if (!FormDetails.defaultGenre().equalsIgnoreCase(genre)) {
+            if (!FormDetails.defaultGenre.get().equalsIgnoreCase(genre)) {
                 stmt.setString(c.getCounter(), '%' + genre + '%');
             }
 

@@ -25,7 +25,7 @@ public final class Login extends JFrame implements ActionListener {
         setupHyperLink();
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        setTitle(FormDetails.login());
+        setTitle(FormDetails.login.get());
         setLocation(new Point(500, 300));
         add(panel);
         setSize(400, 200);
