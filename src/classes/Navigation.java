@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 public final class Navigation implements ActionListener {
@@ -16,18 +18,16 @@ public final class Navigation implements ActionListener {
     public final JButton btnShowReceipt = new JButton("Show Receipt");
     private final JFrame frame;
 
-    private JButton[] navButtons() {
 
-        return new JButton[]{
-                btnListMovies,
-                btnShowTimes,
-                btnPurchase,
-                btnShowReceipt
-        };
-    }
+    private Supplier<JButton[]> navButtons = () -> new JButton[]{
+            btnListMovies,
+            btnShowTimes,
+            btnPurchase,
+            btnShowReceipt
+    };
 
-    public Navigation(JFrame frame) {
-        this.frame = frame;
+    public Navigation(JFrame currentFrame) {
+        frame = currentFrame;
         btnListMovies.addActionListener(this);
         btnShowTimes.addActionListener(this);
         btnPurchase.addActionListener(this);
@@ -87,8 +87,9 @@ public final class Navigation implements ActionListener {
         handleNavClick(e);
         frame.dispose();
     }
-    public void addButtons(JPanel top){
-        Arrays.stream(navButtons()).forEach(top::add);
+
+    public void addButtons(JPanel top) {
+        Arrays.stream(navButtons.get()).forEach(top::add);
     }
 }
 

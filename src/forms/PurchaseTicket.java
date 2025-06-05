@@ -146,14 +146,17 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cbMovies) {
-            Movie.movieComboBoxStatus(cbMovies);
-            movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
-            populateTable();
+            handleMovieCB();
             return;
         }
         handlePurchase();
     }
 
+    private void handleMovieCB() {
+        Movie.movieComboBoxStatus(cbMovies);
+        movieShowTimes.setMovieID(db.getMovieID(cbMovies.getSelectedItem().toString()));
+        populateTable();
+    }
 
 
     private boolean updateNumTicksSold(int numTickets) {
