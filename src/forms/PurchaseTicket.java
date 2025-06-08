@@ -1,6 +1,7 @@
 package forms;
 
 import classes.Database;
+import classes.Form;
 import classes.LoginInfo;
 import classes.Navigation;
 import classes.models.*;
@@ -15,7 +16,6 @@ import interfaces.TableGUI;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -77,9 +77,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         JPanel top = new JPanel();
         navigation(top);
 
-        var cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+
+        CustomTableModel.setFirstColumnAlignment(table, JLabel.LEFT);
+
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JPanel middle = new JPanel();
@@ -139,7 +139,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     private void updateTotalLabel() {
         int numTickets = Integer.parseInt(spNumTickets.getValue().toString());
-        lblTotal.setText(STR."Total to pay: \{Helper.formatMoney.apply(Helper.calcPrice(numTickets, ticketDetails.getPrice()))}");
+        lblTotal.setText(STR."Total to pay: \{Helper.formatMoney.apply(numTickets * ticketDetails.getPrice())}");
     }
 
 
@@ -189,7 +189,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         if (db.addSales(sales) && updateNumTicksSold(numTickets)) {
             Helper.message.accept("Thank you for your purchase. you will now be redirected to the receipt page");
-            Helper.gotoForm(this, Pages.SHOW_RECEIPT);
+            Form.gotoForm(this, Pages.SHOW_RECEIPT);
         }
 
     }

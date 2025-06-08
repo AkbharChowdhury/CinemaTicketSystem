@@ -2,6 +2,7 @@ package forms;
 
 
 import classes.Database;
+import classes.Form;
 import classes.LoginInfo;
 import classes.models.Customer;
 import classes.models.Ticket;
@@ -16,10 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 
@@ -103,7 +100,7 @@ public final class Register extends JFrame implements ActionListener {
             return;
         }
 
-        Helper.goTo(this, Pages.LOGIN);
+        Form.goTo(this, Pages.LOGIN);
     }
 
 
@@ -121,7 +118,7 @@ public final class Register extends JFrame implements ActionListener {
             LoginInfo.setEmail(email);
             Helper.message.accept("Your account has been created, you can now login");
         }
-        Helper.gotoForm(this, Pages.LOGIN);
+        Form.gotoForm(this, Pages.LOGIN);
 
 
     }

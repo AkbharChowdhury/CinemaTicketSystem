@@ -260,9 +260,6 @@ public class Invoice {
     }
 
 
-    public int getN() {
-        return n;
-    }
 
     public int getTotalTicket() {
         return totalTicket;

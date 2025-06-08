@@ -2,7 +2,6 @@ package forms;
 
 import classes.Database;
 import classes.Navigation;
-import classes.models.Counter;
 import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
 import classes.models.SearchMovie;
@@ -12,13 +11,11 @@ import interfaces.MenuNavigation;
 import interfaces.TableGUI;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 
 public final class MovieList extends JFrame implements ActionListener, TableGUI, MenuNavigation {
@@ -107,61 +104,12 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
 
     }
 
-    public static Supplier<LinkedHashMap<Integer, Integer>> TABLE_WIDTHS1 = () -> {
-        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
-        Counter c = new Counter(true);
-        LinkedHashMap<String, String> lhm
-                = new LinkedHashMap<String, String>();
-
-        // Add mappings to Map
-        // using put() method
-        lhm.put("3", "Geeks");
-       lhm.get("");
-
-
-        return map;
-    };
-
-//    private void displayWidths() {
-//
-//        LinkedHashMap<String, String> tableWidths = MovieGenres.TABLE_WIDTHS.get();
-//        int tableColumnLength = table.getColumnCount();
-//        for (int i = 0; i < tableColumnLength; i++) {
-//            System.out.println(i);
-//            int width = Integer.parseInt(tableWidths.get(String.valueOf(i)));
-//            System.out.println(width);
-//            table.getColumnModel().getColumn(i).setPreferredWidth(width);
-//
-//        }
-//
-//        var cellRenderer = new DefaultTableCellRenderer();
-//        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
-//        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
-//    }
-
 
     private void displayWidths() {
 
         LinkedHashMap<Integer, Integer> tableWidths = MovieGenres.TABLE_WIDTHS.get();
-//        int tableColumnLength = table.getColumnCount();
-//        for (int i = 0; i < tableColumnLength; i++) {
-//            int width = tableWidths.get(i);
-//            table.getColumnModel().getColumn(i).setPreferredWidth(width);
-//
-//        }
-
-        for (var tableData: tableWidths.entrySet()){
-            int column = tableData.getKey();
-            int width = tableData.getValue();
-            table.getColumnModel().getColumn(column).setPreferredWidth(width);
-
-        }
-
-
-
-        var cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
-        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+        tableWidths.entrySet().forEach((tableData) -> table.getColumnModel().getColumn(tableData.getKey()).setPreferredWidth(tableData.getValue()));
+        CustomTableModel.setFirstColumnAlignment(table, JLabel.LEFT);
     }
 
 

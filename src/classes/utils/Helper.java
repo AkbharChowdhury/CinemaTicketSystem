@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -49,47 +50,13 @@ public final class Helper {
     }
 
     public static void showErrorMessage(String message, String title) {
-        JOptionPane.showMessageDialog(null, message,
-                title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
     }
+
+    public static BiConsumer<String, String> dis = (message, title) -> JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 
     public static Consumer<String> message = message -> JOptionPane.showMessageDialog(null, message);
-
-
     public static Function<Double, String> formatMoney = amount -> NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
-
-
-    public static double calcPrice(int numTickets, double price) {
-        return numTickets * price;
-    }
-
-
-    public static void goTo(JFrame currentPage, Pages page) {
-        try {
-            gotoForm(currentPage, page);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    public static void gotoForm(JFrame currentPage, Pages page) {
-        try {
-            switch (page) {
-                case LOGIN -> new Login();
-                case REGISTER -> new Register();
-                case LIST_MOVIES -> new MovieList();
-                case PURCHASE_TICKET -> new PurchaseTicket();
-                case SHOW_RECEIPT -> new ShowReceipt();
-                case SHOW_TIMES -> new ShowTimesForm();
-            }
-            currentPage.dispose();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-
-
-        }
-
-    }
 
 
 }

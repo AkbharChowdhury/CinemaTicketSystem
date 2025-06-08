@@ -2,6 +2,7 @@ package forms;
 
 
 import classes.Database;
+import classes.Form;
 import classes.LoginInfo;
 import classes.Navigation;
 import classes.models.Customer;
@@ -14,7 +15,6 @@ import interfaces.ListGUI;
 import interfaces.MenuNavigation;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +30,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     private final Database db = Database.getInstance();
     private final JButton btnPrintReceipt = new JButton("Print Receipt");
     private final Navigation nav = new Navigation(this);
-    int selectedListInvoiceItem;
     private final DefaultListModel<String> model = new DefaultListModel<>();
     private final JList<String> list = new JList<>(model);
     private List<Invoice> INVOICES;
@@ -39,7 +38,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
-            Helper.gotoForm(this, Pages.LIST_MOVIES);
+            Form.gotoForm(this, Pages.LIST_MOVIES);
             return;
         }
 
@@ -69,7 +68,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
         populateList();
         list.setPreferredSize(new Dimension(550, 600));
-        list.addListSelectionListener((ListSelectionEvent _) -> selectedListInvoiceItem = list.getSelectedIndex());
 
         setVisible(true);
     }
@@ -87,29 +85,24 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnPrintReceipt) {
-//            if (!processSelectedListItem()) System.err.println("unable to print the selected invoice");
-            processSelectedListItem();
-        }
-
+        if (e.getSource() == btnPrintReceipt) processSelectedListItem();
 
     }
 
-    private boolean processSelectedListItem() {
+    private void processSelectedListItem() {
 
         if (list.isSelectionEmpty()) {
             Helper.showErrorMessage("You must select an item from the invoice list!", "Receipt error");
-            return false;
+            return;
         }
 
         int salesID = list.getSelectedIndex();
         for (int i = 0; i < INVOICES.size(); i++) {
             if (i == salesID) {
                 printInvoice(i);
-                return true;
+                return;
             }
         }
-        return false;
 
     }
 

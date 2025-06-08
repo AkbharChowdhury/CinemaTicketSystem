@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public final class Validation {
@@ -17,49 +18,36 @@ public final class Validation {
     private static final String TICKET_REQUIRED = "Please select a ticket type";
     private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
+    private static String validateName(String name, String column) {
+        if (name.isEmpty()) {
+            return column + REQUIRED;
+        }
+        if (!isValidName.apply(name)) {
+            return name + NAME_ERROR;
+        }
+        return "";
 
-    public static boolean validateRegisterForm(Customer customer, Database db)  {
-//        Database db = Database.getInstance();
+    }
+
+    public static boolean validateRegisterForm(Customer customer, Database db) {
         List<String> errors = new ArrayList<>();
         String firstname = customer.getFirstname().trim();
         String lastname = customer.getLastname().trim();
         String password = customer.getPassword();
         boolean isTicketRequired = customer.getTicketID() == 0;
+        String firstnameError = validateName(firstname, CustomerTable.COLUMN_FIRSTNAME);
+        String lastnameError = validateName(lastname, CustomerTable.COLUMN_LASTNAME);
+        if (!firstnameError.isEmpty()) errors.add(firstnameError);
+        if (!lastnameError.isEmpty()) errors.add(lastnameError);
 
-        if (firstname.isEmpty()) {
-            errors.add(CustomerTable.COLUMN_FIRSTNAME + REQUIRED);
-        } else if (!isValidName(firstname)) {
-            errors.add(CustomerTable.COLUMN_FIRSTNAME + NAME_ERROR);
-        }
 
-        if (lastname.isEmpty()) {
-            errors.add(CustomerTable.COLUMN_LASTNAME + REQUIRED);
-        } else if (!isValidName(lastname)) {
-            errors.add(CustomerTable.COLUMN_LASTNAME + NAME_ERROR);
+        List<String> emailErrors = validateEmail(customer, db);
+        List<String> passwordErrors = validatePassword(password);
 
-        }
+        if (!passwordErrors.isEmpty()) errors.addAll(passwordErrors);
+        if (!emailErrors.isEmpty()) errors.addAll(emailErrors);
+        if (isTicketRequired) errors.add(TICKET_REQUIRED);
 
-        if (customer.getEmail().isEmpty()) {
-            errors.add(CustomerTable.COLUMN_EMAIL + REQUIRED);
-        } else if (!isValidEmail(customer.getEmail())) {
-            errors.add("Please enter a valid email");
-
-        } else if (db.emailExists(customer.getEmail())) {
-            errors.add("This email already exists");
-        }
-
-        if (password.isEmpty()) {
-            errors.add(CustomerTable.COLUMN_PASSWORD + REQUIRED);
-
-        } else if (password.length() < 8) {
-
-            errors.add(CustomerTable.COLUMN_PASSWORD + " must be 8 characters long");
-
-        }
-
-        if (isTicketRequired) {
-            errors.add(TICKET_REQUIRED);
-        }
 
         if (!errors.isEmpty()) {
             var output = new StringBuilder("This form contains the following errors: \n");
@@ -70,6 +58,32 @@ public final class Validation {
 
         return errors.isEmpty();
 
+    }
+
+    private static List<String> validatePassword(String password) {
+        List<String> errors = new ArrayList<>();
+        if (password.isEmpty()) {
+            errors.add(CustomerTable.COLUMN_PASSWORD + REQUIRED);
+
+        } else if (password.length() < 8) {
+
+            errors.add(STR."\{CustomerTable.COLUMN_PASSWORD} must be 8 characters long");
+
+        }
+        return errors;
+    }
+
+    private static List<String> validateEmail(Customer customer, Database db) {
+        List<String> errors = new ArrayList<>();
+        if (customer.getEmail().isEmpty()) {
+            errors.add(CustomerTable.COLUMN_EMAIL + REQUIRED);
+        } else if (!isValidEmail(customer.getEmail())) {
+            errors.add("Please enter a valid email");
+
+        } else if (db.emailExists(customer.getEmail())) {
+            errors.add("This email already exists");
+        }
+        return errors;
     }
 
     private static boolean isValidEmail(String email) {
@@ -91,12 +105,9 @@ public final class Validation {
         int remainingTickets = numTicketsLeft - showTimes.getNumTicketsSold();
         return remainingTickets >= 0;
 
-
     }
 
-    private static boolean isValidName(String str) {
-        return str.matches("^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$");
-    }
+    private static final Function<String, Boolean> isValidName = name -> name.matches("^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$");
 
 
 }

@@ -56,10 +56,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
 
         navigation(top);
 
-
-        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+        CustomTableModel.setFirstColumnAlignment(table, JLabel.CENTER);
 
         JPanel middle = new JPanel();
         middle.add(new Label("Movie: "));

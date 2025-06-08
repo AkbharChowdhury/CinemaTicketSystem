@@ -2,11 +2,20 @@ package classes.models;
 
 import classes.utils.Helper;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.util.Arrays;
 import java.util.List;
 
 public class CustomTableModel {
+    public static void setFirstColumnAlignment(JTable table, int labelAlignment) {
+        var cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(labelAlignment);
+        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+    }
+
+
     private final DefaultTableModel model;
 
     public CustomTableModel(DefaultTableModel model) {
@@ -25,7 +34,6 @@ public class CustomTableModel {
         }
 
     }
-
 
 
 }

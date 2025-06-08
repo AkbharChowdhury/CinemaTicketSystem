@@ -9,10 +9,7 @@ import tables.GenreTable;
 import tables.MovieGenresTable;
 import tables.MovieTable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static classes.utils.Helper.fieldSep;
@@ -27,9 +24,6 @@ public class MovieGenres extends Movie implements Queries {
 
     public MovieGenres() {
     }
-
-
-
 
 
     public static Supplier<LinkedHashMap<Integer, Integer>> TABLE_WIDTHS = () -> {

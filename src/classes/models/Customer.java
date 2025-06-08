@@ -78,7 +78,7 @@ public class Customer extends Ticket implements Queries {
 
             Form.setRedirectPage(page);
             if (LoginInfo.hasOpenFormOnStartUp()) {
-                Helper.gotoForm(frame, Pages.LOGIN);
+                Form.gotoForm(frame, Pages.LOGIN);
                 return false;
             }
             new Login();

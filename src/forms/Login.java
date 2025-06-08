@@ -7,6 +7,7 @@ import classes.utils.Validation;
 import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
+import org.apache.commons.lang3.text.WordUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ public final class Login extends JFrame implements ActionListener {
     private final Database db = Database.getInstance();
     private final JTextField txtEmail = new JTextField();
     private final JButton btnLogin = new JButton("Login");
-    private final JLabel hyperlink = new JLabel("Return to movie list");
+    private final JLabel hyperlink = new JLabel(WordUtils.capitalize("return to movie list"));
     private final JPasswordField txtPassword;
 
     public Login()  {
@@ -127,7 +128,7 @@ public final class Login extends JFrame implements ActionListener {
         hyperlink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Helper.gotoForm(currentPage, Pages.LIST_MOVIES);
+                Form.gotoForm(currentPage, Pages.LIST_MOVIES);
             }
         });
 
@@ -149,7 +150,7 @@ public final class Login extends JFrame implements ActionListener {
             return;
         }
 
-        Helper.goTo(this, Pages.REGISTER);
+        Form.goTo(this, Pages.REGISTER);
     }
 
 
@@ -176,7 +177,7 @@ public final class Login extends JFrame implements ActionListener {
             case SHOW_RECEIPT -> Pages.SHOW_RECEIPT;
         };
 
-        Helper.gotoForm(this, redirectPage);
+        Form.gotoForm(this, redirectPage);
     }
 
 }
