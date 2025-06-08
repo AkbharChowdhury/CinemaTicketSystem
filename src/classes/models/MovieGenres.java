@@ -10,6 +10,7 @@ import tables.MovieGenresTable;
 import tables.MovieTable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,13 +29,14 @@ public class MovieGenres extends Movie implements Queries {
     }
 
 
-    public static Supplier<LinkedHashMap<String, String>> TABLE_WIDTHS = () -> {
+
+
+
+    public static Supplier<LinkedHashMap<Integer, Integer>> TABLE_WIDTHS = () -> {
+        int[] widths = {145, 30, 20, 140};
         Counter c = new Counter(true);
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(String.valueOf(c.getCounter()), String.valueOf(145));
-        map.put(String.valueOf(c.getCounter()), String.valueOf(30));
-        map.put(String.valueOf(c.getCounter()), String.valueOf(20));
-        map.put(String.valueOf(c.getCounter()), String.valueOf(140));
+        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
+        Arrays.stream(widths).forEach(width -> map.put(c.getCounter(), width));
         return map;
     };
 

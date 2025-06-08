@@ -18,7 +18,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -123,17 +122,42 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
         return map;
     };
 
+//    private void displayWidths() {
+//
+//        LinkedHashMap<String, String> tableWidths = MovieGenres.TABLE_WIDTHS.get();
+//        int tableColumnLength = table.getColumnCount();
+//        for (int i = 0; i < tableColumnLength; i++) {
+//            System.out.println(i);
+//            int width = Integer.parseInt(tableWidths.get(String.valueOf(i)));
+//            System.out.println(width);
+//            table.getColumnModel().getColumn(i).setPreferredWidth(width);
+//
+//        }
+//
+//        var cellRenderer = new DefaultTableCellRenderer();
+//        cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+//        table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+//    }
+
+
     private void displayWidths() {
 
-        LinkedHashMap<String, String> tableWidths = MovieGenres.TABLE_WIDTHS.get();
-        int tableColumnLength = table.getColumnCount();
-        for (int i = 0; i < tableColumnLength; i++) {
-            System.out.println(i);
-            int width = Integer.parseInt(tableWidths.get(String.valueOf(i)));
-            System.out.println(width);
-            table.getColumnModel().getColumn(i).setPreferredWidth(width);
+        LinkedHashMap<Integer, Integer> tableWidths = MovieGenres.TABLE_WIDTHS.get();
+//        int tableColumnLength = table.getColumnCount();
+//        for (int i = 0; i < tableColumnLength; i++) {
+//            int width = tableWidths.get(i);
+//            table.getColumnModel().getColumn(i).setPreferredWidth(width);
+//
+//        }
+
+        for (var tableData: tableWidths.entrySet()){
+            int column = tableData.getKey();
+            int width = tableData.getValue();
+            table.getColumnModel().getColumn(column).setPreferredWidth(width);
 
         }
+
+
 
         var cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(JLabel.LEFT);
