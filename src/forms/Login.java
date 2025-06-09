@@ -68,9 +68,8 @@ public final class Login extends JFrame implements ActionListener {
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
         setRegisteredCustomerDetails();
-
-        enterKeyStroke(txtEmail);
-        enterKeyStroke(txtPassword);
+        MyEventListener.enterKeyStroke(txtEmail, loginAction);
+        MyEventListener.enterKeyStroke(txtPassword, loginAction);
         setVisible(true);
 
 
@@ -79,30 +78,6 @@ public final class Login extends JFrame implements ActionListener {
     public static void main() {
         new Login();
     }
-
-    private void enterKeyStroke(JTextField textField) {
-        textField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                MyEventListener.enterKey(e, loginAction);
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-
-
-        });
-
-    }
-
 
 
     private void setupHyperLink() {
