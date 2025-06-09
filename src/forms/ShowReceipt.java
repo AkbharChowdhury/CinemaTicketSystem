@@ -33,17 +33,18 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     DefaultListModel<String> model = new DefaultListModel<>();
     JList<String> list = new JList<>(model);
     List<Invoice> INVOICES;
+    final int CUSTOMER_ID = LoginInfo.getCustomerID();
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
-        if (!db.customerInvoiceExists(LoginInfo.getCustomerID())) {
+        if (!db.customerInvoiceExists(CUSTOMER_ID)) {
             Form.gotoForm(this, Pages.LIST_MOVIES);
             return;
         }
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        INVOICES = Collections.unmodifiableList(db.getInvoice(LoginInfo.getCustomerID()));
+        INVOICES = Collections.unmodifiableList(db.getInvoice(CUSTOMER_ID));
 
         setResizable(false);
         setLayout(new BorderLayout());
@@ -121,7 +122,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
     @Override
     public void populateList() {
-        final double PRICE = db.getCustomerTicketType(LoginInfo.getCustomerID()).getPrice();
+        final double PRICE = db.getCustomerTicketType(CUSTOMER_ID).getPrice();
         INVOICES.forEach(invoice -> model.addElement(Invoice.getDetails(invoice, PRICE)));
     }
 
