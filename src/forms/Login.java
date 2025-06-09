@@ -8,14 +8,10 @@ import classes.utils.Validation;
 import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
-import org.apache.commons.lang3.text.WordUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
-import java.util.Arrays;
 
 public final class Login extends JFrame implements ActionListener {
     Database db = Database.getInstance();

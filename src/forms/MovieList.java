@@ -28,7 +28,6 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
      JComboBox<String> cbGenres = new JComboBox<>();
      Navigation nav = new Navigation(this);
      DefaultTableModel model = (DefaultTableModel) table.getModel();
-
      CustomTableModel tableModel = new CustomTableModel(model);
 
 
