@@ -16,13 +16,14 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public final class Login extends JFrame implements ActionListener {
-     Database db = Database.getInstance();
-     JTextField txtEmail = new JTextField();
-     JButton btnLogin = new JButton("Login");
-     JLabel hyperlink = new JLabel(WordUtils.capitalize("return to movie list"));
-     JPasswordField txtPassword;
+    Database db = Database.getInstance();
 
-    public Login()  {
+    JTextField txtEmail = new JTextField();
+    JButton btnLogin = new JButton("Login");
+    JLabel hyperlink = new JLabel("Return to movie list");
+    JPasswordField txtPassword;
+
+    public Login() {
         setupHyperLink();
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -131,7 +132,6 @@ public final class Login extends JFrame implements ActionListener {
                 Form.gotoForm(currentPage, Pages.LIST_MOVIES);
             }
         });
-
 
 
     }
