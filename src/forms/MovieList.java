@@ -21,15 +21,15 @@ import java.util.Objects;
 public final class MovieList extends JFrame implements ActionListener, TableGUI, MenuNavigation {
 
 
-    private final Database db = Database.getInstance();
-    private final SearchMovie movies = new SearchMovie(db.getMovies());
-    private final JTable table = new JTable();
-    private final JTextField txtMovieTitle = new JTextField(20);
-    private final JComboBox<String> cbGenres = new JComboBox<>();
-    private final Navigation nav = new Navigation(this);
-    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
+     Database db = Database.getInstance();
+     SearchMovie movies = new SearchMovie(db.getMovies());
+     JTable table = new JTable();
+     JTextField txtMovieTitle = new JTextField(20);
+     JComboBox<String> cbGenres = new JComboBox<>();
+     Navigation nav = new Navigation(this);
+     DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-    private final CustomTableModel tableModel = new CustomTableModel(model);
+     CustomTableModel tableModel = new CustomTableModel(model);
 
 
     public MovieList() {

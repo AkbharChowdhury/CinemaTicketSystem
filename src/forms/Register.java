@@ -28,15 +28,14 @@ public final class Register extends JFrame implements ActionListener {
     JComboBox<String> cbTicket = new JComboBox<>();
     JButton btnRegister = new JButton(Buttons.register());
     JButton btnLogin = new JButton("Back to Login");
-
-    private final List<Ticket> ticketList;
-
+    List<Ticket> ticketList;
     Database db;
 
-    final LinkedHashMap<String, JTextField> textFields = new LinkedHashMap<>() {{
+    LinkedHashMap<String, JTextField> textFields = new LinkedHashMap<>() {{
         put("Firstname", txtFirstname);
         put("LastName", txtLastName);
         put("Email", txtEmail);
+        put("Password", txtPassword);
     }};
 
 
@@ -44,7 +43,6 @@ public final class Register extends JFrame implements ActionListener {
 
         db = Database.getInstance();
         ticketList = Collections.unmodifiableList(db.getTickets());
-
         setLayout(new BorderLayout());
         setSize(310, 500);
         setTitle(FormDetails.register.get());
@@ -59,8 +57,6 @@ public final class Register extends JFrame implements ActionListener {
             middle.add(textField);
         });
 
-        middle.add(new JLabel("Password"));
-        middle.add(txtPassword);
         middle.add(new JLabel("Ticket Type:"));
         cbTicket.addItem("Select Ticket Type");
         ticketList.forEach(ticket -> cbTicket.addItem(ticket.getType()));
@@ -97,7 +93,6 @@ public final class Register extends JFrame implements ActionListener {
                 System.err.println(ex.getMessage());
 
             }
-            return;
         }
 
         Form.goTo(this, Pages.LOGIN);
@@ -117,8 +112,9 @@ public final class Register extends JFrame implements ActionListener {
         if (db.addCustomer(customer)) {
             LoginInfo.setEmail(email);
             Helper.message.accept("Your account has been created, you can now login");
+            Form.gotoForm(this, Pages.LOGIN);
+
         }
-        Form.gotoForm(this, Pages.LOGIN);
 
 
     }

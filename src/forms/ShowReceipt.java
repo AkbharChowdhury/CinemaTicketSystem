@@ -27,12 +27,12 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
-    private final Database db = Database.getInstance();
-    private final JButton btnPrintReceipt = new JButton("Print Receipt");
-    private final Navigation nav = new Navigation(this);
-    private final DefaultListModel<String> model = new DefaultListModel<>();
-    private final JList<String> list = new JList<>(model);
-    private List<Invoice> INVOICES;
+    Database db = Database.getInstance();
+    JButton btnPrintReceipt = new JButton("Print Receipt");
+    Navigation nav = new Navigation(this);
+    DefaultListModel<String> model = new DefaultListModel<>();
+    JList<String> list = new JList<>(model);
+    List<Invoice> INVOICES;
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

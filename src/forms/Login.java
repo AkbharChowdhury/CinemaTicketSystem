@@ -16,11 +16,11 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public final class Login extends JFrame implements ActionListener {
-    private final Database db = Database.getInstance();
-    private final JTextField txtEmail = new JTextField();
-    private final JButton btnLogin = new JButton("Login");
-    private final JLabel hyperlink = new JLabel(WordUtils.capitalize("return to movie list"));
-    private final JPasswordField txtPassword;
+     Database db = Database.getInstance();
+     JTextField txtEmail = new JTextField();
+     JButton btnLogin = new JButton("Login");
+     JLabel hyperlink = new JLabel(WordUtils.capitalize("return to movie list"));
+     JPasswordField txtPassword;
 
     public Login()  {
         setupHyperLink();

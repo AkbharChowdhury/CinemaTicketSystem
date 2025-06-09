@@ -2,16 +2,10 @@ package classes.utils;
 
 import classes.Database;
 import classes.LoginInfo;
-import enums.Pages;
-import forms.*;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
@@ -54,7 +48,6 @@ public final class Helper {
     }
 
     public static BiConsumer<String, String> dis = (message, title) -> JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-
     public static Consumer<String> message = message -> JOptionPane.showMessageDialog(null, message);
     public static Function<Double, String> formatMoney = amount -> NumberFormat.getCurrencyInstance(Locale.UK).format(amount);
 

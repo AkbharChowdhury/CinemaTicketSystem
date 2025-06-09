@@ -29,22 +29,22 @@ import java.util.List;
 import static classes.utils.Helper.fieldSep;
 
 public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
-    private final Navigation nav = new Navigation(this);
-    private final Database db = Database.getInstance();
-    private final ShowTimes movieShowTimes = new ShowTimes();
-    private final JTable table = new JTable();
+     Navigation nav = new Navigation(this);
+     Database db = Database.getInstance();
+     ShowTimes movieShowTimes = new ShowTimes();
+     JTable table = new JTable();
 
-    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
-    private final JComboBox<String> cbMovies = new JComboBox<>();
+     JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
+     JComboBox<String> cbMovies = new JComboBox<>();
 
-    private final JLabel lblMovieDetails = new JLabel();
-    private final JLabel lblTotal = new JLabel();
-    private Ticket ticketDetails;
-    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
+     JLabel lblMovieDetails = new JLabel();
+     JLabel lblTotal = new JLabel();
+     Ticket ticketDetails;
+     DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-    private final CustomTableModel tableModel = new CustomTableModel(model);
+     CustomTableModel tableModel = new CustomTableModel(model);
 
-    private List<ShowTimes> list;
+     List<ShowTimes> list;
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

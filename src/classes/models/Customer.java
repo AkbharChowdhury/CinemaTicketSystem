@@ -2,13 +2,10 @@ package classes.models;
 
 import classes.Form;
 import classes.LoginInfo;
-import classes.utils.Helper;
 import enums.Pages;
 import enums.RedirectPage;
 import forms.Login;
 import interfaces.Queries;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import tables.CustomerTable;
 import tables.TicketsTable;
 
@@ -18,8 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-//@Data
-//@NoArgsConstructor
 public class Customer extends Ticket implements Queries {
     private int customerID;
     private String firstname;
@@ -89,10 +84,6 @@ public class Customer extends Ticket implements Queries {
 
     }
 
-
-    public int getCustomerID() {
-        return customerID;
-    }
 
     public String getFirstname() {
         return firstname;
