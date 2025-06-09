@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.text.ParseException;
 
 public final class Form {
 
@@ -35,6 +39,12 @@ public final class Form {
     }
 
     public static void gotoForm(JFrame currentPage, Pages page) {
+        redirectPage(page);
+        currentPage.dispose();
+
+    }
+
+    private static void redirectPage(Pages page) {
         try {
             switch (page) {
                 case LOGIN -> new Login();
@@ -44,12 +54,8 @@ public final class Form {
                 case SHOW_RECEIPT -> new ShowReceipt();
                 case SHOW_TIMES -> new ShowTimesForm();
             }
-            currentPage.dispose();
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-
-
+            System.err.println(STR."There was a problem redirecting to \{page}\n\{ex.getMessage()}");
         }
-
     }
 }

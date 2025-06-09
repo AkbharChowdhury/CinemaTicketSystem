@@ -13,24 +13,8 @@ public enum FormDetails {
     private static Function<String, String> windowTitle = title-> STR."\{APP_NAME} \{title}";
 
 
-//    public static String movieList() {
-//        return STR."\{APP_NAME}List Movies";
-//
-//    }
-
 
     public static final Supplier<String> movieList = () ->  windowTitle.apply(WordUtils.capitalizeFully("list movies"));
-
-
-//    public static String register() {
-//        return "Customer registration";
-//
-//    }
-//
-//    public static String login() {
-//        return STR."\{APP_NAME}Login";
-//
-//    }
 
     public static final Supplier<String> register = () -> WordUtils.capitalizeFully("customer registration");
 
@@ -42,7 +26,6 @@ public enum FormDetails {
 
 
 
-//    public static final Supplier<String> showTimes = () ->  STR."\{APP_NAME}Show Times";
 
 
 

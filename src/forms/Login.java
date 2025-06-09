@@ -3,6 +3,7 @@ package forms;
 import classes.*;
 import classes.utils.Encryption;
 import classes.utils.Helper;
+import classes.utils.MyEventListener;
 import classes.utils.Validation;
 import enums.Buttons;
 import enums.FormDetails;
@@ -20,8 +21,12 @@ public final class Login extends JFrame implements ActionListener {
 
     JTextField txtEmail = new JTextField();
     JButton btnLogin = new JButton("Login");
+    JButton btnRegister = new JButton(Buttons.register());
+
     JLabel hyperlink = new JLabel("Return to movie list");
     JPasswordField txtPassword;
+    Runnable loginAction = this::handleLogin;
+
 
     public Login() {
         setupHyperLink();
@@ -29,10 +34,10 @@ public final class Login extends JFrame implements ActionListener {
         panel.setLayout(null);
         setTitle(FormDetails.login.get());
         setLocation(new Point(500, 300));
-        add(panel);
         setSize(400, 200);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        add(panel);
+
         JLabel lblEmail = new JLabel("Email");
         lblEmail.setBounds(100, 8, 70, 20);
         panel.add(lblEmail);
@@ -53,7 +58,6 @@ public final class Login extends JFrame implements ActionListener {
 
 
         btnLogin.setBounds(100, 110, 90, 25);
-        JButton btnRegister = new JButton(Buttons.register());
         btnRegister.setBounds(200, 110, 90, 25);
         hyperlink.setBounds(100, 130, 180, 30);
 
@@ -61,28 +65,23 @@ public final class Login extends JFrame implements ActionListener {
         panel.add(btnRegister);
         panel.add(hyperlink);
 
-
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
         setRegisteredCustomerDetails();
 
-        JTextFieldEnterKey();
+        enterKeyStroke(txtEmail);
+        enterKeyStroke(txtPassword);
         setVisible(true);
 
 
     }
 
-    public static void main() throws SQLException, FileNotFoundException {
+    public static void main() {
         new Login();
     }
 
-    private void enterKey(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) handleLogin();
-
-    }
-
-    private void JTextFieldEnterKey() {
-        txtEmail.addKeyListener(new KeyListener() {
+    private void enterKeyStroke(JTextField textField) {
+        textField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
 
@@ -90,33 +89,21 @@ public final class Login extends JFrame implements ActionListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                enterKey(e);
+                MyEventListener.enterKey(e, loginAction);
+
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
 
             }
+
+
         });
 
-
-        txtPassword.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                enterKey(e);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
     }
+
+
 
     private void setupHyperLink() {
         hyperlink.setForeground(Color.BLUE.darker());
