@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public final class Login extends JFrame implements ActionListener {
     Database db = Database.getInstance();
@@ -119,7 +120,7 @@ public final class Login extends JFrame implements ActionListener {
     private void handleLogin() {
 
         String email = txtEmail.getText().trim();
-        String password = txtPassword.getText();
+        String password = String.valueOf(txtPassword.getPassword());
 
         if (!Validation.validateLoginForm(email, password)) return;
         if (!db.isAuthorised(email, Encryption.encode(password))) {
