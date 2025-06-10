@@ -18,7 +18,7 @@ public final class Login extends JFrame implements ActionListener {
 
     JTextField txtEmail = new JTextField();
     JButton btnLogin = new JButton("Login");
-    JButton btnRegister = new JButton(Buttons.register());
+    JButton btnRegister = new JButton(Buttons.REGISTER);
 
     JLabel hyperlink = new JLabel("Return to movie list");
     JPasswordField txtPassword;

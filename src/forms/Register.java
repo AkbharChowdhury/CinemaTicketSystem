@@ -26,14 +26,14 @@ public final class Register extends JFrame implements ActionListener {
     JTextField txtEmail = new JTextField();
     JPasswordField txtPassword = new JPasswordField();
     JComboBox<String> cbTicket = new JComboBox<>();
-    JButton btnRegister = new JButton(Buttons.register());
+    JButton btnRegister = new JButton(Buttons.REGISTER);
     JButton btnLogin = new JButton("Back to Login");
     List<Ticket> ticketList;
     Database db;
 
     LinkedHashMap<String, JTextField> textFields = new LinkedHashMap<>() {{
         put("Firstname", txtFirstname);
-        put("LastName", txtLastName);
+        put("Lastname", txtLastName);
         put("Email", txtEmail);
         put("Password", txtPassword);
     }};
