@@ -586,7 +586,7 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(STR."SELECT \{CustomerTable.COLUMN_EMAIL}, \{CustomerTable.COLUMN_PASSWORD} FROM \{CustomerTable.TABLE_NAME} WHERE \{CustomerTable.COLUMN_EMAIL} = ? AND \{CustomerTable.COLUMN_PASSWORD} = ?")) {
 
-            var c = new Counter();
+            Counter c = new Counter();
             stmt.setString(c.getCounter(), email);
             stmt.setString(c.getCounter(), password);
             ResultSet rs2 = stmt.executeQuery();
@@ -684,13 +684,13 @@ public class Database {
         return null;
     }
 
-    public int getNumTickets(ShowTimes movieShowTimes) {
+    public int getNumTickets(int showTimeID) {
         String sql = STR."SELECT \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} FROM \{ShowTimesTable.TABLE_NAME} WHERE \{ShowTimesTable.COLUMN_ID} =?";
 
         try (Connection con = getConnection()) {
             assert con != null;
             try (var stmt = con.prepareStatement(sql)) {
-                stmt.setInt(1, movieShowTimes.getShowTimeID());
+                stmt.setInt(1, showTimeID);
                 ResultSet r = stmt.executeQuery();
 
                 if (isResultSetEmpty(r)) return 0;
@@ -709,7 +709,7 @@ public class Database {
 
         try (Connection conn = getConnection();
              var stmt = conn.prepareStatement(STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?")) {
-            int numTicketsLeft = getNumTickets(movieShowTimes);
+            int numTicketsLeft = getNumTickets(movieShowTimes.getShowTimeID());
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
             var c = new Counter();
             stmt.setInt(c.getCounter(), remainingTickets);

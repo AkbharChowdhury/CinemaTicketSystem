@@ -157,10 +157,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     private boolean updateNumTicksSold(int numTickets) {
-        var updater = new ShowTimes();
-        updater.setShowTimeID(getSelectedShowTimeID());
-        updater.setNumTicketsSold(numTickets);
-        return db.updateNumTickets(updater);
+        ShowTimes updateTickets = new ShowTimes();
+        updateTickets.setShowTimeID(getSelectedShowTimeID());
+        updateTickets.setNumTicketsSold(numTickets);
+        return db.updateNumTickets(updateTickets);
     }
 
 
@@ -197,7 +197,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         validateShowTimes.setShowTimeID(getSelectedShowTimeID());
         validateShowTimes.setNumTicketsSold(numTickets);
         if (!Validation.isValidNumTicketsSold(db, validateShowTimes)) {
-            int numTicketsLeft = db.getNumTickets(validateShowTimes);
+            int numTicketsLeft = db.getNumTickets(validateShowTimes.getShowTimeID());
             String errorMessage = numTicketsLeft == 1 ? "There is only one ticket left to purchase" : STR."You cannot exceed above \{numTicketsLeft} tickets";
             Helper.showErrorMessage(errorMessage, "Ticket Quantity Error");
             return false;
@@ -214,8 +214,6 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void showColumn() {
-
-
         List<String> list = new ArrayList<>(new ShowTimes().tableColumns());
         list.addFirst("Show ID");
         list.forEach(model::addColumn);
@@ -250,7 +248,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == spNumTickets) updateTotalLabel();
+        updateTotalLabel();
     }
 
 

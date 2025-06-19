@@ -5,7 +5,6 @@ import classes.Navigation;
 import classes.models.CustomTableModel;
 import classes.models.MovieGenres;
 import classes.models.SearchMovie;
-import classes.utils.Helper;
 import enums.FormDetails;
 import interfaces.MenuNavigation;
 import interfaces.TableGUI;
