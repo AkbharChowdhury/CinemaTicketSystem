@@ -21,14 +21,14 @@ import java.util.Objects;
 public final class MovieList extends JFrame implements ActionListener, TableGUI, MenuNavigation {
 
 
-     Database db = Database.getInstance();
-     SearchMovie movies = new SearchMovie(db.getMovies());
-     JTable table = new JTable();
-     JTextField txtMovieTitle = new JTextField(20);
-     JComboBox<String> cbGenres = new JComboBox<>();
-     Navigation nav = new Navigation(this);
-     DefaultTableModel model = (DefaultTableModel) table.getModel();
-     CustomTableModel tableModel = new CustomTableModel(model);
+    Database db = Database.getInstance();
+    SearchMovie movies = new SearchMovie(db.getMovies());
+    JTable table = new JTable();
+    JTextField txtMovieTitle = new JTextField(20);
+    JComboBox<String> cbGenres = new JComboBox<>();
+    Navigation nav = new Navigation(this);
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    CustomTableModel tableModel = new CustomTableModel(model);
 
 
     public MovieList() {
@@ -132,8 +132,7 @@ public final class MovieList extends JFrame implements ActionListener, TableGUI,
     }
 
     @Override
-    public void
-    populateTable() {
+    public void populateTable() {
         clearTable(table);
         tableModel.populateTable(movies.filterResults().stream().map(MovieGenres::toMovieList).toList());
     }

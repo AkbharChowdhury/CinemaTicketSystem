@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHandler {
+    private FileHandler(){}
+    public static final String CSV_PATH = "src/csv/";
+
     public static List<Movie> getMovieData(String fileName) throws FileNotFoundException {
 
         List<Movie> movieList = new ArrayList<>();
@@ -28,7 +31,7 @@ public class FileHandler {
 
         List<Customer> customerList = new ArrayList<>();
 
-        for (String line : getCSVFileDetails(Helper.getCSVPath.get() + Files.Customers.DESCRIPTION)) {
+        for (String line : getCSVFileDetails(CSV_PATH + Files.Customers.DESCRIPTION)) {
             String[] values = line.split(",");
             String firstname = values[0];
             String lastname = values[1];
@@ -43,7 +46,7 @@ public class FileHandler {
     }
 
     public static List<ShowTimes> getShowTimeData() throws FileNotFoundException {
-        String fileName = Helper.getCSVPath.get() + Files.ShowTimes.DESCRIPTION;
+        String fileName = CSV_PATH + Files.ShowTimes.DESCRIPTION;
         List<ShowTimes> showTimeList = new ArrayList<>();
 
         for (String line : getCSVFileDetails(fileName)) {
@@ -100,7 +103,7 @@ public class FileHandler {
 
 
     // reads the first line in the csv file
-    public static List<String> readSingleColumn(String filename) throws FileNotFoundException {
+    private static List<String> readSingleColumn(String filename) throws FileNotFoundException {
         return new ArrayList<>(getCSVFileDetails(filename));
     }
 
@@ -122,5 +125,10 @@ public class FileHandler {
         }
 
 
+    }
+
+
+    public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
+        return readSingleColumn(FileHandler.CSV_PATH + filename);
     }
 }

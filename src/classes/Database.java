@@ -74,11 +74,11 @@ public class Database {
     }
 
     private void insertRatings() throws FileNotFoundException {
-        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Ratings.DESCRIPTION), new Rating().insert());
+        insertSingleColumnTable(FileHandler.readSingleLineCSV(Files.Ratings.DESCRIPTION), new Rating().insert());
     }
 
     private void insertGenres() throws FileNotFoundException {
-        insertSingleColumnTable(Helper.readSingleLineCSV(Files.Genres.DESCRIPTION), new Genre().insert());
+        insertSingleColumnTable(FileHandler.readSingleLineCSV(Files.Genres.DESCRIPTION), new Genre().insert());
 
     }
 
@@ -129,7 +129,7 @@ public class Database {
 
     private void insertMovies() throws FileNotFoundException {
 
-        String movieFile = Helper.getCSVPath.get() + Files.Movies.DESCRIPTION;
+        String movieFile = FileHandler.CSV_PATH + Files.Movies.DESCRIPTION;
         List<Movie> movieList = FileHandler.getMovieData(movieFile);
 
 
@@ -224,7 +224,7 @@ public class Database {
 
     private void insertMovieGenres() throws FileNotFoundException {
 
-        String movieGenreFile = Helper.getCSVPath.get() + Files.MovieGenres.DESCRIPTION;
+        String movieGenreFile = FileHandler.CSV_PATH + Files.MovieGenres.DESCRIPTION;
         List<MovieGenres> movieGenres = FileHandler.getMovieGenreData(movieGenreFile);
 
 
@@ -266,7 +266,7 @@ public class Database {
     }
 
     private void insertTickets() throws FileNotFoundException {
-        List<Ticket> ticketList = FileHandler.getTicketData(Helper.getCSVPath.get() + Files.Tickets.DESCRIPTION);
+        List<Ticket> ticketList = FileHandler.getTicketData(FileHandler.CSV_PATH + Files.Tickets.DESCRIPTION);
 
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Ticket().insert())) {

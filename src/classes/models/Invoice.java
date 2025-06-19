@@ -18,12 +18,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.format.FormatStyle;
-import java.util.List;
+
 @Data
 public class Invoice {
     public static final String INVOICE_FILE = "invoice.txt";
     public static final String INVOICE_FILE_NAME = "invoice.pdf";
-    private int n;
     private int totalTicket;
     private String salesDate;
     private String showDate;
@@ -126,6 +125,7 @@ public class Invoice {
 
         try(var cs = new PDPageContentStream(invoiceDocument, invoiceDocument.getPage(0))) {
             double total = ticketDetails.getPrice() * myInvoice.getTotalTicket();
+            int n = 0;
             cs.beginText();
             cs.setFont(font, 20);
 

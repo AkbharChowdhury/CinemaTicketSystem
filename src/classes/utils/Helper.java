@@ -4,7 +4,6 @@ import classes.Database;
 import classes.LoginInfo;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.text.NumberFormat;
 import java.util.List;
@@ -24,7 +23,6 @@ public final class Helper {
     }
 
 
-    public static Supplier<String> getCSVPath = () -> "src/csv/";
 
 
     public static void disableSpinnerInput(JSpinner spinner) {
@@ -33,9 +31,7 @@ public final class Helper {
         editor.setEditable(false);
     }
 
-    public static List<String> readSingleLineCSV(String filename) throws FileNotFoundException {
-        return FileHandler.readSingleColumn(getCSVPath.get() + filename);
-    }
+
 
     public static Function<Database, Boolean> disableReceipt = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
 

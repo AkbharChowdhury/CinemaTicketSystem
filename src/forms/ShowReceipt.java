@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
+
     Database db = Database.getInstance();
     JButton btnPrintReceipt = new JButton("Print Receipt");
     Navigation nav = new Navigation(this);
@@ -37,6 +39,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        LoginInfo.setCustomerID(1);
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(CUSTOMER_ID)) {
             Form.gotoForm(this, Pages.LIST_MOVIES);
@@ -110,7 +113,9 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
     public void printInvoice(int i) {
         try {
             new Invoice().printInvoice(INVOICES.get(i));
-            Helper.message.accept(STR."Your invoice has been saved as \{Invoice.INVOICE_FILE_NAME}");
+            final String INVOICE = Invoice.INVOICE_FILE_NAME;
+            Helper.message.accept(STR."Your invoice has been saved as \{INVOICE}");
+            Desktop.getDesktop().open(new File(INVOICE));
 
         } catch (ParseException ex) {
             Helper.showErrorMessage("The time cannot be formatted", "Time parse error");
