@@ -685,15 +685,19 @@ public class Database {
     }
 
     public int getNumTickets(ShowTimes movieShowTimes) {
-        try (Connection con = getConnection();
-             var stmt = con.prepareStatement(ShowTimes.getSelectedShowDetails())) {
-            stmt.setInt(1, movieShowTimes.getShowTimeID());
-            ResultSet r = stmt.executeQuery();
+        String sql = STR."SELECT \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} FROM \{ShowTimesTable.TABLE_NAME} WHERE \{ShowTimesTable.COLUMN_ID} =?";
 
-            if (isResultSetEmpty(r)) return 0;
+        try (Connection con = getConnection()) {
+            assert con != null;
+            try (var stmt = con.prepareStatement(sql)) {
+                stmt.setInt(1, movieShowTimes.getShowTimeID());
+                ResultSet r = stmt.executeQuery();
 
-            return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+                if (isResultSetEmpty(r)) return 0;
 
+                return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
+
+            }
         } catch (Exception e) {
             getErrorMessage(e);
         }

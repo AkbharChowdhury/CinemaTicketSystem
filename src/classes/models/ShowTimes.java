@@ -8,9 +8,11 @@ import tables.MovieTable;
 import tables.ShowTimesTable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
+
 @Data
 
 public class ShowTimes implements Queries {
@@ -50,41 +52,35 @@ public class ShowTimes implements Queries {
 
 
     public List<String> tableColumns() {
-        List<String> columns = new ArrayList<>();
-        columns.add("Date");
-        columns.add("Time");
-        columns.add("No of tickets left");
-        return columns;
+        return Arrays.asList("Date", "Time", "No of tickets left");
     }
 
 
     @Override
     public String createTable() {
-        return STR. """
-                        CREATE TABLE IF NOT EXISTS \{ ShowTimesTable.TABLE_NAME } (
-                            \{ ShowTimesTable.COLUMN_ID } INTEGER PRIMARY KEY AUTOINCREMENT,
-                            \{ ShowTimesTable.COLUMN_MOVIE_ID } INTEGER NOT NULL,
-                            \{ ShowTimesTable.COLUMN_SHOW_DATE } TEXT NOT NULL,
-                            \{ ShowTimesTable.COLUMN_SHOW_TIME } TEXT NOT NULL,
-                            \{ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT } INTEGER NOT NULL,
-                            FOREIGN KEY(\{ ShowTimesTable.COLUMN_MOVIE_ID }) REFERENCES \{ MovieTable.TABLE_NAME }(\{ MovieTable.COLUMN_ID })
+        return STR."""
+                        CREATE TABLE IF NOT EXISTS \{ShowTimesTable.TABLE_NAME} (
+                            \{ShowTimesTable.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                            \{ShowTimesTable.COLUMN_MOVIE_ID} INTEGER NOT NULL,
+                            \{ShowTimesTable.COLUMN_SHOW_DATE} TEXT NOT NULL,
+                            \{ShowTimesTable.COLUMN_SHOW_TIME} TEXT NOT NULL,
+                            \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} INTEGER NOT NULL,
+                            FOREIGN KEY(\{ShowTimesTable.COLUMN_MOVIE_ID}) REFERENCES \{MovieTable.TABLE_NAME}(\{MovieTable.COLUMN_ID})
                         );
-                        """ ;
+                        """;
 
 
     }
 
     @Override
     public String insert() {
-        return STR. """
-                        INSERT INTO \{ ShowTimesTable.TABLE_NAME }
+        return STR."""
+                        INSERT INTO \{ShowTimesTable.TABLE_NAME}
                         VALUES (?, ?, ?, ?, ?);
-                        """ ;
+                        """;
 
 
     }
-
-
 
 
     public static String getSelectedMovieShowTimes(ShowTimes movieShowTimes) {
@@ -100,12 +96,12 @@ public class ShowTimes implements Queries {
                                 WHERE
                                     m.movie_id = ? AND num_tickets_left > 0
                                    			AND	show_date BETWEEN Date('NOW') AND Date('now', 'start of month', '+1 month', '-1 day')
-                     """;
+                """;
 
         if (!StringUtils.isEmpty(movieShowTimes.getDate())) {
             sql += " AND show_date LIKE ?";
         }
-        sql+= " ORDER BY show_date, show_time";
+        sql += " ORDER BY show_date, show_time";
 //        sql += """
 //                GROUP BY show_time_id
 //                HAVING show_time >= TIME('NOW')
@@ -116,14 +112,9 @@ public class ShowTimes implements Queries {
 
     }
 
-    public static String getSelectedShowDetails() {
-        return STR. "SELECT \{ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT } FROM \{ ShowTimesTable.TABLE_NAME } WHERE \{ ShowTimesTable.COLUMN_ID } =?" ;
-
-    }
-
 
     public static String updateNumTickets() {
-        return STR. "UPDATE \{ ShowTimesTable.TABLE_NAME } SET \{ ShowTimesTable.COLUMN_NUM_TICKETS_LEFT } = ? WHERE \{ ShowTimesTable.COLUMN_ID } = ?" ;
+        return STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?";
     }
 
 
@@ -144,11 +135,11 @@ public class ShowTimes implements Queries {
 
     public static String toShowTimeList(ShowTimes showTime) {
 
-        return STR. """
-                \{ fieldSep(CalendarUtils.formatDate.apply(showTime.getDate())) }
-                \{ fieldSep(CalendarUtils.formatTime.apply(showTime.getTime())) }
-                 \{ showTime.getNumTicketsLeft() }
-                """ ;
+        return STR."""
+                \{fieldSep(CalendarUtils.formatDate.apply(showTime.getDate()))}
+                \{fieldSep(CalendarUtils.formatTime.apply(showTime.getTime()))}
+                 \{showTime.getNumTicketsLeft()}
+                """;
     }
 
     public int getShowTimeID() {

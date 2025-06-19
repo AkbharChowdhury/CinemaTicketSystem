@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static classes.utils.Helper.fieldSep;
@@ -43,12 +44,13 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     private Ticket ticketDetails;
     private final DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-    CustomTableModel tableModel = new CustomTableModel(model);
+    private final CustomTableModel tableModel = new CustomTableModel(model);
 
-    List<ShowTimes> list;
+    private List<ShowTimes> list;
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        LoginInfo.setCustomerID(1);
         if (!Customer.isLoggedIn(this, RedirectPage.PURCHASE_TICKET)) return;
         nav.receiptStatus(db);
 
@@ -118,7 +120,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
                     ShowTimes showTime = list.get(table.getSelectedRow());
                     lblMovieDetails.setText(STR."\{db.getMovieName(showTime.getMovieID())}- \{showTime.getDate()}: \{showTime.getTime()}");
                 } catch (Exception ex) {
-                    System.err.println(ex.getMessage());
+                    System.err.println(STR."Error \{ex.getMessage()}");
                 }
             }
         });
@@ -126,12 +128,10 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     }
 
 
-    public static void main() {
-        try {
-            new PurchaseTicket();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public static void main() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        new PurchaseTicket();
+
     }
 
     private void updateTotalLabel() {
@@ -165,8 +165,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     private void handlePurchase() {
-
-        if (table.getSelectedRow() == -1) {
+        boolean isSelectionEmpty = table.getSelectedRow() == -1;
+        if (isSelectionEmpty) {
             Helper.showErrorMessage("Please select a show time from the table", "Show time required");
             return;
         }
@@ -178,7 +178,7 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
         if (!isValidNumTickets(numTickets)) return;
 
-        var sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
+        Sales sales = new Sales(selectedShowTimeID, customerID, salesDate, numTickets);
         if (db.salesExists(sales)) {
             Helper.showErrorMessage("You have already booked this show time", "booking error");
             return;
@@ -215,7 +215,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
     @Override
     public void showColumn() {
 
-        var list = new ShowTimes().tableColumns();
+
+        List<String> list = new ArrayList<>(new ShowTimes().tableColumns());
         list.addFirst("Show ID");
         list.forEach(model::addColumn);
 

@@ -19,6 +19,7 @@ public final class Navigation implements ActionListener {
     private final JButton btnPurchase = new JButton("Purchase Ticket");
     public final JButton btnShowReceipt = new JButton("Show Receipt");
     private final JFrame frame;
+    private final Function<Database, Boolean> isReceiptButtonDisabled = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
 
 
     private final Supplier<JButton[]> navButtons = () -> new JButton[]{
@@ -30,7 +31,6 @@ public final class Navigation implements ActionListener {
 
     public void receiptStatus(Database database) {
 
-        Function<Database, Boolean> isReceiptButtonDisabled = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
         if (isReceiptButtonDisabled.apply(database)) {
             btnShowReceipt.setEnabled(false);
 

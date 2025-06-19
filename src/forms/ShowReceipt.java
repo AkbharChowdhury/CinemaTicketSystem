@@ -30,13 +30,13 @@ import java.util.List;
 
 public final class ShowReceipt extends JFrame implements ActionListener, ListGUI, MenuNavigation {
 
-    Database db = Database.getInstance();
-    JButton btnPrintReceipt = new JButton("Print Receipt");
-    Navigation nav = new Navigation(this);
-    DefaultListModel<String> model = new DefaultListModel<>();
-    JList<String> list = new JList<>(model);
-    List<Invoice> INVOICES;
-    final int CUSTOMER_ID = LoginInfo.getCustomerID();
+    private final Database db = Database.getInstance();
+    private final JButton btnPrintReceipt = new JButton("Print Receipt");
+    private final Navigation nav = new Navigation(this);
+    private final DefaultListModel<String> model = new DefaultListModel<>();
+    private final JList<String> list = new JList<>(model);
+    private List<Invoice> INVOICES;
+    private final int CUSTOMER_ID = LoginInfo.getCustomerID();
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -48,6 +48,8 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         }
 
         list.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        list.setPreferredSize(new Dimension(550, 600));
+
         INVOICES = Collections.unmodifiableList(db.getInvoice(CUSTOMER_ID));
 
         setResizable(false);
@@ -72,7 +74,6 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
         btnPrintReceipt.addActionListener(this);
 
         populateList();
-        list.setPreferredSize(new Dimension(550, 600));
 
         setVisible(true);
     }

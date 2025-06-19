@@ -21,20 +21,19 @@ import java.util.List;
 
 
 public final class ShowTimesForm extends JFrame implements ActionListener, TableGUI, MenuNavigation {
-    Navigation nav = new Navigation(this);
-    Database db = Database.getInstance();
-    ShowTimes movieShowTimes = new ShowTimes();
-    JTable table = new JTable();
-    JComboBox<String> cbMovies = new JComboBox<>();
-    JComboBox<String> cbDate = new JComboBox<>();
-    DefaultTableModel model = (DefaultTableModel) table.getModel();
-    List<Movie> movieList;
-    CustomTableModel tableModel = new CustomTableModel(model);
+    private final Navigation nav = new Navigation(this);
+    private final Database db = Database.getInstance();
+    private final ShowTimes movieShowTimes = new ShowTimes();
+    private final JTable table = new JTable();
+    private final JComboBox<String> cbMovies = new JComboBox<>();
+    private final JComboBox<String> cbDate = new JComboBox<>();
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
+    private final List<Movie> movieList;
+    private final CustomTableModel tableModel = new CustomTableModel(model);
 
 
     public ShowTimesForm() {
         table.setEnabled(false);
-
         nav.receiptStatus(db);
 
         movieList = db.getAllMovieShowTimes();
