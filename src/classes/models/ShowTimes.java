@@ -1,7 +1,6 @@
 package classes.models;
 
 import classes.utils.CalendarUtils;
-import classes.utils.Helper;
 import interfaces.Queries;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
