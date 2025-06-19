@@ -8,6 +8,7 @@ import classes.Navigation;
 import classes.models.Customer;
 import classes.models.Invoice;
 import classes.utils.Helper;
+import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
@@ -39,7 +40,7 @@ public final class ShowReceipt extends JFrame implements ActionListener, ListGUI
 
 
     public ShowReceipt() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        LoginInfo.setCustomerID(1);
+        Buttons.handCursor.accept(new JButton[]{btnPrintReceipt});
         if (!Customer.isLoggedIn(this, RedirectPage.SHOW_RECEIPT)) return;
         if (!db.customerInvoiceExists(CUSTOMER_ID)) {
             Form.gotoForm(this, Pages.LIST_MOVIES);

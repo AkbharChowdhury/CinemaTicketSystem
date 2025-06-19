@@ -7,6 +7,7 @@ import classes.Navigation;
 import classes.models.*;
 import classes.utils.Helper;
 import classes.utils.Validation;
+import enums.Buttons;
 import enums.FormDetails;
 import enums.Pages;
 import enums.RedirectPage;
@@ -29,18 +30,18 @@ import java.util.List;
 import static classes.utils.Helper.fieldSep;
 
 public final class PurchaseTicket extends JFrame implements ActionListener, TableGUI, ChangeListener, MenuNavigation {
-    Navigation nav = new Navigation(this);
-    Database db = Database.getInstance();
-    ShowTimes movieShowTimes = new ShowTimes();
-    JTable table = new JTable();
+    private final Navigation nav = new Navigation(this);
+    private final Database db = Database.getInstance();
+    private final ShowTimes movieShowTimes = new ShowTimes();
+    private final JTable table = new JTable();
 
-    JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
-    JComboBox<String> cbMovies = new JComboBox<>();
+    private final JSpinner spNumTickets = new JSpinner(new SpinnerNumberModel(1, 1, 8, 1));
+    private final JComboBox<String> cbMovies = new JComboBox<>();
 
-    JLabel lblMovieDetails = new JLabel();
-    JLabel lblTotal = new JLabel();
-    Ticket ticketDetails;
-    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    private final JLabel lblMovieDetails = new JLabel();
+    private final JLabel lblTotal = new JLabel();
+    private Ticket ticketDetails;
+    private final DefaultTableModel model = (DefaultTableModel) table.getModel();
 
     CustomTableModel tableModel = new CustomTableModel(model);
 
@@ -48,9 +49,8 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
 
 
     public PurchaseTicket() throws SQLException, FileNotFoundException, ParseException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        LoginInfo.setCustomerID(1);
         if (!Customer.isLoggedIn(this, RedirectPage.PURCHASE_TICKET)) return;
-        if (Helper.disableReceipt.apply(db)) nav.btnShowReceipt.setEnabled(false);
+        nav.receiptStatus(db);
 
         Helper.disableSpinnerInput(spNumTickets);
 
@@ -103,6 +103,9 @@ public final class PurchaseTicket extends JFrame implements ActionListener, Tabl
         cbMovies.addActionListener(this);
         spNumTickets.addChangeListener(this);
         btnConfirm.addActionListener(this);
+
+        Buttons.handCursor.accept(new JButton[]{btnConfirm});
+
         setVisible(true);
         tableEvent();
     }

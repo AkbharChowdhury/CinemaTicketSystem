@@ -35,7 +35,7 @@ public final class ShowTimesForm extends JFrame implements ActionListener, Table
     public ShowTimesForm() {
         table.setEnabled(false);
 
-        if (Helper.disableReceipt.apply(db)) nav.btnShowReceipt.setEnabled(false);
+        nav.receiptStatus(db);
 
         movieList = db.getAllMovieShowTimes();
 

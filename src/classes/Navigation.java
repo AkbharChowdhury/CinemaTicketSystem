@@ -1,5 +1,7 @@
 package classes;
 
+import classes.utils.Helper;
+import enums.Buttons;
 import enums.RedirectPage;
 import forms.*;
 
@@ -19,19 +21,27 @@ public final class Navigation implements ActionListener {
     private final JFrame frame;
 
 
-    private Supplier<JButton[]> navButtons = () -> new JButton[]{
+    private final Supplier<JButton[]> navButtons = () -> new JButton[]{
             btnListMovies,
             btnShowTimes,
             btnPurchase,
             btnShowReceipt
     };
 
+    public void receiptStatus(Database database) {
+
+        Function<Database, Boolean> isReceiptButtonDisabled = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
+        if (isReceiptButtonDisabled.apply(database)) {
+            btnShowReceipt.setEnabled(false);
+
+        }
+
+    }
+
     public Navigation(JFrame currentFrame) {
         frame = currentFrame;
-        btnListMovies.addActionListener(this);
-        btnShowTimes.addActionListener(this);
-        btnPurchase.addActionListener(this);
-        btnShowReceipt.addActionListener(this);
+        Arrays.stream(navButtons.get()).forEach(button -> button.addActionListener(this));
+        Buttons.handCursor.accept(navButtons.get());
     }
 
     private void purchaseTicket() {

@@ -21,15 +21,16 @@ import java.util.*;
 import java.util.List;
 
 public final class Register extends JFrame implements ActionListener {
-    JTextField txtFirstname = new JTextField();
-    JTextField txtLastName = new JTextField();
-    JTextField txtEmail = new JTextField();
-    JPasswordField txtPassword = new JPasswordField();
-    JComboBox<String> cbTicket = new JComboBox<>();
-    JButton btnRegister = new JButton(Buttons.REGISTER);
-    JButton btnLogin = new JButton("Back to Login");
-    List<Ticket> ticketList;
-    Database db;
+    private final JTextField txtFirstname = new JTextField();
+    private final JTextField txtLastName = new JTextField();
+    private final JTextField txtEmail = new JTextField();
+    private final JPasswordField txtPassword = new JPasswordField();
+    private final JComboBox<String> cbTicket = new JComboBox<>();
+    private final JButton btnRegister = new JButton(Buttons.REGISTER);
+    private final JButton btnLogin = new JButton("Back to Login");
+
+    private final List<Ticket> ticketList;
+    private final Database db;
 
     LinkedHashMap<String, JTextField> textFields = new LinkedHashMap<>() {{
         put("Firstname", txtFirstname);
@@ -40,6 +41,7 @@ public final class Register extends JFrame implements ActionListener {
 
 
     public Register() {
+        Buttons.handCursor.accept(new JButton[]{btnLogin, btnRegister});
 
         db = Database.getInstance();
         ticketList = Collections.unmodifiableList(db.getTickets());

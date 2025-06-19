@@ -14,15 +14,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public final class Login extends JFrame implements ActionListener {
-    Database db = Database.getInstance();
+    private Database db = Database.getInstance();
 
-    JTextField txtEmail = new JTextField();
-    JButton btnLogin = new JButton("Login");
-    JButton btnRegister = new JButton(Buttons.REGISTER);
-
-    JLabel hyperlink = new JLabel("Return to movie list");
-    JPasswordField txtPassword;
-    Runnable loginAction = this::handleLogin;
+    private JTextField txtEmail = new JTextField();
+    private JButton btnLogin = new JButton("Login");
+    private JButton btnRegister = new JButton(Buttons.REGISTER);
+    private JLabel hyperlink = new JLabel("Return to movie list");
+    private JPasswordField txtPassword;
+    private Runnable loginAction = this::handleLogin;
 
 
     public Login() {
@@ -64,6 +63,7 @@ public final class Login extends JFrame implements ActionListener {
 
         btnLogin.addActionListener(this);
         btnRegister.addActionListener(this);
+        Buttons.handCursor.accept(new JButton[]{btnLogin, btnRegister});
         setRegisteredCustomerDetails();
         MyEventListener.enterKeyStroke(txtEmail, loginAction);
         MyEventListener.enterKeyStroke(txtPassword, loginAction);
