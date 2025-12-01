@@ -14,13 +14,14 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import static  classes.utils.Helper.error;
 
 public class Database {
     private static final String DB_NAME = "cinema.db";
     private static volatile Database instance;
 
     private Database() {
+
 
         try {
             File databaseFile = new File(DB_NAME);
@@ -31,7 +32,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            error.accept(e);
 
         }
 
@@ -46,9 +47,9 @@ public class Database {
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception e) {
 
-            System.err.println(ex.getMessage());
+            error.accept(e);
         }
 
         return instance;
@@ -99,7 +100,8 @@ public class Database {
         try (var con = getConnection(); Statement stmt = con.createStatement()) {
             stmt.execute(createTableSQL);
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
+
 
         }
 
@@ -117,14 +119,11 @@ public class Database {
                 stmt.executeUpdate();
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
 
-    }
-
-    private void getErrorMessage(Exception ex) {
-        System.err.println(ex.getMessage());
     }
 
     private void insertMovies() throws FileNotFoundException {
@@ -145,8 +144,9 @@ public class Database {
                 stmt.executeUpdate();
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
 
     }
@@ -169,8 +169,9 @@ public class Database {
                 stmt.executeUpdate();
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
 
     }
@@ -189,8 +190,9 @@ public class Database {
 
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
 
     }
@@ -203,8 +205,9 @@ public class Database {
             customerDataParams(customer, stmt);
             return stmt.executeUpdate() == 1;
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
         return false;
 
@@ -238,8 +241,9 @@ public class Database {
                 stmt.executeUpdate();
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
+
         }
 
     }
@@ -257,7 +261,7 @@ public class Database {
             config.enforceForeignKeys(true); // enables foreign key constraint as sqlite disables them by default for compatibility
             connection = DriverManager.getConnection(CONN_STR, config.toProperties());
         } catch (ClassNotFoundException | SQLException e) {
-            getErrorMessage(e);
+            error.accept(e);
             return null;
 
         }
@@ -281,8 +285,8 @@ public class Database {
                 stmt.executeUpdate();
             }
 
-        } catch (Exception ex) {
-            getErrorMessage(ex);
+        } catch (Exception e) {
+            error.accept(e);
         }
 
     }
@@ -318,7 +322,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return list;
     }
@@ -356,7 +360,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return list;
     }
@@ -388,7 +392,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return list;
     }
@@ -406,7 +410,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
 
         return list.stream().sorted().toList();
@@ -428,7 +432,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return false;
 
@@ -450,7 +454,7 @@ public class Database {
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return false;
 
@@ -480,7 +484,7 @@ public class Database {
             return invoices;
 
         } catch (Exception ex) {
-            getErrorMessage(ex);
+            error.accept(e);
         }
 
         return invoices;
@@ -511,7 +515,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return movies;
     }
@@ -533,7 +537,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return ticketList;
     }
@@ -554,7 +558,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return "error fetching movie name by movie id";
 
@@ -574,7 +578,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return 0;
 
@@ -595,7 +599,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
 
         }
         return false;
@@ -615,7 +619,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return false;
 
@@ -634,7 +638,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
 
         return false;
@@ -652,7 +656,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return 0;
 
@@ -678,7 +682,7 @@ public class Database {
 
 
         } catch (Exception e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
 
         return null;
@@ -699,7 +703,7 @@ public class Database {
 
             }
         } catch (Exception e) {
-            getErrorMessage(e);
+           error.accept(e);
         }
         return 0;
     }
@@ -717,7 +721,7 @@ public class Database {
             int result = stmt.executeUpdate();
             return result != 0;
         } catch (SQLException e) {
-            getErrorMessage(e);
+            error.accept(e);
         }
         return false;
     }
