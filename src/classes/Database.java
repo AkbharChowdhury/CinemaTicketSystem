@@ -556,8 +556,7 @@ public class Database {
 
     public int getMovieID(String title) {
 
-
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(STR."SELECT \{MovieTable.COLUMN_ID} FROM \{MovieTable.TABLE_NAME} WHERE \{MovieTable.COLUMN_TITLE} = ?")) {
             stmt.setString(1, title);
             ResultSet rs = stmt.executeQuery();
@@ -681,9 +680,9 @@ public class Database {
     public int getNumTickets(int showTimeID) {
         String sql = STR."SELECT \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} FROM \{ShowTimesTable.TABLE_NAME} WHERE \{ShowTimesTable.COLUMN_ID} =?";
 
-        try (Connection con = getConnection()) {
-            assert con != null;
-            try (var stmt = con.prepareStatement(sql)) {
+        try (Connection con = getConnection(); 
+            var stmt = con.prepareStatement(sql)) {
+
                 stmt.setInt(1, showTimeID);
                 ResultSet r = stmt.executeQuery();
 
@@ -701,7 +700,7 @@ public class Database {
 
     public boolean updateNumTickets(ShowTimes movieShowTimes) {
 
-        try (Connection conn = getConnection();
+        try (var conn = getConnection();
              var stmt = conn.prepareStatement(STR."UPDATE \{ShowTimesTable.TABLE_NAME} SET \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} = ? WHERE \{ShowTimesTable.COLUMN_ID} = ?")) {
             int numTicketsLeft = getNumTickets(movieShowTimes.getShowTimeID());
             int remainingTickets = numTicketsLeft - movieShowTimes.getNumTicketsSold();
@@ -717,6 +716,7 @@ public class Database {
     }
 
 }
+
 
 
 
