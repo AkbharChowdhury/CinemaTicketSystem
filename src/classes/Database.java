@@ -21,8 +21,6 @@ public class Database {
     private static volatile Database instance;
 
     private Database() {
-
-
         try {
             File databaseFile = new File(DB_NAME);
             if (!databaseFile.exists()) {
@@ -48,7 +46,6 @@ public class Database {
                 }
             }
         } catch (Exception e) {
-
             error.accept(e);
         }
 
@@ -135,7 +132,6 @@ public class Database {
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new Movie().insert())) {
             for (var movie : movieList) {
-
                 var c = new Counter();
                 stmt.setNull(c.getCounter(), java.sql.Types.NULL);
                 stmt.setString(c.getCounter(), movie.getTitle());
@@ -154,8 +150,6 @@ public class Database {
     private void insertShowTimes() throws FileNotFoundException {
 
         var showTimeList = FileHandler.getShowTimeData();
-
-
         try (Connection con = getConnection();
              var stmt = con.prepareStatement(new ShowTimes().insert())) {
             for (ShowTimes showtime : showTimeList) {
@@ -165,7 +159,6 @@ public class Database {
                 stmt.setString(c.getCounter(), showtime.getDate());
                 stmt.setString(c.getCounter(), showtime.getTime());
                 stmt.setInt(c.getCounter(), showtime.getNumTicketsLeft());
-
                 stmt.executeUpdate();
             }
 
@@ -179,13 +172,10 @@ public class Database {
     private void insertCustomer() throws FileNotFoundException {
 
         var customerList = FileHandler.getCustomerData();
-
-
-        try (Connection con = getConnection();
+        try (var con = getConnection();
              var stmt = con.prepareStatement(new Customer().insert())) {
             for (var customer : customerList) {
                 customerDataParams(customer, stmt);
-
                 stmt.executeUpdate();
 
             }
@@ -483,7 +473,7 @@ public class Database {
             }
             return invoices;
 
-        } catch (Exception ex) {
+        } catch (Exception e) {
             error.accept(e);
         }
 
