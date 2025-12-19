@@ -55,8 +55,6 @@ public class MovieGenres extends Movie implements Queries {
         this.movieID = movieID;
         this.genres = genres;
         this.rating = rating;
-
-
     }
 
     @Override
@@ -83,42 +81,35 @@ public class MovieGenres extends Movie implements Queries {
     }
 
 
-    public static String showMovieList(MovieGenres movieGenres) {
-        String genre = movieGenres.getGenre();
+//    public static String showMovieList(MovieGenres movieGenres) {
+//        String genre = movieGenres.getGenre();
+//
+//        String sql = """
+//                SELECT m.title,
+//                       m.duration,
+//                       r.rating,
+//                       Group_concat(genre, '/') genre_list,
+//                       mg.movie_id,
+//                       mg.genre_id
+//                FROM   MovieGenres mg
+//                       NATURAL JOIN Movies m
+//                       NATURAL JOIN genres g
+//                       NATURAL JOIN Ratings r
+//                 WHERE title LIKE ?
+//                GROUP BY m.movie_id
+//
+//                """;
+//
+//
+//        if (!genre.equalsIgnoreCase(FormDetails.defaultGenre.get())) {
+//            sql += " HAVING genre_list LIKE ?";
+//        }
+//
+//        return sql;
+//
+//    }
 
-        String sql = """
-                SELECT m.title,
-                       m.duration,
-                       r.rating,
-                       Group_concat(genre, '/') genre_list,
-                       mg.movie_id,
-                       mg.genre_id
-                FROM   MovieGenres mg
-                       NATURAL JOIN Movies m
-                       NATURAL JOIN genres g
-                       NATURAL JOIN Ratings r
-                 WHERE title LIKE ?                        
-                GROUP BY m.movie_id
-                
-                """;
 
-
-        if (!genre.equalsIgnoreCase(FormDetails.defaultGenre.get())) {
-            sql += " HAVING genre_list LIKE ?";
-        }
-
-        return sql;
-
-    }
-
-    public static String getMovieGenreList() {
-        return """
-                SELECT DISTINCT(genre)
-                FROM MovieGenres 
-                NATURAL JOIN Genres
-                ORDER BY genre                         
-                """;
-    }
 
     public static List<String> tableColumns() {
         List<String> columns = new ArrayList<>();

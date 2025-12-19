@@ -25,8 +25,8 @@ public final class SearchMovie {
         return !FormDetails.defaultGenre.get().equals(genre) ? p -> StringUtils.containsIgnoreCase(p.getGenres(), genre) : p -> true;
     }
 
-    public SearchMovie(List<MovieGenres> LIST) {
-        list = Collections.unmodifiableList(LIST);
+    public SearchMovie(List<MovieGenres> MOVIE_LIST) {
+        list = Collections.unmodifiableList(MOVIE_LIST);
     }
 
 

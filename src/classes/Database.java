@@ -280,41 +280,41 @@ public class Database {
 
     }
 
-    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
-        List<MovieGenres> list = new ArrayList<>();
-        try (Connection con = getConnection();
-             var stmt = con.prepareStatement(MovieGenres.showMovieList(movieGenres))) {
-            // search by genre and movie title
-            String genre = movieGenres.getGenre();
-            var c = new Counter();
-            stmt.setString(c.getCounter(), "%" + movieGenres.getTitle() + "%");
-
-            if (!FormDetails.defaultGenre.get().equalsIgnoreCase(genre)) {
-                stmt.setString(c.getCounter(), '%' + genre + '%');
-            }
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (isResultSetEmpty(rs)) {
-                return list;
-            }
-
-            // add movies to list
-            while (rs.next()) {
-                int movieID = rs.getInt(MovieTable.COLUMN_ID);
-                String title = rs.getString(MovieTable.COLUMN_TITLE);
-                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
-                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
-                String rating = rs.getString(RatingTable.COLUMN_RATING);
-                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
-
-            }
-
-        } catch (Exception e) {
-            error.accept(e);
-        }
-        return list;
-    }
+//    public List<MovieGenres> showMovieList(MovieGenres movieGenres) {
+//        List<MovieGenres> list = new ArrayList<>();
+//        try (Connection con = getConnection();
+//             var stmt = con.prepareStatement(MovieGenres.showMovieList(movieGenres))) {
+//            // search by genre and movie title
+//            String genre = movieGenres.getGenre();
+//            var c = new Counter();
+//            stmt.setString(c.getCounter(), "%" + movieGenres.getTitle() + "%");
+//
+//            if (!FormDetails.defaultGenre.get().equalsIgnoreCase(genre)) {
+//                stmt.setString(c.getCounter(), '%' + genre + '%');
+//            }
+//
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if (isResultSetEmpty(rs)) {
+//                return list;
+//            }
+//
+//            // add movies to list
+//            while (rs.next()) {
+//                int movieID = rs.getInt(MovieTable.COLUMN_ID);
+//                String title = rs.getString(MovieTable.COLUMN_TITLE);
+//                int duration = Integer.parseInt(rs.getString(MovieTable.COLUMN_DURATION));
+//                String genreList = rs.getString(MovieGenresTable.COLUMN_GENRE_LIST);
+//                String rating = rs.getString(RatingTable.COLUMN_RATING);
+//                list.add(new MovieGenres(movieID, title, duration, genreList, rating));
+//
+//            }
+//
+//        } catch (Exception e) {
+//            error.accept(e);
+//        }
+//        return list;
+//    }
 
     public List<MovieGenres> getMovies() {
         List<MovieGenres> list = new ArrayList<>();
@@ -391,7 +391,12 @@ public class Database {
         List<String> list = new ArrayList<>();
         try (Connection con = getConnection();
              var stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(MovieGenres.getMovieGenreList());
+            ResultSet rs = stmt.executeQuery( """
+                SELECT DISTINCT(genre)
+                FROM MovieGenres 
+                NATURAL JOIN Genres
+                ORDER BY genre                         
+                """);
             if (isResultSetEmpty(rs)) return list;
 
             while (rs.next()) {
