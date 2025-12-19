@@ -2,7 +2,6 @@ package classes;
 
 import classes.models.*;
 import classes.utils.FileHandler;
-import classes.utils.Helper;
 import enums.Files;
 import enums.FormDetails;
 import org.apache.commons.lang3.StringUtils;
@@ -679,23 +678,23 @@ public class Database {
 
     public int getNumTickets(int showTimeID) {
         String sql = STR."SELECT \{ShowTimesTable.COLUMN_NUM_TICKETS_LEFT} FROM \{ShowTimesTable.TABLE_NAME} WHERE \{ShowTimesTable.COLUMN_ID} =?";
+        try (Connection con = getConnection(); var stmt = con.prepareStatement(sql)){
+            stmt.setInt(1, showTimeID);
+            ResultSet r = stmt.executeQuery();
+            if (isResultSetEmpty(r)) return 0;
 
-        try (Connection con = getConnection(); 
-            var stmt = con.prepareStatement(sql)) {
+            return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
 
-                stmt.setInt(1, showTimeID);
-                ResultSet r = stmt.executeQuery();
 
-                if (isResultSetEmpty(r)) return 0;
+    } catch (Exception e) {
 
-                return r.getInt(ShowTimesTable.COLUMN_NUM_TICKETS_LEFT);
-
-            }
-        } catch (Exception e) {
-           error.accept(e);
         }
         return 0;
+
     }
+
+
+
 
 
     public boolean updateNumTickets(ShowTimes movieShowTimes) {

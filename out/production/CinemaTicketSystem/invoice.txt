@@ -165,7 +165,7 @@ public class Invoice {
     }
 
     public void generatePDFInvoice(List<Invoice> invoice, int i) throws ParseException, SQLException, IOException {
-        Database db = Database.getInstance();
+        Database2 db = Database2.getInstance();
         Ticket ticketDetails = db.getCustomerTicketType(LoginInfo.getCustomerID());
         var font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
 
