@@ -394,6 +394,7 @@ public class Database {
             ResultSet rs = stmt.executeQuery( """
                 SELECT DISTINCT(genre)
                 FROM MovieGenres 
+                    
                 NATURAL JOIN Genres
                 ORDER BY genre                         
                 """);
