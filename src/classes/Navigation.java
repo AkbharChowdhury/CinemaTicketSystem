@@ -1,16 +1,15 @@
 package classes;
 
-import classes.utils.Helper;
 import enums.Buttons;
 import enums.RedirectPage;
 import forms.*;
 
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 
 public final class Navigation implements ActionListener {
@@ -20,14 +19,7 @@ public final class Navigation implements ActionListener {
     public final JButton btnShowReceipt = new JButton("Show Receipt");
     private final JFrame frame;
     private final Function<Database, Boolean> isReceiptButtonDisabled = db -> LoginInfo.getCustomerID() == 0 | !db.customerInvoiceExists(LoginInfo.getCustomerID());
-
-
-    private final Supplier<JButton[]> navButtons = () -> new JButton[]{
-            btnListMovies,
-            btnShowTimes,
-            btnPurchase,
-            btnShowReceipt
-    };
+    private final List<JButton> navButtons = List.of(btnListMovies, btnShowTimes, btnPurchase, btnShowReceipt);
 
     public void receiptStatus(Database database) {
 
@@ -40,8 +32,8 @@ public final class Navigation implements ActionListener {
 
     public Navigation(JFrame currentFrame) {
         frame = currentFrame;
-        Arrays.stream(navButtons.get()).forEach(button -> button.addActionListener(this));
-        Buttons.handCursor.accept(navButtons.get());
+        navButtons.forEach(button -> button.addActionListener(this));
+        Buttons.handCursor.accept(navButtons.toArray(new JButton[0]));
     }
 
     private void purchaseTicket() {
@@ -77,29 +69,36 @@ public final class Navigation implements ActionListener {
         }
     }
 
+    private final Map<JButton, Runnable> buttonActions = Map.of(
+            btnListMovies, this::openMovieList,
+            btnShowTimes, this::openShowTimes,
+            btnPurchase, this::purchaseTicket,
+            btnShowReceipt, this::showReceipt
+    );
 
-    public void handleNavClick(ActionEvent e) {
-        try {
-
-            if (e.getSource() == btnListMovies) new MovieList();
-            if (e.getSource() == btnShowTimes) new ShowTimesForm();
-            if (e.getSource() == btnPurchase) purchaseTicket();
-            if (e.getSource() == btnShowReceipt) showReceipt();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-        }
-
+    private void openMovieList() {
+        new MovieList();
 
     }
 
+    private void openShowTimes() {
+        new ShowTimesForm();
+
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        handleNavClick(e);
+        Runnable action = buttonActions.get(e.getSource());
+        if (action != null) {
+            action.run();
+        }
+        // Close current frame after button click
         frame.dispose();
     }
 
     public void addButtons(JPanel top) {
-        Arrays.stream(navButtons.get()).forEach(top::add);
+        navButtons.forEach(top::add);
     }
 }
 
